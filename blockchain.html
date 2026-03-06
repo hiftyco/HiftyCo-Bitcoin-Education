@@ -167,8 +167,7 @@
   </footer>
   
   <script>
-    // REAL-TIME Bitcoin Data - Robust version with multiple fallbacks
-    const API = 'https://blockstream.info/api';
+    // REAL-TIME Bitcoin Data from mempool.space API
     let blockHeight = 939600;
     
     // Run immediately when script loads
@@ -181,41 +180,60 @@
     async function loadBlockchainData() {
       console.log('Loading blockchain data...');
       try {
-        // Fetch blocks
+        // Fetch blocks - try mempool.space first (more reliable)
         let blocks = null;
         try {
-          const blocksResp = await fetch(API + '/blocks');
+          const blocksResp = await fetch('https://mempool.space/api/blocks');
           blocks = await blocksResp.json();
         } catch(e) {
-          console.log('Primary API failed, trying alternative...');
+          console.log('mempool.space failed, trying blockstream...');
           try {
-            const backupResp = await fetch('https://mempool.space/api/blocks');
+            const backupResp = await fetch('https://blockstream.info/api/blocks');
             blocks = await backupResp.json();
           } catch(e2) {
-            console.log('Backup also failed');
+            console.log('All block APIs failed');
           }
         }
         
-        // Fetch mempool
+        // Fetch mempool stats from mempool.space
         let mempool = null;
         try {
-          const mempoolResp = await fetch(API + '/mempool');
+          const mempoolResp = await fetch('https://mempool.space/api/mempool');
           mempool = await mempoolResp.json();
         } catch(e) {}
         
-        // Fetch transactions
+        // Fetch transactions from mempool.space
         let txs = [];
         try {
-          const txResp = await fetch(API + '/mempool/recent');
+          const txResp = await fetch('https://mempool.space/api/mempool/recent');
           txs = await txResp.json();
         } catch(e) {}
         
-        // Fetch fees
-        let fees = { hourFeePercentile: 12, halfHourFeePercentile: 25, fastestFee: 55 };
+        // Fetch fee estimates from mempool.space recommended endpoint
+        let fees = null;
         try {
-          const feeResp = await fetch(API + '/fees/recommended');
+          const feeResp = await fetch('https://mempool.space/api/v1/fees/recommended');
           fees = await feeResp.json();
-        } catch(e) {}
+        } catch(e) {
+          // Calculate fees from mempool histogram if API fails
+          if(mempool && mempool.fee_histogram) {
+            const hist = mempool.fee_histogram;
+            // hist is array of [fee_rate, tx_count] sorted by fee (high to low)
+            // Get approximate fees from histogram
+            const totalTxs = hist.reduce((sum, item) => sum + item[1], 0);
+            let cumulative = 0;
+            // Slow: bottom 20% of fees
+            let slowFee = 0, normalFee = 0, fastFee = 0;
+            for(let i = hist.length - 1; i >= 0; i--) {
+              cumulative += hist[i][1];
+              const pct = cumulative / totalTxs;
+              if(pct >= 0.95 && !fastFee) fastFee = Math.round(hist[i][0]);
+              if(pct >= 0.7 && !normalFee) normalFee = Math.round(hist[i][0]);
+              if(pct >= 0.2 && !slowFee) slowFee = Math.round(hist[i][0]);
+            }
+            fees = { fastestFee: fastFee || 25, halfHourFee: normalFee || 15, hourFee: slowFee || 8 };
+          }
+        }
         
         // Update if we got data
         if(blocks && blocks[0]) {
@@ -229,8 +247,8 @@
             const b = blocks[i];
             chainHTML += '<div class="chain-block">' +
               '<span class="block-num">#' + b.height.toLocaleString() + '</span>' +
-              '<span class="block-txs">' + (b.tx_count || 0).toLocaleString() + ' txs</span>' +
-              '<span class="block-size">' + ((b.size || 0)/1000).toFixed(0) + ' KB</span>' +
+              '<span class="block-txs">' + (b.extras?.txCount || b.tx_count || 0).toLocaleString() + ' txs</span>' +
+              '<span class="block-size">' + ((b.size || b.extras?.size || 0)/1000).toFixed(0) + ' KB</span>' +
             '</div>';
             if(i < 5) chainHTML += '<span class="chain-arrow">→</span>';
           }
@@ -242,10 +260,12 @@
           document.getElementById('mempool-size').textContent = ((mempool.vsize || 0) / 1000000).toFixed(1) + ' MB';
         }
         
-        // Update fees
-        document.getElementById('fee-low').textContent = (fees.hourFeePercentile || 12) + '+';
-        document.getElementById('fee-medium').textContent = (fees.halfHourFeePercentile || 25) + '+';
-        document.getElementById('fee-high').textContent = (fees.fastestFee || 55) + '+';
+        // Update fees - use mempool.space format
+        if(fees) {
+          document.getElementById('fee-low').textContent = (fees.hourFee || fees.minimumFee || 8) + '+';
+          document.getElementById('fee-medium').textContent = (fees.halfHourFee || fees.normalFee || 15) + '+';
+          document.getElementById('fee-high').textContent = (fees.fastestFee || fees.highFee || 25) + '+';
+        }
         
         // Hash rate & difficulty
         document.getElementById('hash-rate').textContent = '~700 EH/s';
@@ -270,11 +290,11 @@
           txList.innerHTML = '<div class="tx-item"><span style="color:#606070">Loading transactions...</span></div>';
         }
         
-        // Confirmed transactions
+        // Confirmed transactions from mempool.space
         const confirmedList = document.getElementById('confirmed-list');
         if(blocks && blocks[0]) {
           try {
-            const blockTxResp = await fetch(API + '/block/' + blocks[0].id + '/txs');
+            const blockTxResp = await fetch('https://mempool.space/api/block/' + blocks[0].id + '/txs');
             const blockTxs = await blockTxResp.json();
             if(blockTxs && blockTxs.length > 0) {
               confirmedList.innerHTML = blockTxs.slice(0, 10).map(tx => 
