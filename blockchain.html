@@ -209,43 +209,70 @@
     // Cache for faster loading
     let cachedData = null;
     let lastLoad = 0;
-    const CACHE_TIME = 10000; // 10 seconds
-    
+    const CACHE_TIME = 15000;
     let currentBlockHeight = 939600;
+    let dataLoaded = false;
     
-    // Load on page init
+    // Load immediately with fallback, then try API
     (function init() {
+      // Show fallback immediately
+      loadFallback();
+      // Try to load live data
       loadBlockchainData();
+      // Refresh every 15 seconds
       setInterval(loadBlockchainData, 15000);
     })();
     
     async function loadBlockchainData() {
       const now = Date.now();
-      if(cachedData && (now - lastLoad) < 5000) {
+      if(cachedData && (now - lastLoad) < CACHE_TIME) {
         console.log('Using cached data');
         return;
       }
       
       console.log('Loading blockchain data...');
-      updateUI({ loading: true });
       
       try {
-        // Parallel fetch for speed
-        const [blocksData, mempoolData, feesData, txsData] = await Promise.all([
-          fetch('https://mempool.space/api/blocks').then(r => r.json()).catch(() => null),
-          fetch('https://mempool.space/api/mempool').then(r => r.json()).catch(() => null),
-          fetch('https://mempool.space/api/v1/fees/recommended').then(r => r.json()).catch(() => null),
-          fetch('https://mempool.space/api/mempool/recent').then(r => r.json()).catch(() => null)
-        ]);
+        // Try mempool.space first with timeout
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
         
-        const data = { blocks: blocksData, mempool: mempoolData, fees: feesData, txs: txsData, timestamp: now };
-        cachedData = data;
-        lastLoad = now;
+        try {
+          const blocksResp = await fetch('https://mempool.space/api/blocks', { signal: controller.signal });
+          var blocksData = await blocksResp.json();
+        } catch(e) { blocksData = null; clearTimeout(timeout); }
         
-        updateUI(data);
+        try {
+          clearTimeout(controller.timeout);
+          const mempoolResp = await fetch('https://mempool.space/api/mempool', { signal: controller.signal });
+          var mempoolData = await mempoolResp.json();
+        } catch(e) { mempoolData = null; clearTimeout(timeout); }
+        
+        try {
+          clearTimeout(controller.timeout);
+          const feesResp = await fetch('https://mempool.space/api/v1/fees/recommended', { signal: controller.signal });
+          var feesData = await feesResp.json();
+        } catch(e) { feesData = null; clearTimeout(timeout); }
+        
+        try {
+          clearTimeout(controller.timeout);
+          const txsResp = await fetch('https://mempool.space/api/mempool/recent', { signal: controller.signal });
+          var txsData = await txsResp.json();
+        } catch(e) { txsData = null; clearTimeout(timeout); }
+        
+        clearTimeout(controller.timeout);
+        
+        if(blocksData || mempoolData || feesData) {
+          const data = { blocks: blocksData, mempool: mempoolData, fees: feesData, txs: txsData, timestamp: now };
+          cachedData = data;
+          lastLoad = now;
+          dataLoaded = true;
+          updateUI(data);
+          console.log('Live data loaded!');
+        }
       } catch(e) {
-        console.error('Error:', e);
-        loadFallback();
+        console.error('API Error:', e);
+        // Keep showing fallback data
       }
     }
     
