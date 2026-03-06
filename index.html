@@ -259,17 +259,17 @@
     
     // Live Ticker
     const Ticker = () => {
-      const [data, setData] = useState({BTC:{USD:0},ETH:{USD:0},SOL:{USD:0}});
+      const [data, setData] = useState({BTC:{USD:0}});
       useEffect(() => {
-        fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,SOL&tsyms=USD')
+        fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD')
           .then(r=>r.json()).then(d=>setData(d)).catch(()=>{});
-        const i = setInterval(()=>fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,SOL&tsyms=USD').then(r=>r.json()).then(d=>setData(d)).catch(()=>{}),10000);
+        const i = setInterval(()=>fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD').then(r=>r.json()).then(d=>setData(d)).catch(()=>{}),10000);
         return ()=>clearInterval(i);
       }, []);
       
-      const items = [
-        {sym:'BTC',name:'Bitcoin'}, {sym:'ETH',name:'Ethereum'}, {sym:'SOL',name:'Solana'},
-        {sym:'BTC',name:'Bitcoin'}, {sym:'ETH',name:'Ethereum'}, {sym:'SOL',name:'Solana'}
+      // const items = [
+        {sym:'BTC',name:'Bitcoin'},
+        {sym:'BTC',name:'Bitcoin'}
       ];
       
       return (
