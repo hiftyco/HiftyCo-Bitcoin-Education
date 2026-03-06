@@ -258,8 +258,8 @@
   
   <script>
     // Supabase config
-    const SUPABASE_URL = 'https://7c42c6a2e1e7e42a127d80ace302ac6a.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IjVjNDJjNmEyZTFlN2U0MmExMjdkODBhY2UzMDJhYzZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2NjE1MTYsImV4cCI6MjA1NDIzNzUxNn0.M9M5gR0cTjKZmJvBqCjbS4ZJ9L1R0vZjHkNQ1zK0FYY';
+    const SUPABASE_URL = 'https://rykdrzqclyszgktrvtui.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5a2RyenFjbHlzemdrdHJ2dHVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTUzOTMsImV4cCI6MjA4ODM3MTM5M30.QmNqcEmueMmSmoK_XMMbKCFwSW-P8yd3NwrY0TarBBA';
     
     // Default leaderboard data
     const defaultLeaderboard = [
@@ -309,8 +309,29 @@
       document.getElementById('qnum').textContent = 'Question '+(qIdx+1)+' of '+questions.length + ' | Score: ' + quizScore;
     }
     
-    // Load leaderboard from localStorage or use default
-    function loadLeaderboard() {
+    // Load leaderboard from Supabase or localStorage
+    async function loadLeaderboard() {
+      // Try Supabase first
+      try {
+        const response = await fetch(SUPABASE_URL + '/rest/v1/leaderboard?score=desc&limit=10', {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+          }
+        });
+        if(response.ok) {
+          const data = await response.json();
+          if(data && data.length > 0) {
+            const lbList = document.getElementById('lb-list');
+            lbList.innerHTML = data.map((entry, i) => 
+              '<div class="lb-row"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name">'+entry.name+'</span><span class="lb-score">'+entry.score+'</span></div>'
+            ).join('');
+            return;
+          }
+        }
+      } catch(e) { console.log('Supabase not available'); }
+      
+      // Fallback to localStorage
       let lbData = localStorage.getItem('hifty_leaderboard');
       if(lbData) {
         lbData = JSON.parse(lbData);
@@ -367,8 +388,29 @@
       }
     }
     
-    // Load insights from localStorage
-    function loadInsights() {
+    // Load insights from Supabase or localStorage
+    async function loadInsights() {
+      // Try Supabase first
+      try {
+        const response = await fetch(SUPABASE_URL + '/rest/v1/insights?order=created_at.desc&limit=20', {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+          }
+        });
+        if(response.ok) {
+          const data = await response.json();
+          if(data && data.length > 0) {
+            const list = document.getElementById('insights-list');
+            list.innerHTML = data.map(i => 
+              '<div class="insight"><div class="insight-user">'+i.user+'</div><div class="insight-msg">"'+i.message+'"</div><div class="insight-time">'+i.created_at?.split('T')[0] || 'Now'+'</div></div>'
+            ).join('');
+            return;
+          }
+        }
+      } catch(e) { console.log('Supabase not available'); }
+      
+      // Fallback to localStorage
       const insightsData = localStorage.getItem('hifty_insights');
       let insights = insightsData ? JSON.parse(insightsData) : [];
       
@@ -414,6 +456,17 @@
       const checks = document.querySelectorAll('.progress-check');
       const progress = Array.from(checks).map(c => c.classList.contains('checked'));
       localStorage.setItem('hifty_progress', JSON.stringify(progress));
+      
+      // Save to Supabase
+      const userId = localStorage.getItem('hifty_user_id') || 'user_' + Math.random().toString(36).substr(2,9);
+      localStorage.setItem('hifty_user_id', userId);
+      
+      trySubmitToSupabase('progress', {
+        user_id: userId,
+        path: 'bitcoin_basics',
+        completed: progress.filter(p => p).length,
+        total: progress.length
+      });
     }
     
     function loadProgress() {
