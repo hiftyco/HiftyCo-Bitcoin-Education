@@ -354,9 +354,9 @@
         const poolsResp = await fetch(BLOCKCHAIN_API + '/pools?timespan=5days');
         const pools = await poolsResp.json();
         
-        // Update network stats with REAL data
+        // Update network stats with REAL data (hash_rate is in H/s, convert to TH/s)
         document.getElementById('block-height').textContent = '#' + (stats.n_blocks_total || 0).toLocaleString();
-        document.getElementById('hash-rate').textContent = ((stats.hash_rate || 0) / 1e18).toFixed(2) + ' EH/s';
+        document.getElementById('hash-rate').textContent = ((stats.hash_rate || 0) / 1e12).toFixed(2) + ' TH/s';
         document.getElementById('difficulty').textContent = ((stats.difficulty || 0) / 1e12).toFixed(2) + ' T';
         
         // Calculate blocks until halving (next at block 1050000)
@@ -462,7 +462,7 @@
       document.getElementById('block-height').textContent = '#' + baseHeight.toLocaleString();
       document.getElementById('mempool-count').textContent = '32,000';
       document.getElementById('mempool-size').textContent = '18.5 MB';
-      document.getElementById('hash-rate').textContent = '715 EH/s';
+      document.getElementById('hash-rate').textContent = '715 TH/s';
       document.getElementById('difficulty').textContent = '92.5 T';
       document.getElementById('next-halving').textContent = '110,500 blks';
       document.getElementById('halving-date').textContent = '~2 years';
@@ -487,7 +487,7 @@
         // Estimate hashrate and difficulty (blockstream doesn't provide these directly)
         // Using historical approximations
         const currentHeight = blocks?.[0]?.height || 939586;
-        document.getElementById('hash-rate').textContent = '~700 EH/s';
+        document.getElementById('hash-rate').textContent = '~700 TH/s';
         document.getElementById('difficulty').textContent = '~92 T';
         
         // Fee estimates
@@ -531,7 +531,7 @@
       document.getElementById('block-height').textContent = '#870,432';
       document.getElementById('mempool-count').textContent = '24,891';
       document.getElementById('mempool-size').textContent = '18.3 MB';
-      document.getElementById('hash-rate').textContent = '678.45 EH/s';
+      document.getElementById('hash-rate').textContent = '678.45 TH/s';
       document.getElementById('difficulty').textContent = '92.67 T';
       document.getElementById('next-halving').textContent = '4,568 blks';
       document.getElementById('fee-low').textContent = '15';
