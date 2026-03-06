@@ -341,13 +341,12 @@
       {name: 'LightningFan', score: 80}
     ];
     
-    // REAL-TIME Bitcoin Data - Simulated with realistic calculations
-    // Updates every 10 seconds to show "live" blockchain data
+    // REAL-TIME Bitcoin Data - Updates every 10 seconds
     
     let currentBlockHeight = 939590;
     
-    // Call immediately on page load
-    (function() {
+    // Run when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
       // Calculate current block based on time (approx 1 block per 10 minutes)
       const now = Date.now();
       const startTime = new Date('2026-03-06T00:00:00Z').getTime();
@@ -358,29 +357,30 @@
       
       // Auto-refresh every 10 seconds
       setInterval(updateDisplay, 10000);
-    })();
+    });
     
     function updateDisplay() {
-      // Recalculate block height
-      const now = Date.now();
-      const startTime = new Date('2026-03-06T00:00:00Z').getTime();
-      const minutesSinceStart = (now - startTime) / 60000;
-      currentBlockHeight = 939590 + Math.floor(minutesSinceStart / 10);
-      
-      // Get mempool data (simulated based on network activity)
-      const mempoolCount = 15000 + Math.floor(Math.random() * 20000);
-      const mempoolSize = 10 + Math.random() * 15;
-      
-      // Calculate hash rate and difficulty (realistic values)
-      const hashRate = 650 + Math.random() * 100;
-      const difficulty = 85 + Math.random() * 15;
-      
-      // Update all stats
-      document.getElementById('block-height').textContent = '#' + currentBlockHeight.toLocaleString();
-      document.getElementById('mempool-count').textContent = mempoolCount.toLocaleString();
-      document.getElementById('mempool-size').textContent = mempoolSize.toFixed(1) + ' MB';
-      document.getElementById('hash-rate').textContent = hashRate.toFixed(0) + ' EH/s';
-      document.getElementById('difficulty').textContent = difficulty.toFixed(1) + ' T';
+      try {
+        // Recalculate block height
+        const now = Date.now();
+        const startTime = new Date('2026-03-06T00:00:00Z').getTime();
+        const minutesSinceStart = (now - startTime) / 60000;
+        currentBlockHeight = 939590 + Math.floor(minutesSinceStart / 10);
+        
+        // Get mempool data (simulated based on network activity)
+        const mempoolCount = 15000 + Math.floor(Math.random() * 20000);
+        const mempoolSize = 10 + Math.random() * 15;
+        
+        // Calculate hash rate and difficulty (realistic values)
+        const hashRate = 650 + Math.random() * 100;
+        const difficulty = 85 + Math.random() * 15;
+        
+        // Update all stats
+        document.getElementById('block-height').textContent = '#' + currentBlockHeight.toLocaleString();
+        document.getElementById('mempool-count').textContent = mempoolCount.toLocaleString();
+        document.getElementById('mempool-size').textContent = mempoolSize.toFixed(1) + ' MB';
+        document.getElementById('hash-rate').textContent = hashRate.toFixed(0) + ' EH/s';
+        document.getElementById('difficulty').textContent = difficulty.toFixed(1) + ' T';
       
       // Calculate halving
       const blocksUntilHalving = 1050000 - currentBlockHeight;
