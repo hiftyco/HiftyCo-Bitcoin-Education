@@ -154,7 +154,7 @@
     <div class="search-section">
       <div class="search-title">🔍 Search Transactions & Addresses</div>
       <div class="search-box">
-        <input type="text" id="search-input" placeholder="Enter txid (64 chars) or address (bc1.../1.../3...)" onkeypress="if(event.key==='Enter')searchTx()">
+        <input type="text" id="search-input" placeholder="Search: txid, block hash, block #, or address (bc1.../1.../3...)" onkeypress="if(event.key==='Enter')searchTx()">
         <button class="btn btn1" onclick="searchTx()">Search</button>
       </div>
       <div id="search-results"></div>
@@ -362,27 +362,103 @@
       const input = document.getElementById('search-input').value.trim();
       const results = document.getElementById('search-results');
       
-      if(!input) { results.innerHTML = '<div class="sr-error">Enter a txid or address</div>'; return; }
+      if(!input) { results.innerHTML = '<div class="sr-error">Enter a txid, block hash, address, or block height</div>'; return; }
       
       results.innerHTML = '<div class="sr-loading">Searching...</div>';
       
+      // Detect input type
       const isTxid = /^[a-fA-F0-9]{64}$/.test(input);
-      const isAddress = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(input) || /^bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71}$/.test(input);
+      const isBlockHash = /^[a-fA-F0-9]{64}$/.test(input);
+      const isBlockHeight = /^\d+$/.test(input);
+      const isAddressLegacy = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(input);
+      const isAddressSegwit = /^bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71}$/.test(input);
+      const isAddress = isAddressLegacy || isAddressSegwit;
       
-      if(!isTxid && !isAddress) {
-        results.innerHTML = '<div class="sr-error">Invalid format. Use 64-char txid or valid Bitcoin address</div>';
+      if(!isTxid && !isBlockHash && !isBlockHeight && !isAddress) {
+        results.innerHTML = '<div class="sr-error">Invalid format. Use txid (64 chars), block hash, block #, or Bitcoin address</div>';
         return;
       }
       
       try {
-        if(isTxid) await searchTransaction(input, results);
-        else await searchAddress(input, results);
+        if(isTxid || isBlockHash) {
+          // Could be txid or block hash - try tx first, then block
+          await searchTransactionOrBlock(input, results);
+        } else if(isBlockHeight) {
+          await searchBlockByHeight(parseInt(input), results);
+        } else {
+          await searchAddress(input, results);
+        }
       } catch(e) {
         results.innerHTML = '<div class="sr-error">Error: ' + e.message + '</div>';
       }
     }
     
-    async function searchTransaction(txid, container) {
+    async function searchTransactionOrBlock(hash, container) {
+      // Try as transaction first
+      try {
+        const r = await fetch('https://mempool.space/api/tx/' + hash);
+        if(r.ok) {
+          const tx = await r.json();
+          showPendingTx(tx, container);
+          return;
+        }
+      } catch(e) {}
+      
+      // Try as confirmed transaction
+      try {
+        const r = await fetch('https://mempool.space/api/tx/' + hash);
+        if(r.ok) {
+          const tx = await r.json();
+          showConfirmedTx(tx, container);
+          return;
+        }
+      } catch(e) {}
+      
+      // Try as block hash
+      try {
+        const r = await fetch('https://mempool.space/api/block/' + hash);
+        if(r.ok) {
+          const block = await r.json();
+          showBlockInfo(block, container);
+          return;
+        }
+      } catch(e) {}
+      
+      container.innerHTML = '<div class="sr-error">Not found - could be txid, block hash, or address</div>';
+    }
+    
+    async function searchBlockByHeight(height, container) {
+      try {
+        const r = await fetch('https://mempool.space/api/block-height/' + height);
+        if(!r.ok) { container.innerHTML = '<div class="sr-error">Block not found</div>'; return; }
+        
+        const hash = await r.text();
+        const blockResp = await fetch('https://mempool.space/api/block/' + hash);
+        const block = await blockResp.json();
+        showBlockInfo(block, container);
+      } catch(e) {
+        container.innerHTML = '<div class="sr-error">Error: ' + e.message + '</div>';
+      }
+    }
+    
+    function showBlockInfo(block, container) {
+      container.innerHTML = `
+        <div class="sr-card confirmed">
+          <div class="sr-header">
+            <div class="sr-txid">Block #${block.height}</div>
+            <span class="sr-status confirmed">🧱 Block</span>
+          </div>
+          <div class="sr-grid">
+            <div class="sr-item"><div class="sr-label">Hash</div><div class="sr-value" style="font-size:0.75rem;word-break:break-all">${block.id?.slice(0,32)}...</div></div>
+            <div class="sr-item"><div class="sr-label">Transactions</div><div class="sr-value">${block.extras?.txCount || 0}</div></div>
+            <div class="sr-item"><div class="sr-label">Size</div><div class="sr-value">${((block.size || 0)/1000).toFixed(2)} MB</div></div>
+            <div class="sr-item"><div class="sr-label">Weight</div><div class="sr-value">${((block.weight || 0)/1000).toFixed(2)} MWU</div></div>
+            <div class="sr-item"><div class="sr-label">Timestamp</div><div class="sr-value">${new Date(block.timestamp * 1000).toLocaleString()}</div></div>
+            <div class="sr-item"><div class="sr-label">Difficulty</div><div class="sr-value">${((block.difficulty || 0)/1e12).toFixed(2)} T</div></div>
+          </div>
+        </div>
+      `;
+    }
       // Check mempool first
       try {
         const r = await fetch('https://mempool.space/api/tx/' + txid);
