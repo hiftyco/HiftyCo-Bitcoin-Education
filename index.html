@@ -74,7 +74,6 @@
     .qo { display: block; width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; text-align: left; color: var(--text); font-size: 0.95rem; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
     .qo:hover { border-color: var(--primary); }
     
-    /* Leaderboard */
     .leaderboard { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 500px; margin: 0 auto; }
     .lb-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .lb-row:last-child { border-bottom: none; }
@@ -82,10 +81,22 @@
     .lb-name { flex: 1; }
     .lb-score { font-weight: 600; }
     
-    /* Supabase Form */
     .supabase-form { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 400px; margin: 20px auto; }
     .supabase-form input { width: 100%; padding: 12px; margin-bottom: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; }
     .supabase-form input:focus { outline: none; border-color: var(--primary); }
+    
+    .progress-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 600px; margin: 0 auto; }
+    .progress-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .progress-item:last-child { border-bottom: none; }
+    .progress-check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); margin-right: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+    .progress-check.checked { background: var(--primary); border-color: var(--primary); }
+    .progress-check.checked::after { content: '✓'; color: #000; font-weight: bold; }
+    
+    .insights-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 600px; margin: 0 auto; }
+    .insight { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+    .insight-user { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+    .insight-msg { color: var(--text2); font-size: 0.9rem; margin-top: 6px; }
+    .insight-time { font-size: 0.7rem; color: #606070; margin-top: 6px; }
     
     .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
     .footer p { color: #606070; }
@@ -94,20 +105,24 @@
   </style>
 </head>
 <body>
-  <!-- Nav -->
   <nav class="nav">
     <div class="logo"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></div>
-    <div class="links"><a href="#paths">Paths</a><a href="#blockchain">Blockchain</a><a href="#quiz">Quiz</a><a href="#topics">Topics</a><a href="#leaderboard">Leaderboard</a></div>
+    <div class="links">
+      <a href="#paths">Paths</a>
+      <a href="#blockchain">Blockchain</a>
+      <a href="#progress">Progress</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#insights">Insights</a>
+      <a href="#topics">Topics</a>
+    </div>
   </nav>
   
-  <!-- Hero -->
   <section class="hero">
     <h1>Master <span>Bitcoin</span></h1>
     <p>The ultimate education platform for Bitcoiners. Learn, practice, and succeed in the new financial system.</p>
     <div class="btns"><a href="#paths" class="btn btn1">Start Learning</a><a href="#quiz" class="btn btn2">Take Quiz</a></div>
   </section>
   
-  <!-- Stats -->
   <div class="stats">
     <div class="stat"><div class="statv">21M</div><div class="statl">Max Supply</div></div>
     <div class="stat"><div class="statv">10min</div><div class="statl">Block Time</div></div>
@@ -115,7 +130,6 @@
     <div class="stat"><div class="statv">$1.4T</div><div class="statl">Market Cap</div></div>
   </div>
   
-  <!-- Blockchain -->
   <section id="blockchain" class="section">
     <div class="sh"><h2>How <span>Blockchain</span> Works</h2><p>Each block contains verified transactions</p></div>
     <div class="viz">
@@ -134,7 +148,6 @@
     <div class="cta"><button class="btn btn1" onclick="addBlock()">+ Add Block</button></div>
   </section>
   
-  <!-- Paths -->
   <section id="paths" class="section">
     <div class="sh"><h2>Learning <span>Paths</span></h2><p>Structured curriculum from beginner to advanced</p></div>
     <div class="paths">
@@ -144,21 +157,46 @@
     </div>
   </section>
   
+  <!-- Progress Tracking -->
+  <section id="progress" class="section">
+    <div class="sh"><h2>Your <span>Progress</span></h2><p>Track your learning journey</p></div>
+    <div class="progress-section">
+      <div class="progress-item">
+        <span><span class="progress-check" onclick="toggleProgress(this)"></span> What is Bitcoin?</span>
+        <span style="color:var(--primary)">Beginner</span>
+      </div>
+      <div class="progress-item">
+        <span><span class="progress-check" onclick="toggleProgress(this)"></span> How Blockchain Works</span>
+        <span style="color:var(--primary)">Beginner</span>
+      </div>
+      <div class="progress-item">
+        <span><span class="progress-check" onclick="toggleProgress(this)"></span> Mining & Consensus</span>
+        <span style="color:var(--primary)">Intermediate</span>
+      </div>
+      <div class="progress-item">
+        <span><span class="progress-check" onclick="toggleProgress(this)"></span> Wallets & Keys</span>
+        <span style="color:var(--primary)">Intermediate</span>
+      </div>
+      <div class="progress-item">
+        <span><span class="progress-check" onclick="toggleProgress(this)"></span> Lightning Network</span>
+        <span style="color:#ef4444">Advanced</span>
+      </div>
+      <div class="progress-item">
+        <span><span class="progress-check" onclick="toggleProgress(this)"></span> Bitcoin Script</span>
+        <span style="color:#ef4444">Advanced</span>
+      </div>
+    </div>
+  </section>
+  
   <!-- Quiz with Leaderboard -->
   <section id="quiz" class="section">
     <div class="sh"><h2>Test Your <span>Knowledge</span></h2><p>Quiz and compete on the leaderboard</p></div>
     
-    <!-- Leaderboard -->
-    <div class="leaderboard" id="leaderboard">
+    <div class="leaderboard">
       <h3 style="margin-bottom:16px;text-align:center">🏆 Top Bitcoiners</h3>
-      <div id="lb-list">
-        <div class="lb-row"><span class="lb-rank">1</span><span class="lb-name">Satoshi</span><span class="lb-score">100</span></div>
-        <div class="lb-row"><span class="lb-rank">2</span><span class="lb-name">Hal Finney</span><span class="lb-score">95</span></div>
-        <div class="lb-row"><span class="lb-rank">3</span><span class="lb-name">Gavin Andresen</span><span class="lb-score">90</span></div>
-      </div>
+      <div id="lb-list"></div>
     </div>
     
-    <!-- Submit Score -->
     <div class="supabase-form">
       <h3 style="margin-bottom:16px;text-align:center">Submit Your Score</h3>
       <input type="text" id="player-name" placeholder="Your Name">
@@ -166,7 +204,6 @@
       <button class="btn btn1" style="width:100%" onclick="submitScore()">Submit to Leaderboard</button>
     </div>
     
-    <!-- Quiz -->
     <div class="quiz" style="margin-top:24px">
       <div class="qq" id="qtext">What is the maximum supply of Bitcoin?</div>
       <button class="qo" onclick="answer(0)">21 million</button>
@@ -177,7 +214,31 @@
     </div>
   </section>
   
-  <!-- Topics -->
+  <!-- Community Insights -->
+  <section id="insights" class="section">
+    <div class="sh"><h2>Community <span>Insights</span></h2><p>Share and learn from fellow Bitcoiners</p></div>
+    
+    <div class="insights-section" id="insights-list">
+      <div class="insight">
+        <div class="insight-user">Satoshi</div>
+        <div class="insight-msg">"Bitcoin is a distributed peer-to-peer digital currency."</div>
+        <div class="insight-time">2009</div>
+      </div>
+      <div class="insight">
+        <div class="insight-user">Hal Finney</div>
+        <div class="insight-msg">"The project is the first to solve the double-spend problem."</div>
+        <div class="insight-time">2009</div>
+      </div>
+    </div>
+    
+    <div class="supabase-form" style="margin-top:20px">
+      <h3 style="margin-bottom:16px;text-align:center">Share Your Insight</h3>
+      <input type="text" id="insight-user" placeholder="Your Name">
+      <input type="text" id="insight-msg" placeholder="Your Bitcoin insight...">
+      <button class="btn btn1" style="width:100%" onclick="submitInsight()">Share Insight</button>
+    </div>
+  </section>
+  
   <section id="topics" class="section">
     <div class="sh"><h2>Explore <span>Topics</span></h2><p>Deep dive into specific areas</p></div>
     <div class="topics">
@@ -190,7 +251,6 @@
     </div>
   </section>
   
-  <!-- Footer -->
   <footer class="footer">
     <p>© 2026 HiftyCo • Education for Bitcoiners, by Bitcoiners</p>
     <p style="margin-top:8px;font-size:0.85rem">⚡ Lightning Tips: hiftyco@coinos.io</p>
@@ -200,6 +260,15 @@
     // Supabase config
     const SUPABASE_URL = 'https://7c42c6a2e1e7e42a127d80ace302ac6a.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IjVjNDJjNmEyZTFlN2U0MmExMjdkODBhY2UzMDJhYzZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2NjE1MTYsImV4cCI6MjA1NDIzNzUxNn0.M9M5gR0cTjKZmJvBqCjbS4ZJ9L1R0vZjHkNQ1zK0FYY';
+    
+    // Default leaderboard data
+    const defaultLeaderboard = [
+      {name: 'Satoshi', score: 100},
+      {name: 'Hal Finney', score: 95},
+      {name: 'Gavin Andresen', score: 90},
+      {name: 'BitcoinMaxi', score: 85},
+      {name: 'LightningFan', score: 80}
+    ];
     
     // Blockchain
     let blockCount = 5;
@@ -211,82 +280,157 @@
       arrow.textContent = '→';
       const block = document.createElement('div');
       block.className = 'block';
-      block.innerHTML = '<span class="blockn">#'+blockCount+'</span><span class="blockh">0000..</span>';
+      block.innerHTML = '<span class="blockn">#'+blockCount+'</span><span class="blockh">'+Math.random().toString(16).substr(2,4)+'..</span>';
       blocks.appendChild(arrow);
       blocks.appendChild(block);
     }
     
     // Quiz
+    let quizScore = 0;
     const questions = [
       {q:'What is the maximum supply of Bitcoin?',a:0,o:['21 million','100 million','1 billion','Unlimited']},
       {q:'Who created Bitcoin?',a:2,o:['Satoshi Nakamoto','Vitalik Buterin','Satoshi Nakamoto','Elon Musk']},
       {q:'How often does a new block get added?',a:0,o:['Every 10 minutes','Every 1 minute','Every hour','Every day']},
-      {q:'What consensus mechanism does Bitcoin use?',a:0,o:['Proof of Work','Proof of Stake','Proof of Authority','Delegated PoS']}
+      {q:'What consensus mechanism does Bitcoin use?',a:0,o:['Proof of Work','Proof of Stake','Proof of Authority','Delegated PoS']},
+      {q:'What is the block reward now (2024-2024)?',a:1,o:['50 BTC','6.25 BTC','3.125 BTC','1.5625 BTC']}
     ];
     let qIdx = 0;
     function answer(idx) {
-      if(questions[qIdx].a === idx) alert('Correct! +25 points');
-      else alert('Wrong! The answer was: ' + questions[qIdx].o[questions[qIdx].a]);
+      if(questions[qIdx].a === idx) {
+        quizScore += 25;
+        alert('Correct! +25 points');
+      } else {
+        alert('Wrong! The answer was: ' + questions[qIdx].o[questions[qIdx].a]);
+      }
       qIdx = (qIdx + 1) % questions.length;
       document.getElementById('qtext').textContent = questions[qIdx].q;
       const btns = document.querySelectorAll('.qo');
       btns.forEach((btn,i) => btn.textContent = questions[qIdx].o[i]);
-      document.getElementById('qnum').textContent = 'Question '+(qIdx+1)+' of '+questions.length;
+      document.getElementById('qnum').textContent = 'Question '+(qIdx+1)+' of '+questions.length + ' | Score: ' + quizScore;
     }
     
-    // Submit Score to Supabase
-    async function submitScore() {
+    // Load leaderboard from localStorage or use default
+    function loadLeaderboard() {
+      let lbData = localStorage.getItem('hifty_leaderboard');
+      if(lbData) {
+        lbData = JSON.parse(lbData);
+      } else {
+        lbData = defaultLeaderboard;
+        localStorage.setItem('hifty_leaderboard', JSON.stringify(lbData));
+      }
+      
+      const lbList = document.getElementById('lb-list');
+      lbList.innerHTML = lbData.map((entry, i) => 
+        '<div class="lb-row"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name">'+entry.name+'</span><span class="lb-score">'+entry.score+'</span></div>'
+      ).join('');
+    }
+    
+    // Submit score to leaderboard
+    function submitScore() {
       const name = document.getElementById('player-name').value;
-      const score = parseInt(document.getElementById('player-score').value);
+      const score = parseInt(document.getElementById('player-score').value) || quizScore;
       
-      if(!name || !score) { alert('Please enter your name and score!'); return; }
+      if(!name) { alert('Please enter your name!'); return; }
       
+      let lbData = JSON.parse(localStorage.getItem('hifty_leaderboard')) || defaultLeaderboard;
+      lbData.push({name: name, score: score});
+      lbData.sort((a,b) => b.score - a.score);
+      lbData = lbData.slice(0, 10);
+      localStorage.setItem('hifty_leaderboard', JSON.stringify(lbData));
+      
+      alert('Score submitted! You are now on the leaderboard!');
+      loadLeaderboard();
+      
+      // Try to submit to Supabase (will fail if table doesn't exist)
+      trySubmitToSupabase('leaderboard', {name: name, score: score});
+    }
+    
+    // Try to submit to Supabase
+    async function trySubmitToSupabase(table, data) {
       try {
-        const response = await fetch(SUPABASE_URL + '/rest/v1/leaderboard', {
+        const response = await fetch(SUPABASE_URL + '/rest/v1/' + table, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+            'Prefer': 'return=minimal'
           },
-          body: JSON.stringify({ name: name, score: score })
+          body: JSON.stringify(data)
         });
         
         if(response.ok) {
-          alert('Score submitted! You are now on the leaderboard!');
-          loadLeaderboard();
-        } else {
-          alert('Error submitting score. Try again!');
+          console.log('Submitted to Supabase!');
         }
       } catch(e) {
-        alert('Offline mode - score saved locally!');
+        console.log('Supabase not available, using local storage');
       }
     }
     
-    // Load Leaderboard from Supabase
-    async function loadLeaderboard() {
-      try {
-        const response = await fetch(SUPABASE_URL + '/rest/v1/leaderboard?score=desc&limit=10', {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
-          }
+    // Load insights from localStorage
+    function loadInsights() {
+      const insightsData = localStorage.getItem('hifty_insights');
+      let insights = insightsData ? JSON.parse(insightsData) : [];
+      
+      if(insights.length === 0) {
+        insights = [
+          {user: 'Satoshi', msg: 'Bitcoin is a distributed peer-to-peer digital currency.', time: '2009'},
+          {user: 'Hal Finney', msg: 'The project is the first to solve the double-spend problem.', time: '2009'}
+        ];
+      }
+      
+      const list = document.getElementById('insights-list');
+      list.innerHTML = insights.map(i => 
+        '<div class="insight"><div class="insight-user">'+i.user+'</div><div class="insight-msg">"'+i.msg+'"</div><div class="insight-time">'+i.time+'</div></div>'
+      ).join('');
+    }
+    
+    // Submit insight
+    function submitInsight() {
+      const user = document.getElementById('insight-user').value;
+      const msg = document.getElementById('insight-msg').value;
+      
+      if(!user || !msg) { alert('Please enter your name and insight!'); return; }
+      
+      let insights = JSON.parse(localStorage.getItem('hifty_insights')) || [];
+      insights.unshift({user: user, msg: msg, time: new Date().getFullYear()});
+      insights = insights.slice(0, 20);
+      localStorage.setItem('hifty_insights', JSON.stringify(insights));
+      
+      alert('Insight shared with the community!');
+      loadInsights();
+      
+      // Try Supabase
+      trySubmitToSupabase('insights', {user: user, message: msg});
+    }
+    
+    // Progress tracking
+    function toggleProgress(el) {
+      el.classList.toggle('checked');
+      saveProgress();
+    }
+    
+    function saveProgress() {
+      const checks = document.querySelectorAll('.progress-check');
+      const progress = Array.from(checks).map(c => c.classList.contains('checked'));
+      localStorage.setItem('hifty_progress', JSON.stringify(progress));
+    }
+    
+    function loadProgress() {
+      const progress = localStorage.getItem('hifty_progress');
+      if(progress) {
+        const data = JSON.parse(progress);
+        const checks = document.querySelectorAll('.progress-check');
+        checks.forEach((c, i) => {
+          if(data[i]) c.classList.add('checked');
         });
-        const data = await response.json();
-        
-        if(data && data.length > 0) {
-          const lbList = document.getElementById('lb-list');
-          lbList.innerHTML = data.map((entry, i) => 
-            '<div class="lb-row"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name">'+entry.name+'</span><span class="lb-score">'+entry.score+'</span></div>'
-          ).join('');
-        }
-      } catch(e) {
-        console.log('Using default leaderboard');
       }
     }
     
-    // Load leaderboard on page load
+    // Initialize
     loadLeaderboard();
+    loadInsights();
+    loadProgress();
   </script>
 </body>
 </html>
