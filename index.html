@@ -342,15 +342,29 @@
     ];
     
     // REAL-TIME Bitcoin Data - Simulated with realistic calculations
-    // Note: Due to CORS restrictions on blockchain APIs, we simulate real-time data
-    // that mathematically represents the current state of the Bitcoin network
+    // Updates every 10 seconds to show "live" blockchain data
     
-    let currentBlockHeight = 939590; // Starting block height
+    let currentBlockHeight = 939590;
     
-    async function loadMempool() {
+    // Call immediately on page load
+    (function() {
       // Calculate current block based on time (approx 1 block per 10 minutes)
       const now = Date.now();
-      const minutesSinceStart = (now - 1772724000000) / 60000; // Since Dec 2026
+      const startTime = new Date('2026-03-06T00:00:00Z').getTime();
+      const minutesSinceStart = (now - startTime) / 60000;
+      currentBlockHeight = 939590 + Math.floor(minutesSinceStart / 10);
+      
+      updateDisplay();
+      
+      // Auto-refresh every 10 seconds
+      setInterval(updateDisplay, 10000);
+    })();
+    
+    function updateDisplay() {
+      // Recalculate block height
+      const now = Date.now();
+      const startTime = new Date('2026-03-06T00:00:00Z').getTime();
+      const minutesSinceStart = (now - startTime) / 60000;
       currentBlockHeight = 939590 + Math.floor(minutesSinceStart / 10);
       
       // Get mempool data (simulated based on network activity)
@@ -410,13 +424,12 @@
           '</span></div>';
       }
       txsContainer.innerHTML = txHTML;
-      
-      // Auto-refresh every 10 seconds for truly real-time feel
-      setTimeout(loadMempool, 10000);
     }
     
-    // Start loading
-    loadMempool();
+    // Legacy function for button click
+    function loadMempool() {
+      updateDisplay();
+    }
               '<span style="color:#606070;font-size:0.55rem">'+b.tx_count.toLocaleString()+' txs</span>' +
             '</div>' +
             (i < 5 ? '<span style="color:var(--primary);font-size:1.2rem">→</span>' : '')
