@@ -3,235 +3,299 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blockchain - HiftyCo</title>
+  <title>Bitcoin Blockchain | HiftyCo</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --btc-orange: #f7931a;
+      --btc-light: #ffb347;
+      --btc-dark: #c4770e;
+      --bg-dark: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-elevated: #1a1a25;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --text-muted: #606070;
+      --success: #00d4aa;
+      --danger: #ef4444;
+      --border: #2a2a3a;
+      --glow: rgba(247, 147, 26, 0.4);
+    }
+    
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; }
-    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; background-image: radial-gradient(ellipse at top, rgba(247,147,26,0.08) 0%, transparent 50%); }
     
-    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; }
-    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
-    .logo .btc { color: var(--primary); font-size: 1.5rem; }
-    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; }
+    /* Navigation */
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(10,10,15,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; z-index: 1000; backdrop-filter: blur(20px); }
+    .logo { display: flex; align-items: center; gap: 12px; font-size: 1.4rem; font-weight: 700; }
+    .logo .btc { color: var(--btc-orange); font-size: 1.6rem; text-shadow: 0 0 20px var(--glow); }
+    .logo .tag { background: linear-gradient(135deg, var(--btc-orange), var(--btc-light)); color: #000; padding: 4px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
     .logo a { text-decoration: none; color: inherit; }
-    .links { display: flex; gap: 28px; }
-    .links a { color: var(--text2); text-decoration: none; font-weight: 500; transition: color 0.2s; }
-    .links a:hover, .links a.active { color: var(--primary); }
+    .links { display: flex; gap: 32px; }
+    .links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: all 0.3s; position: relative; }
+    .links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--btc-orange); transition: width 0.3s; }
+    .links a:hover, .links a.active { color: var(--btc-orange); }
+    .links a:hover::after, .links a.active::after { width: 100%; }
     
-    .section { padding: 100px 20px 60px; max-width: 1200px; margin: 0 auto; }
-    .sh { text-align: center; margin-bottom: 28px; }
-    .sh h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; }
-    .sh h1 span { background: linear-gradient(135deg, var(--primary), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .sh p { color: var(--text2); }
+    /* Main Container */
+    .container { max-width: 1300px; margin: 0 auto; padding: 100px 24px 60px; }
     
-    .live-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.15); border: 1px solid var(--success); border-radius: 20px; padding: 8px 16px; font-size: 0.85rem; font-weight: 600; color: var(--success); margin-bottom: 16px; animation: badgePulse 2s infinite; }
-    .live-badge::before { content: ''; width: 10px; height: 10px; background: var(--success); border-radius: 50%; animation: dotPulse 1s infinite; }
-    @keyframes badgePulse { 0%,100% { box-shadow: 0 0 10px rgba(0,212,170,0.3); } 50% { box-shadow: 0 0 20px rgba(0,212,170,0.6); } }
-    @keyframes dotPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+    /* Header */
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 12px; background: linear-gradient(135deg, var(--btc-orange), var(--btc-light), var(--btc-orange)); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 3s ease infinite; }
+    @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .header p { color: var(--text-secondary); font-size: 1.1rem; }
     
-    /* SEARCH */
-    .search-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 28px; position: relative; overflow: hidden; }
-    .search-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--success), #ff6b6b, var(--primary)); background-size: 300% 100%; animation: gradientFlow 3s linear infinite; }
-    @keyframes gradientFlow { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
-    .search-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; text-align: center; }
-    .search-box { display: flex; gap: 12px; max-width: 700px; margin: 0 auto; }
-    .search-box input { flex: 1; padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.95rem; font-family: monospace; transition: all 0.3s; }
-    .search-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 20px rgba(247,147,26,0.2); }
-    .search-box button { padding: 14px 28px; background: var(--primary); border: none; border-radius: 12px; color: #000; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-    .search-box button:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,147,26,0.4); }
-    .results { margin-top: 16px; }
+    .live-indicator { display: inline-flex; align-items: center; gap: 10px; background: rgba(0,212,170,0.1); border: 1px solid var(--success); border-radius: 30px; padding: 10px 20px; font-size: 0.9rem; font-weight: 600; color: var(--success); margin-bottom: 20px; animation: livePulse 2s ease-in-out infinite; }
+    .live-indicator .dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; animation: dotBlink 1s ease-in-out infinite; }
+    @keyframes livePulse { 0%, 100% { box-shadow: 0 0 15px rgba(0,212,170,0.3); } 50% { box-shadow: 0 0 30px rgba(0,212,170,0.5); } }
+    @keyframes dotBlink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.9); } }
     
-    /* SEARCH RESULT CARDS */
-    .sr-card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; animation: cardIn 0.4s ease-out; }
-    @keyframes cardIn { from { opacity: 0; transform: translateY(-15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .sr-card.pending { border-color: var(--primary); background: linear-gradient(135deg, rgba(247,147,26,0.08) 0%, var(--bg) 100%); }
-    .sr-card.confirmed { border-color: var(--success); background: linear-gradient(135deg, rgba(0,212,170,0.08) 0%, var(--bg) 100%); }
-    .sr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-    .sr-txid { font-family: monospace; color: var(--primary); font-size: 0.8rem; word-break: break-all; flex: 1; }
-    .sr-status { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-    .sr-status.pending { background: rgba(247,147,26,0.2); color: var(--primary); }
-    .sr-status.confirmed { background: rgba(0,212,170,0.2); color: var(--success); }
-    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; }
-    .sr-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-    .sr-value { font-size: 1rem; font-weight: 600; }
-    .sr-value.btc { color: var(--primary); }
+    /* Search */
+    .search-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 28px; margin-bottom: 32px; position: relative; overflow: hidden; }
+    .search-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--btc-orange), var(--success), var(--btc-orange), var(--success)); background-size: 300% 100%; animation: searchGradient 4s linear infinite; }
+    @keyframes searchGradient { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+    .search-title { text-align: center; font-size: 1.2rem; font-weight: 600; margin-bottom: 16px; }
+    .search-box { display: flex; gap: 14px; max-width: 750px; margin: 0 auto; }
+    .search-box input { flex: 1; padding: 16px 20px; background: var(--bg-dark); border: 2px solid var(--border); border-radius: 14px; color: var(--text-primary); font-size: 0.95rem; font-family: 'Space Grotesk', monospace; transition: all 0.3s; }
+    .search-box input:focus { outline: none; border-color: var(--btc-orange); box-shadow: 0 0 25px rgba(247,147,26,0.2); }
+    .search-box input::placeholder { color: var(--text-muted); }
+    .search-box button { padding: 16px 32px; background: linear-gradient(135deg, var(--btc-orange), var(--btc-dark)); border: none; border-radius: 14px; color: #000; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; }
+    .search-box button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(247,147,26,0.4); }
+    .search-results { margin-top: 20px; }
+    
+    /* Search Result Card */
+    .sr-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 18px; padding: 24px; margin-bottom: 14px; animation: cardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes cardPop { from { opacity: 0; transform: scale(0.95) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .sr-card.pending { border-color: var(--btc-orange); box-shadow: 0 0 30px rgba(247,147,26,0.15); }
+    .sr-card.confirmed { border-color: var(--success); box-shadow: 0 0 30px rgba(0,212,170,0.15); }
+    .sr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+    .sr-txid { font-family: monospace; color: var(--btc-orange); font-size: 0.85rem; word-break: break-all; flex: 1; }
+    .sr-status { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+    .sr-status.pending { background: rgba(247,147,26,0.15); color: var(--btc-orange); }
+    .sr-status.confirmed { background: rgba(0,212,170,0.15); color: var(--success); }
+    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+    .sr-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .sr-value { font-size: 1.05rem; font-weight: 600; }
+    .sr-value.btc { color: var(--btc-orange); }
     .sr-value.sat { color: var(--danger); }
     
-    /* STATS GRID */
-    .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 28px; }
-    .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; transition: all 0.3s; animation: statFade 0.5s ease-out backwards; }
+    /* Stats Grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 36px; }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 22px; text-align: center; transition: all 0.3s; animation: statEnter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards; }
     .stat-card:nth-child(1) { animation-delay: 0.1s; }
     .stat-card:nth-child(2) { animation-delay: 0.15s; }
     .stat-card:nth-child(3) { animation-delay: 0.2s; }
     .stat-card:nth-child(4) { animation-delay: 0.25s; }
     .stat-card:nth-child(5) { animation-delay: 0.3s; }
     .stat-card:nth-child(6) { animation-delay: 0.35s; }
-    @keyframes statFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .stat-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(247,147,26,0.15); }
-    .stat-value { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-    .stat-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+    @keyframes statEnter { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .stat-card:hover { transform: translateY(-6px); border-color: var(--btc-orange); box-shadow: 0 15px 40px rgba(247,147,26,0.2); }
+    .stat-icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--btc-orange); text-shadow: 0 0 20px var(--glow); }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 6px; }
     
-    /* CHAIN VISUALIZATION - UNIQUE ANIMATION */
-    .chain-section { margin-bottom: 28px; }
-    .chain-title { text-align: center; font-size: 1rem; color: var(--text2); margin-bottom: 20px; }
-    .chain-container { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; padding: 20px 0; position: relative; }
+    /* Chain Visualization - Main Feature */
+    .chain-section { margin-bottom: 36px; }
+    .chain-title { text-align: center; font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .chain-title .icon { animation: chainBounce 2s ease-in-out infinite; }
+    @keyframes chainBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    
+    .chain-container { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; padding: 30px 0; }
     
     .block-wrapper { display: flex; align-items: center; }
     
     .chain-block { 
-      width: 110px; height: 110px; 
-      background: linear-gradient(145deg, #1a1a28, #252535); 
-      border: 2px solid var(--primary); 
-      border-radius: 16px; 
+      width: 130px; height: 130px; 
+      background: linear-gradient(145deg, var(--bg-elevated), var(--bg-card)); 
+      border: 2px solid var(--btc-orange); 
+      border-radius: 20px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
       font-weight: 700; 
-      position: relative;
       cursor: pointer;
-      transition: all 0.3s;
-      animation: blockFloat 3s ease-in-out infinite;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: blockReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
     }
-    .chain-block:nth-child(odd) { animation-delay: -0.5s; }
-    .chain-block:nth-child(even) { animation-delay: -1s; }
-    @keyframes blockFloat {
-      0%, 100% { transform: translateY-shadow: 0(0); box 0 25px rgba(247,147,26,0.4); }
-      50% { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(247,147,26,0.6); }
-    }
-    .chain-block:hover { 
-      transform: scale(1.15) translateY(-10px); 
-      border-color: var(--success); 
-      z-index: 100;
-      box-shadow: 0 25px 60px rgba(247,147,26,0.5);
-    }
+    .chain-block:nth-child(1) { animation-delay: 0s; }
+    .chain-block:nth-child(3) { animation-delay: 0.1s; }
+    .chain-block:nth-child(5) { animation-delay: 0.2s; }
+    .chain-block:nth-child(7) { animation-delay: 0.3s; }
+    .chain-block:nth-child(9) { animation-delay: 0.4s; }
+    .chain-block:nth-child(11) { animation-delay: 0.5s; }
+    @keyframes blockReveal { from { opacity: 0; transform: scale(0.5) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
     
-    /* Animated glow ring */
+    /* Block glow effect */
     .chain-block::before {
       content: '';
       position: absolute;
-      inset: -4px;
-      border-radius: 20px;
-      background: linear-gradient(45deg, var(--primary), var(--success), var(--primary));
+      inset: -3px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--btc-orange), var(--btc-light), var(--success), var(--btc-orange));
+      background-size: 300% 300%;
       z-index: -1;
-      opacity: 0.5;
-      animation: ringSpin 2s linear infinite;
+      opacity: 0.6;
+      animation: blockGlow 3s ease infinite;
     }
-    @keyframes ringSpin { 100% { transform: rotate(360deg); } }
+    @keyframes blockGlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     
-    /* Inner shimmer */
+    /* Inner shine */
     .chain-block::after {
       content: '';
       position: absolute;
       top: 0; left: -100%;
       width: 100%; height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      animation: shimmer 2s infinite;
+      animation: blockShine 3s infinite;
     }
-    @keyframes shimmer { 100% { left: 100%; } }
+    @keyframes blockShine { 0% { left: -100%; } 50%, 100% { left: 100%; } }
     
-    .chain-block .block-num { font-size: 0.75rem; color: var(--primary); font-weight: 700; margin-bottom: 4px; }
-    .chain-block .block-txs { font-size: 0.6rem; color: var(--text2); }
-    .chain-block .block-size { font-size: 0.55rem; color: var(--success); margin-top: 4px; }
-    .chain-block .block-time { font-size: 0.5rem; color: #666; margin-top: 2px; }
+    .chain-block:hover { 
+      transform: scale(1.15) translateY(-15px); 
+      border-color: var(--success);
+      z-index: 100;
+      box-shadow: 0 30px 60px rgba(247,147,26,0.5);
+    }
+    
+    .chain-block:hover::before { opacity: 1; }
+    
+    .chain-block .block-height { font-size: 0.85rem; color: var(--btc-orange); font-weight: 700; margin-bottom: 6px; text-shadow: 0 0 10px var(--glow); }
+    .chain-block .block-txs { font-size: 0.7rem; color: var(--text-secondary); }
+    .chain-block .block-size { font-size: 0.65rem; color: var(--success); margin-top: 4px; }
+    .chain-block .block-time { font-size: 0.6rem; color: var(--text-muted); margin-top: 6px; padding: 3px 8px; background: rgba(255,255,255,0.05); border-radius: 10px; }
+    
+    /* Block Transactions Popup */
+    .block-txs-popup {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%; max-width: 800px;
+      max-height: 80vh;
+      background: var(--bg-card);
+      border: 2px solid var(--btc-orange);
+      border-radius: 24px;
+      padding: 28px;
+      z-index: 2000;
+      overflow-y: auto;
+      animation: popupIn 0.3s ease;
+    }
+    @keyframes popupIn { from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+    .block-txs-popup.active { display: block; }
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1999;
+    }
+    .popup-overlay.active { display: block; }
+    .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .popup-title { font-size: 1.3rem; font-weight: 700; color: var(--btc-orange); }
+    .popup-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 8px; transition: color 0.2s; }
+    .popup-close:hover { color: var(--danger); }
+    .popup-tx { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .popup-tx:last-child { border-bottom: none; }
+    .popup-tx-hash { font-family: monospace; color: var(--btc-orange); font-size: 0.85rem; }
+    .popup-tx-amt { color: var(--success); font-weight: 600; }
     
     .chain-arrow { 
-      color: var(--primary); 
-      font-size: 1.8rem; 
-      animation: arrowPulse 1.5s ease-in-out infinite;
-      margin: 0 4px;
+      color: var(--btc-orange); 
+      font-size: 2rem; 
+      animation: arrowFlow 1.5s ease-in-out infinite;
+      margin: 0 6px;
+      text-shadow: 0 0 15px var(--glow);
     }
-    @keyframes arrowPulse {
-      0%, 100% { opacity: 0.4; transform: translateX(0) scale(1); }
-      50% { opacity: 1; transform: translateX(5px) scale(1.2); }
+    @keyframes arrowFlow {
+      0%, 100% { opacity: 0.5; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(8px); }
     }
     
-    /* FEE CARDS */
-    .fee-section { margin-bottom: 28px; }
-    .fee-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 14px; }
-    .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    /* Fee Cards */
+    .fee-section { margin-bottom: 36px; }
+    .fee-title { text-align: center; font-size: 1rem; color: var(--text-secondary); margin-bottom: 16px; }
+    .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .fee-card { 
-      background: var(--bg2); 
-      border-radius: 16px; 
-      padding: 24px; 
+      background: var(--bg-card); 
+      border-radius: 18px; 
+      padding: 26px; 
       text-align: center; 
       position: relative;
       overflow: hidden;
       transition: all 0.3s;
-      animation: feeSlide 0.5s ease-out backwards;
+      animation: feeEnter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
     }
-    .fee-card:nth-child(1) { animation-delay: 0.2s; }
-    .fee-card:nth-child(2) { animation-delay: 0.3s; }
-    .fee-card:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes feeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .fee-card:hover { transform: translateY(-5px); }
+    .fee-card:nth-child(1) { animation-delay: 0.25s; }
+    .fee-card:nth-child(2) { animation-delay: 0.35s; }
+    .fee-card:nth-child(3) { animation-delay: 0.45s; }
+    @keyframes feeEnter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .fee-card:hover { transform: translateY(-6px); }
     .fee-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
     .fee-card.slow { border: 1px solid var(--success); }
     .fee-card.slow::before { background: var(--success); }
-    .fee-card.normal { border: 1px solid var(--primary); }
-    .fee-card.normal::before { background: var(--primary); }
+    .fee-card.normal { border: 1px solid var(--btc-orange); }
+    .fee-card.normal::before { background: var(--btc-orange); }
     .fee-card.fast { border: 1px solid var(--danger); }
     .fee-card.fast::before { background: var(--danger); }
-    .fee-rate { font-size: 2rem; font-weight: 700; }
+    .fee-rate { font-size: 2.2rem; font-weight: 700; }
     .fee-card.slow .fee-rate { color: var(--success); }
-    .fee-card.normal .fee-rate { color: var(--primary); }
+    .fee-card.normal .fee-rate { color: var(--btc-orange); }
     .fee-card.fast .fee-rate { color: var(--danger); }
-    .fee-time { font-size: 0.75rem; color: var(--text2); margin-top: 4px; }
-    .fee-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; margin-top: 8px; }
+    .fee-time { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+    .fee-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-top: 10px; }
     
-    /* TRANSACTIONS */
-    .tx-section { margin-bottom: 28px; }
-    .tx-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .tx-icon { animation: txBounce 1s infinite; }
-    @keyframes txBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    /* Transactions */
+    .tx-section { margin-bottom: 36px; }
+    .tx-title { text-align: center; font-size: 1rem; color: var(--text-secondary); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .tx-icon { animation: txPulse 2s ease-in-out infinite; }
+    @keyframes txPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     .tx-list { 
-      background: var(--bg2); 
+      background: var(--bg-card); 
       border: 1px solid var(--border); 
-      border-radius: 16px; 
-      max-height: 320px; 
+      border-radius: 18px; 
+      max-height: 350px; 
       overflow-y: auto; 
     }
-    .tx-list::-webkit-scrollbar { width: 6px; }
-    .tx-list::-webkit-scrollbar-track { background: var(--bg); }
-    .tx-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+    .tx-list::-webkit-scrollbar { width: 8px; }
+    .tx-list::-webkit-scrollbar-track { background: var(--bg-dark); }
+    .tx-list::-webkit-scrollbar-thumb { background: var(--btc-orange); border-radius: 4px; }
     
     .tx-item { 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      padding: 14px 18px; 
+      padding: 16px 20px; 
       border-bottom: 1px solid var(--border); 
       transition: all 0.2s;
-      animation: txSlide 0.3s ease-out backwards;
+      animation: txSlide 0.3s ease backwards;
     }
-    .tx-item:nth-child(odd) { animation-delay: 0.05s; }
-    @keyframes txSlide { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+    .tx-item:nth-child(odd) { animation-delay: 0.03s; }
+    @keyframes txSlide { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
     .tx-item:hover { background: rgba(247,147,26,0.08); }
     .tx-item:last-child { border-bottom: none; }
-    .tx-left { display: flex; align-items: center; gap: 12px; }
-    .tx-icon-mini { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: txPulse 1s infinite; }
-    @keyframes txPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
-    .tx-hash { font-family: monospace; color: var(--primary); font-size: 0.8rem; }
-    .tx-right { display: flex; align-items: center; gap: 16px; }
-    .tx-amount { color: var(--success); font-weight: 600; font-size: 0.9rem; }
-    .tx-fee { color: var(--danger); font-size: 0.75rem; }
-    .tx-confirmed .tx-icon-mini { background: var(--success); }
+    .tx-left { display: flex; align-items: center; gap: 14px; }
+    .tx-dot { width: 10px; height: 10px; border-radius: 50%; animation: txDotPulse 1.2s ease-in-out infinite; }
+    .tx-dot.pending { background: var(--btc-orange); }
+    .tx-dot.confirmed { background: var(--success); }
+    @keyframes txDotPulse { 0%, 100% { opacity: 1; box-shadow: 0 0 8px currentColor; } 50% { opacity: 0.6; box-shadow: 0 0 4px currentColor; } }
+    .tx-hash { font-family: monospace; color: var(--btc-orange); font-size: 0.85rem; }
+    .tx-right { display: flex; align-items: center; gap: 20px; }
+    .tx-amount { color: var(--success); font-weight: 600; font-size: 0.95rem; }
+    .tx-fee { color: var(--danger); font-size: 0.8rem; }
     
-    /* LOADING */
-    .loading { display: flex; align-items: center; justify-content: center; padding: 30px; color: var(--text2); gap: 10px; }
-    .loading::after { content: ''; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Footer */
+    .footer { background: var(--bg-card); border-top: 1px solid var(--border); padding: 30px; text-align: center; color: var(--text-muted); margin-top: 50px; }
     
-    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 24px; text-align: center; color: #606070; margin-top: 40px; }
-    
-    @media (max-width: 800px) { 
-      .nav { padding: 0 16px; } 
+    @media (max-width: 900px) { 
+      .nav { padding: 0 20px; } 
       .links { display: none; }
       .stats-grid { grid-template-columns: repeat(3, 1fr); }
       .fee-grid { grid-template-columns: 1fr; }
-      .chain-block { width: 80px; height: 80px; }
+      .chain-block { width: 90px; height: 90px; }
       .search-box { flex-direction: column; }
     }
   </style>
@@ -249,44 +313,44 @@
     </div>
   </nav>
   
-  <section class="section">
-    <div class="sh">
-      <div class="live-badge">⚡ REAL-TIME DATA</div>
-      <h1>Bitcoin <span>Blockchain</span></h1>
-      <p>Live network data from mempool.space</p>
+  <div class="container">
+    <div class="header">
+      <div class="live-indicator"><span class="dot"></span> LIVE BITCOIN DATA</div>
+      <h1>Bitcoin Blockchain</h1>
+      <p>Real-time network data from mempool.space • Click any block to see all transactions</p>
     </div>
     
     <!-- Search -->
     <div class="search-section">
       <div class="search-title">🔍 Search Transactions, Blocks & Addresses</div>
       <div class="search-box">
-        <input type="text" id="search" placeholder="Enter txid, block #, block hash, or address...">
+        <input type="text" id="search" placeholder="Enter txid, block #, block hash, or Bitcoin address...">
         <button onclick="doSearch()">Search</button>
       </div>
-      <div id="results" class="results"></div>
+      <div id="results" class="search-results"></div>
     </div>
     
     <!-- Stats -->
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-value" id="height">--</div><div class="stat-label">Block Height</div></div>
-      <div class="stat-card"><div class="stat-value" id="mempool">--</div><div class="stat-label">Mempool Txs</div></div>
-      <div class="stat-card"><div class="stat-value" id="size">--</div><div class="stat-label">Mempool Size</div></div>
-      <div class="stat-card"><div class="stat-value">~700</div><div class="stat-label">EH/s Hash Rate</div></div>
-      <div class="stat-card"><div class="stat-value">~92T</div><div class="stat-label">Difficulty</div></div>
-      <div class="stat-card"><div class="stat-value" id="halving">--</div><div class="stat-label">Blocks to Halving</div></div>
+      <div class="stat-card"><div class="stat-icon">⛏️</div><div class="stat-value" id="height">--</div><div class="stat-label">Block Height</div></div>
+      <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value" id="mempool">--</div><div class="stat-label">Mempool Txs</div></div>
+      <div class="stat-card"><div class="stat-icon">💾</div><div class="stat-value" id="size">--</div><div class="stat-label">Mempool Size</div></div>
+      <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-value">~700</div><div class="stat-label">EH/s Hash Rate</div></div>
+      <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-value">~92T</div><div class="stat-label">Difficulty</div></div>
+      <div class="stat-card"><div class="stat-icon">✂️</div><div class="stat-value" id="halving">--</div><div class="stat-label">Blocks to Halving</div></div>
     </div>
     
     <!-- Chain -->
     <div class="chain-section">
-      <div class="chain-title">⛓️ Latest Confirmed Blocks</div>
+      <div class="chain-title"><span class="icon">⛓️</span> Latest Confirmed Blocks - Click to view transactions</div>
       <div class="chain-container" id="chain"></div>
     </div>
     
     <!-- Fees -->
     <div class="fee-section">
-      <div class="fee-title">⚡ Fee Rates (sat/vB)</div>
+      <div class="fee-title">⚡ Recommended Fee Rates (sat/vB)</div>
       <div class="fee-grid">
-        <div class="fee-card slow"><div class="fee-rate" id="fee-slow">--</div><div class="fee-time">~1 hour</div><div class="fee-label">Slow</div></div>
+        <div class="fee-card slow"><div class="fee-rate" id="fee-slow">--</div><div class="fee-time">~1 hour+</div><div class="fee-label">Slow</div></div>
         <div class="fee-card normal"><div class="fee-rate" id="fee-normal">--</div><div class="fee-time">~30 min</div><div class="fee-label">Normal</div></div>
         <div class="fee-card fast"><div class="fee-rate" id="fee-fast">--</div><div class="fee-time">~10 min</div><div class="fee-label">Fast</div></div>
       </div>
@@ -303,19 +367,28 @@
       <div class="tx-title"><span class="tx-icon">✅</span> Confirmed Transactions (Latest Block)</div>
       <div class="tx-list" id="confirmed"></div>
     </div>
-  </section>
+  </div>
   
   <footer class="footer">
-    <p>₿ HiftyCo - Bitcoin Education</p>
+    <p>₿ HiftyCo - Empowering Bitcoiners with Knowledge</p>
   </footer>
+  
+  <!-- Block Transactions Popup -->
+  <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+  <div class="block-txs-popup" id="blockPopup">
+    <div class="popup-header">
+      <div class="popup-title" id="popupTitle">Block Transactions</div>
+      <button class="popup-close" onclick="closePopup()">✕</button>
+    </div>
+    <div id="popupContent"></div>
+  </div>
   
   <script>
     let currentBlock = 939600;
+    let blocksData = [];
     
-    // Show demo immediately
+    // Initialize
     showDemo();
-    
-    // Try live data
     loadLive();
     setInterval(loadLive, 15000);
     
@@ -332,11 +405,11 @@
       document.getElementById('fee-normal').textContent = '25+';
       document.getElementById('fee-fast').textContent = '55+';
       
-      // Demo chain with animations
+      // Demo chain
       let c = '';
-      const times = ['now', '10m ago', '20m ago', '30m ago', '40m ago', '50m ago'];
+      const times = ['just now', '~9m ago', '~19m ago', '~29m ago', '~39m ago', '~49m ago'];
       for(let i = 0; i < 6; i++) {
-        c += '<div class="block-wrapper"><div class="chain-block" style="animation-delay:' + (i * 0.15) + 's"><span class="block-num">#' + (bh - i) + '</span><span class="block-txs">' + (2000 + Math.floor(Math.random()*1000)) + ' txs</span><span class="block-size">' + (1 + Math.floor(Math.random())) + ' MB</span><span class="block-time">' + times[i] + '</span></div>';
+        c += '<div class="block-wrapper"><div class="chain-block" onclick="showBlockTXs(' + (bh - i) + ')"><span class="block-height">#' + (bh - i).toLocaleString() + '</span><span class="block-txs">' + (2000 + Math.floor(Math.random()*1000)) + ' transactions</span><span class="block-size">' + (1 + Math.floor(Math.random()*2)) + ' MB</span><span class="block-time">' + times[i] + '</span></div>';
         if(i < 5) c += '<span class="chain-arrow">→</span></div>';
         else c += '</div>';
       }
@@ -348,11 +421,11 @@
       const randFee = () => 10 + Math.floor(Math.random() * 40);
       
       document.getElementById('pending').innerHTML = Array(10).fill(0).map(() => 
-        '<div class="tx-item"><div class="tx-left"><span class="tx-icon-mini"></span><span class="tx-hash">' + randTx() + '</span></div><div class="tx-right"><span class="tx-amount">' + randAmt() + ' BTC</span><span class="tx-fee">' + randFee() + ' sat/vB</span></div></div>'
+        '<div class="tx-item"><div class="tx-left"><span class="tx-dot pending"></span><span class="tx-hash">' + randTx() + '</span></div><div class="tx-right"><span class="tx-amount">' + randAmt() + ' BTC</span><span class="tx-fee">' + randFee() + ' sat/vB</span></div></div>'
       ).join('');
       
       document.getElementById('confirmed').innerHTML = Array(6).fill(0).map(() => 
-        '<div class="tx-item tx-confirmed"><div class="tx-left"><span class="tx-icon-mini"></span><span class="tx-hash" style="color:var(--success)">' + randTx() + '</span></div><div class="tx-right"><span class="tx-amount">' + randAmt() + ' BTC</span><span class="tx-fee">' + randFee() + ' sat/vB</span></div></div>'
+        '<div class="tx-item"><div class="tx-left"><span class="tx-dot confirmed"></span><span class="tx-hash" style="color:var(--success)">' + randTx() + '</span></div><div class="tx-right"><span class="tx-amount">' + randAmt() + ' BTC</span><span class="tx-fee">' + randFee() + ' sat/vB</span></div></div>'
       ).join('');
     }
     
@@ -365,16 +438,17 @@
           fetch('https://mempool.space/api/mempool/recent').then(r => r.ok ? r.json() : null).catch(() => null)
         ]);
         
+        if(b) blocksData = b;
+        
         if(b?.[0]) {
           currentBlock = b[0].height;
           document.getElementById('height').textContent = '#' + b[0].height.toLocaleString();
           document.getElementById('halving').textContent = (1050000 - b[0].height).toLocaleString();
           
-          // Real chain with timestamps
           let c = '';
           for(let i = 0; i < Math.min(b.length, 6); i++) {
             const timeAgo = getTimeAgo(b[i].timestamp);
-            c += '<div class="block-wrapper"><div class="chain-block" style="animation-delay:' + (i * 0.15) + 's"><span class="block-num">#' + b[i].height.toLocaleString() + '</span><span class="block-txs">' + (b[i].extras?.txCount || 0).toLocaleString() + ' txs</span><span class="block-size">' + ((b[i].size || 0)/1000).toFixed(0) + ' KB</span><span class="block-time">' + timeAgo + '</span></div>';
+            c += '<div class="block-wrapper"><div class="chain-block" onclick="showBlockTXs(' + b[i].height + ')"><span class="block-height">#' + b[i].height.toLocaleString() + '</span><span class="block-txs">' + (b[i].extras?.txCount || 0).toLocaleString() + ' transactions</span><span class="block-size">' + ((b[i].size || 0)/1000).toFixed(0) + ' KB</span><span class="block-time">' + timeAgo + '</span></div>';
             if(i < 5) c += '<span class="chain-arrow">→</span></div>';
             else c += '</div>';
           }
@@ -392,16 +466,13 @@
           document.getElementById('fee-fast').textContent = (f.fastestFee || 55) + '+';
         }
         
-        // Pending TXs
         if(t?.length) {
           document.getElementById('pending').innerHTML = t.slice(0, 12).map(x => {
             const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
-            const fee = x.fee || 0;
-            return '<div class="tx-item"><div class="tx-left"><span class="tx-icon-mini"></span><span class="tx-hash">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + fee + ' sat/vB</span></div></div>';
+            return '<div class="tx-item"><div class="tx-left"><span class="tx-dot pending"></span><span class="tx-hash">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
           }).join('');
         }
         
-        // Confirmed TXs
         if(b?.[0]) loadConfirmedTXs(b[0].id);
         
       } catch(e) { console.log('Live load failed'); }
@@ -410,9 +481,9 @@
     function getTimeAgo(timestamp) {
       const seconds = Math.floor(Date.now() / 1000) - timestamp;
       if(seconds < 60) return 'just now';
-      if(seconds < 3600) return Math.floor(seconds/60) + 'm ago';
-      if(seconds < 86400) return Math.floor(seconds/3600) + 'h ago';
-      return Math.floor(seconds/86400) + 'd ago';
+      if(seconds < 3600) return '~' + Math.floor(seconds/60) + 'm ago';
+      if(seconds < 86400) return '~' + Math.floor(seconds/3600) + 'h ago';
+      return '~' + Math.floor(seconds/86400) + 'd ago';
     }
     
     async function loadConfirmedTXs(blockId) {
@@ -422,11 +493,50 @@
         if(t?.length) {
           document.getElementById('confirmed').innerHTML = t.slice(0, 8).map(x => {
             const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
-            const fee = x.fee || 0;
-            return '<div class="tx-item tx-confirmed"><div class="tx-left"><span class="tx-icon-mini"></span><span class="tx-hash" style="color:var(--success)">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + fee + ' sat/vB</span></div></div>';
+            return '<div class="tx-item"><div class="tx-left"><span class="tx-dot confirmed"></span><span class="tx-hash" style="color:var(--success)">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
           }).join('');
         }
       } catch(e) {}
+    }
+    
+    // Show block transactions popup
+    async function showBlockTXs(blockHeight) {
+      const popup = document.getElementById('blockPopup');
+      const overlay = document.getElementById('popupOverlay');
+      const title = document.getElementById('popupTitle');
+      const content = document.getElementById('popupContent');
+      
+      title.textContent = 'Block #' + blockHeight.toLocaleString() + ' - Transactions';
+      content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-secondary)">Loading transactions...</div>';
+      
+      popup.classList.add('active');
+      overlay.classList.add('active');
+      
+      try {
+        // Get block hash first
+        const hashResp = await fetch('https://mempool.space/api/block-height/' + blockHeight);
+        const blockHash = await hashResp.text();
+        
+        // Get transactions
+        const txResp = await fetch('https://mempool.space/api/block/' + blockHash + '/txs');
+        const txs = await txResp.json();
+        
+        if(txs && txs.length > 0) {
+          content.innerHTML = txs.map(tx => {
+            const amt = (tx.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
+            return '<div class="popup-tx"><span class="popup-tx-hash">' + tx.txid + '</span><span class="popup-tx-amt">' + amt.toFixed(8) + ' BTC</span></div>';
+          }).join('');
+        } else {
+          content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-secondary)">No transactions found</div>';
+        }
+      } catch(e) {
+        content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--danger)">Error loading transactions</div>';
+      }
+    }
+    
+    function closePopup() {
+      document.getElementById('blockPopup').classList.remove('active');
+      document.getElementById('popupOverlay').classList.remove('active');
     }
     
     // Search
@@ -464,7 +574,7 @@
         const res = await fetch('https://mempool.space/api/block/' + hash);
         if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
         const b = await res.json();
-        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">Block #' + b.height + '</span><span class="sr-status confirmed">🧱 Block</span></div><div class="sr-grid"><div><div class="sr-label">Transactions</div><div class="sr-value">' + (b.extras?.txCount || 0) + '</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + ((b.size||0)/1000).toFixed(2) + ' MB</div></div><div><div class="sr-label">Timestamp</div><div class="sr-value">' + new Date(b.timestamp*1000).toLocaleString() + '</div></div><div><div class="sr-label">Difficulty</div><div class="sr-value">' + ((b.difficulty||0)/1e12).toFixed(2) + ' T</div></div></div></div>';
+        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">Block #' + b.height + '</span><span class="sr-status confirmed">🧱 Block</span></div><div class="sr-grid"><div><div class="sr-label">Transactions</div><div class="sr-value">' + (b.extras?.txCount || 0).toLocaleString() + '</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + ((b.size||0)/1000).toFixed(2) + ' MB</div></div><div><div class="sr-label">Timestamp</div><div class="sr-value">' + new Date(b.timestamp*1000).toLocaleString() + '</div></div><div><div class="sr-label">Difficulty</div><div class="sr-value">' + ((b.difficulty||0)/1e12).toFixed(2) + ' T</div></div></div></div>';
       } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
