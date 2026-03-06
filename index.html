@@ -341,13 +341,15 @@
       {name: 'LightningFan', score: 80}
     ];
     
-    // REAL-TIME Bitcoin Data from blockchain.info API (CORS-friendly!)
+    // REAL-TIME Bitcoin Data using CORS proxy
     const BLOCKCHAIN_API = 'https://api.blockchain.info';
+    const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
     
     async function loadMempool() {
       try {
-        // Get real-time stats from blockchain.info
-        const statsResp = await fetch(BLOCKCHAIN_API + '/stats');
+        // Get real-time stats via CORS proxy
+        const statsUrl = encodeURIComponent(BLOCKCHAIN_API + '/stats');
+        const statsResp = await fetch(CORS_PROXY + statsUrl);
         const stats = await statsResp.json();
         
         // Get pools data
@@ -373,7 +375,7 @@
         
         // Try to get mempool data from blockstream (may fail due to CORS)
         try {
-          const mempoolResp = await fetch('https://blockstream.info/api/mempool');
+          const mempoolResp = await fetch(CORS_PROXY + encodeURIComponent('https://blockstream.info/api/mempool'));
           if(mempoolResp.ok) {
             const mempool = await mempoolResp.json();
             document.getElementById('mempool-count').textContent = (mempool.count || 0).toLocaleString();
@@ -407,7 +409,7 @@
         
         // Try to get recent transactions
         try {
-          const txResp = await fetch('https://blockstream.info/api/mempool/recent');
+          const txResp = await fetch(CORS_PROXY + encodeURIComponent('https://blockstream.info/api/mempool/recent'));
           if(txResp.ok) {
             const txs = await txResp.json();
             const txsContainer = document.getElementById('mempool-txs');
