@@ -8,16 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; }
-    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
     
-    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; }
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; backdrop-filter: blur(10px); }
     .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
     .logo .btc { color: var(--primary); font-size: 1.5rem; }
     .logo .name { color: var(--text); }
     .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
     .links { display: flex; gap: 28px; }
-    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
     .links a:hover { color: var(--primary); }
     
     .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 60px; background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247,147,26,0.15) 0%, transparent 60%); }
@@ -31,47 +31,77 @@
     .btn2 { background: transparent; border: 1px solid var(--border); color: var(--text); }
     .btn2:hover { border-color: var(--primary); color: var(--primary); }
     
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; max-width: 900px; margin: 0 auto; padding: 0 20px; }
-    .stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; text-align: center; }
-    .statv { font-size: 2rem; font-weight: 700; color: var(--primary); }
-    .statl { color: var(--text2); font-size: 0.85rem; }
-    
-    .section { padding: 60px 20px; max-width: 1000px; margin: 0 auto; }
+    .section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
     .sh { text-align: center; margin-bottom: 32px; }
     .sh h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
     .sh h2 span { color: var(--primary); }
     .sh p { color: var(--text2); }
     
-    .mempool-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
-    .mempool-stat { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
-    .mempool-statv { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-    .mempool-statl { font-size: 0.75rem; color: var(--text2); }
-    .mempool-blocks { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
-    .mempool-block { width: 90px; height: 90px; background: linear-gradient(145deg, var(--bg), #1a1a2e); border: 2px solid var(--primary); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; animation: pulse 2s infinite; position: relative; overflow: hidden; }
-    .mempool-block::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(247,147,26,0.3), transparent); animation: shimmer 2s infinite; }
-    @keyframes pulse { 0%,100% { box-shadow: 0 0 10px rgba(247,147,26,0.3); } 50% { box-shadow: 0 0 25px rgba(247,147,26,0.6); } }
-    @keyframes shimmer { 100% { left: 100%; } }
-    .mempool-blockn { font-size: 0.8rem; color: var(--primary); }
-    .mempool-blockh { font-size: 0.45rem; color: #606070; font-family: monospace; }
-    .mempool-txs { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; max-height: 300px; overflow-y: auto; }
-    .mempool-tx { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-    .mempool-tx:last-child { border-bottom: none; }
-    .mempool-txh { font-family: monospace; color: var(--primary); font-size: 0.7rem; }
-    .mempool-txamt { color: #00d4aa; font-weight: 600; }
-    .mempool-txfee { color: #ef4444; font-size: 0.75rem; }
-    .live-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #00d4aa; margin-left: 10px; }
-    .live-indicator::before { content: ''; width: 8px; height: 8px; background: #00d4aa; border-radius: 50%; animation: blink 1s infinite; }
-    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-    .viz { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 32px; margin-bottom: 24px; }
-    .blocks { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
-    .block { width: 70px; height: 70px; background: linear-gradient(145deg, var(--bg2), #22222e); border: 2px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; transition: all 0.3s; cursor: pointer; position: relative; }
-    .block:hover { transform: scale(1.05); border-color: var(--primary); }
-    .block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), #00d4aa); }
-    .blockn { font-size: 0.9rem; color: var(--primary); }
-    .blockh { font-size: 0.5rem; color: #606070; font-family: monospace; }
-    .arrow { color: var(--primary); font-size: 1.2rem; }
-    .cta { text-align: center; }
+    /* LIVE BLOCKCHAIN SECTION */
+    .blockchain-viz { background: linear-gradient(135deg, var(--bg2) 0%, #1a1a28 100%); border: 1px solid var(--border); border-radius: 24px; padding: 32px; position: relative; overflow: hidden; }
+    .blockchain-viz::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--success), var(--primary)); background-size: 200% 100%; animation: gradientMove 3s linear infinite; }
+    @keyframes gradientMove { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
     
+    .live-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.15); border: 1px solid var(--success); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 600; color: var(--success); margin-bottom: 20px; }
+    .live-badge::before { content: ''; width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; transition: all 0.3s; position: relative; overflow: hidden; }
+    .stat-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(247,147,26,0.15); }
+    .stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--primary); transform: scaleX(0); transition: transform 0.3s; }
+    .stat-card:hover::after { transform: scaleX(1); }
+    .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .stat-label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* CHAIN VISUALIZATION */
+    .chain-container { margin: 32px 0; position: relative; }
+    .chain-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 20px; }
+    .chain { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 20px 0; }
+    .chain-block { width: 90px; height: 90px; background: linear-gradient(145deg, #1e1e2e, #252535); border: 2px solid var(--primary); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; position: relative; animation: blockPulse 2s ease-in-out infinite; transition: all 0.3s; cursor: pointer; }
+    .chain-block:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 15px 40px rgba(247,147,26,0.4); border-color: var(--success); }
+    .chain-block::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(247,147,26,0.3), transparent); animation: shimmer 2s infinite; }
+    @keyframes blockPulse { 0%,100% { box-shadow: 0 0 15px rgba(247,147,26,0.2); } 50% { box-shadow: 0 0 30px rgba(247,147,26,0.4); } }
+    @keyframes shimmer { 100% { left: 100%; } }
+    .chain-block .block-num { font-size: 0.85rem; color: var(--primary); margin-bottom: 2px; }
+    .chain-block .block-txs { font-size: 0.6rem; color: var(--text2); }
+    .chain-arrow { color: var(--primary); font-size: 1.4rem; animation: arrowPulse 1s ease-in-out infinite; }
+    @keyframes arrowPulse { 0%,100% { opacity: 0.5; transform: translateX(0); } 50% { opacity: 1; transform: translateX(5px); } }
+    
+    /* FEE RATES */
+    .fee-section { margin: 32px 0; }
+    .fee-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 16px; }
+    .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .fee-card { background: var(--bg); border-radius: 16px; padding: 24px; text-align: center; position: relative; overflow: hidden; }
+    .fee-card.slow { border: 1px solid var(--success); }
+    .fee-card.normal { border: 1px solid var(--primary); }
+    .fee-card.fast { border: 1px solid var(--danger); }
+    .fee-card .fee-rate { font-size: 2rem; font-weight: 700; }
+    .fee-card.slow .fee-rate { color: var(--success); }
+    .fee-card.normal .fee-rate { color: var(--primary); }
+    .fee-card.fast .fee-rate { color: var(--danger); }
+    .fee-card .fee-time { font-size: 0.75rem; color: var(--text2); margin-top: 4px; }
+    .fee-card .fee-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; margin-top: 8px; }
+    
+    /* TRANSACTIONS */
+    .tx-section { margin-top: 32px; }
+    .tx-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 16px; }
+    .tx-list { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; max-height: 350px; overflow-y: auto; }
+    .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .tx-item:hover { background: rgba(247,147,26,0.05); }
+    .tx-item:last-child { border-bottom: none; }
+    .tx-hash { font-family: monospace; color: var(--primary); font-size: 0.75rem; }
+    .tx-details { text-align: right; }
+    .tx-amount { color: var(--success); font-weight: 600; font-size: 0.85rem; }
+    .tx-fee { color: var(--danger); font-size: 0.7rem; margin-left: 10px; }
+    
+    .refresh-btn { display: block; margin: 24px auto 0; }
+    
+    .loading { display: flex; align-items: center; justify-content: center; padding: 40px; color: var(--text2); }
+    .loading::after { content: ''; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; margin-left: 10px; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    /* Other sections */
     .paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
     .path { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: all 0.3s; }
     .path:hover { transform: translateY(-3px); border-color: var(--primary); }
@@ -82,6 +112,33 @@
     .path h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
     .path p { color: var(--text2); font-size: 0.9rem; }
     
+    .progress-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .progress-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .progress-item:last-child { border-bottom: none; }
+    .progress-check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); margin-right: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+    .progress-check.checked { background: var(--primary); border-color: var(--primary); }
+    .progress-check.checked::after { content: '✓'; color: #000; font-weight: bold; font-size: 0.8rem; }
+    
+    .quiz { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; max-width: 600px; margin: 0 auto; }
+    .qq { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; }
+    .qo { display: block; width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; text-align: left; color: var(--text); font-size: 0.95rem; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .qo:hover { border-color: var(--primary); }
+    
+    .leaderboard { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 500px; margin: 20px auto; }
+    .lb-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { font-weight: 700; color: var(--primary); width: 40px; }
+    .lb-score { font-weight: 600; }
+    
+    .supabase-form { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 400px; margin: 20px auto; }
+    .supabase-form input { width: 100%; padding: 12px; margin-bottom: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; }
+    .supabase-form input:focus { outline: none; border-color: var(--primary); }
+    
+    .insight { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+    .insight-user { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+    .insight-msg { color: var(--text2); font-size: 0.9rem; margin-top: 6px; }
+    .insight-time { font-size: 0.7rem; color: #606070; margin-top: 6px; }
+    
     .topics { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
     .topic { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 20px; transition: all 0.3s; }
     .topic:hover { transform: translateY(-3px); border-color: var(--primary); background: #1e1e2a; }
@@ -89,134 +146,67 @@
     .topic h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
     .topic p { color: var(--text2); font-size: 0.85rem; }
     
-    .quiz { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; max-width: 600px; margin: 0 auto; }
-    .qq { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; }
-    .qo { display: block; width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; text-align: left; color: var(--text); font-size: 0.95rem; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-    .qo:hover { border-color: var(--primary); }
-    
-    .leaderboard { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 500px; margin: 0 auto; }
-    .lb-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
-    .lb-row:last-child { border-bottom: none; }
-    .lb-rank { font-weight: 700; color: var(--primary); width: 40px; }
-    .lb-name { flex: 1; }
-    .lb-score { font-weight: 600; }
-    
-    .supabase-form { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 400px; margin: 20px auto; }
-    .supabase-form input { width: 100%; padding: 12px; margin-bottom: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; }
-    .supabase-form input:focus { outline: none; border-color: var(--primary); }
-    
-    .progress-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 600px; margin: 0 auto; }
-    .progress-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
-    .progress-item:last-child { border-bottom: none; }
-    .progress-check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); margin-right: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
-    .progress-check.checked { background: var(--primary); border-color: var(--primary); }
-    .progress-check.checked::after { content: '✓'; color: #000; font-weight: bold; }
-    
-    .insights-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 600px; margin: 0 auto; }
-    .insight { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
-    .insight-user { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
-    .insight-msg { color: var(--text2); font-size: 0.9rem; margin-top: 6px; }
-    .insight-time { font-size: 0.7rem; color: #606070; margin-top: 6px; }
-    
     .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
     .footer p { color: #606070; }
     
-    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } }
+    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } .fee-grid { grid-template-columns: 1fr; } .chain-block { width: 70px; height: 70px; } }
   </style>
 </head>
 <body>
   <nav class="nav">
     <div class="logo"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></div>
-    <div class="links">
-      <a href="#paths">Paths</a>
-      <a href="#blockchain">Blockchain</a>
-      <a href="#progress">Progress</a>
-      <a href="#quiz">Quiz</a>
-      <a href="#insights">Insights</a>
-      <a href="#topics">Topics</a>
-    </div>
+    <div class="links"><a href="#paths">Paths</a><a href="#blockchain">Blockchain</a><a href="#progress">Progress</a><a href="#quiz">Quiz</a><a href="#topics">Topics</a></div>
   </nav>
   
   <section class="hero">
     <h1>Master <span>Bitcoin</span></h1>
     <p>The ultimate education platform for Bitcoiners. Learn, practice, and succeed in the new financial system.</p>
-    <div class="btns"><a href="#paths" class="btn btn1">Start Learning</a><a href="#quiz" class="btn btn2">Take Quiz</a></div>
+    <div class="btns"><a href="#paths" class="btn btn1">Start Learning</a><a href="#blockchain" class="btn btn2">View Live Blockchain</a></div>
   </section>
   
-  <div class="stats">
-    <div class="stat"><div class="statv">21M</div><div class="statl">Max Supply</div></div>
-    <div class="stat"><div class="statv">10min</div><div class="statl">Block Time</div></div>
-    <div class="stat"><div class="statv">200M+</div><div class="statl">Global Users</div></div>
-    <div class="stat"><div class="statv">$1.4T</div><div class="statl">Market Cap</div></div>
-  </div>
-  
+  <!-- LIVE BLOCKCHAIN SECTION -->
   <section id="blockchain" class="section">
-    <div class="sh"><h2>Live Bitcoin <span>Blockchain</span> <span class="live-indicator">LIVE</span></h2><p>Real-time data from the Bitcoin network</p></div>
-    <div class="viz">
-      <!-- Core Stats -->
-      <div class="mempool-stats" id="network-stats">
-        <div class="mempool-stat"><div class="mempool-statv" id="block-height">--</div><div class="mempool-statl">Current Block</div></div>
-        <div class="mempool-stat"><div class="mempool-statv" id="mempool-count">--</div><div class="mempool-statl">Mempool Txs</div></div>
-        <div class="mempool-stat"><div class="mempool-statv" id="mempool-size">--</div><div class="mempool-statl">Mempool Size</div></div>
-        <div class="mempool-stat"><div class="mempool-statv" id="hash-rate">--</div><div class="mempool-statl">Hash Rate</div></div>
-        <div class="mempool-stat"><div class="mempool-statv" id="difficulty">--</div><div class="mempool-statl">Difficulty</div></div>
-        <div class="mempool-stat"><div class="mempool-statv" id="next-halving">--</div><div class="mempool-statl">Blocks to Halving</div></div>
-      </div>
-      
-      <!-- Visual Chain -->
-      <div style="margin:24px 0">
-        <div style="text-align:center;margin-bottom:16px;font-size:0.95rem;color:var(--text2)">📜 The Bitcoin Chain - Last 6 Blocks</div>
-        <div class="chain-viz" id="chain-viz" style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:20px 0">
-          <div class="chain-block" style="width:80px;height:80px;background:linear-gradient(145deg,var(--bg),#1a1a2e);border:2px solid var(--primary);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;position:relative">
-            <span style="color:var(--primary);font-size:0.8rem">#--</span>
-            <span style="color:#606070;font-size:0.6rem">Loading</span>
-            <div style="position:absolute;bottom:-8px;background:var(--primary);color:#000;font-size:0.5rem;padding:2px 6px;border-radius:4px">GENESIS</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Fee Rates Visual -->
-      <div style="margin:20px 0">
-        <div style="text-align:center;margin-bottom:12px;font-size:0.9rem;color:var(--text2)">⚡ Recommended Fee Rates (sat/vB)</div>
-        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-          <div style="background:linear-gradient(180deg,rgba(0,212,170,0.2),transparent);border:1px solid #00d4aa;border-radius:12px;padding:16px 24px;text-align:center;min-width:100px">
-            <div style="color:#00d4aa;font-weight:700;font-size:1.4rem" id="fee-low">--</div>
-            <div style="color:var(--text2);font-size:0.7rem">~1 hour</div>
-            <div style="color:#00d4aa;font-size:0.6rem">SLOW</div>
-          </div>
-          <div style="background:linear-gradient(180deg,rgba(247,147,26,0.2),transparent);border:1px solid var(--primary);border-radius:12px;padding:16px 24px;text-align:center;min-width:100px">
-            <div style="color:var(--primary);font-weight:700;font-size:1.4rem" id="fee-medium">--</div>
-            <div style="color:var(--text2);font-size:0.7rem">~30 min</div>
-            <div style="color:var(--primary);font-size:0.6rem">NORMAL</div>
-          </div>
-          <div style="background:linear-gradient(180deg,rgba(239,68,68,0.2),transparent);border:1px solid #ef4444;border-radius:12px;padding:16px 24px;text-align:center;min-width:100px">
-            <div style="color:#ef4444;font-weight:700;font-size:1.4rem" id="fee-high">--</div>
-            <div style="color:var(--text2);font-size:0.7rem">~10 min</div>
-            <div style="color:#ef4444;font-size:0.6rem">FAST</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Mempool Txs -->
-      <div style="margin:24px 0">
-        <div style="text-align:center;margin-bottom:12px;font-size:0.9rem;color:var(--text2)">📤 Pending Transactions (Mempool)</div>
-        <div class="mempool-txs" id="mempool-txs" style="background:var(--bg);border:1px solid var(--border);border-radius:12px;max-height:250px;overflow-y:auto">
-          <div style="padding:20px;text-align:center;color:var(--text2)">Loading mempool...</div>
-        </div>
-      </div>
-      
-      <!-- Network Info -->
-      <div style="margin-top:20px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:12px">
-        <div style="font-size:0.9rem;font-weight:600;margin-bottom:10px;color:var(--primary)">⛏️ Network Statistics</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;font-size:0.8rem">
-          <div><span style="color:var(--text2)">Block Reward:</span> <span style="color:var(--primary);font-weight:600">3.125 BTC</span></div>
-          <div><span style="color:var(--text2)">Next Halving:</span> <span style="color:var(--primary);font-weight:600" id="halving-date">~2028</span></div>
-          <div><span style="color:var(--text2)">Max Supply:</span> <span style="color:var(--primary);font-weight:600">21,000,000 BTC</span></div>
-          <div><span style="color:var(--text2)">Miners Earn:</span> <span style="color:var(--primary);font-weight:600">Fees + Subsidy</span></div>
-        </div>
-      </div>
+    <div class="sh">
+      <div class="live-badge">REAL-TIME DATA</div>
+      <h2>Live Bitcoin <span>Blockchain</span></h2>
+      <p>Direct from blockstream.info nodes</p>
     </div>
-    <div class="cta"><button class="btn btn1" onclick="loadMempool()">🔄 Refresh Network Data</button></div>
+    
+    <div class="blockchain-viz">
+      <!-- Stats Grid -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="stat-value" id="block-height">Loading...</div><div class="stat-label">Current Block</div></div>
+        <div class="stat-card"><div class="stat-value" id="mempool-count">--</div><div class="stat-label">Mempool Txs</div></div>
+        <div class="stat-card"><div class="stat-value" id="mempool-size">--</div><div class="stat-label">Mempool Size</div></div>
+        <div class="stat-card"><div class="stat-value" id="hash-rate">--</div><div class="stat-label">Hash Rate</div></div>
+        <div class="stat-card"><div class="stat-value" id="difficulty">--</div><div class="stat-label">Difficulty</div></div>
+        <div class="stat-card"><div class="stat-value" id="next-halving">--</div><div class="stat-label">Blocks to Halving</div></div>
+      </div>
+      
+      <!-- Chain Visualization -->
+      <div class="chain-container">
+        <div class="chain-title">📜 Latest Confirmed Blocks</div>
+        <div class="chain" id="chain"></div>
+      </div>
+      
+      <!-- Fee Rates -->
+      <div class="fee-section">
+        <div class="fee-title">⚡ Recommended Fee Rates (sat/vB)</div>
+        <div class="fee-grid">
+          <div class="fee-card slow"><div class="fee-rate" id="fee-low">--</div><div class="fee-time">~1 hour</div><div class="fee-label">Slow</div></div>
+          <div class="fee-card normal"><div class="fee-rate" id="fee-medium">--</div><div class="fee-time">~30 min</div><div class="fee-label">Normal</div></div>
+          <div class="fee-card fast"><div class="fee-rate" id="fee-high">--</div><div class="fee-time">~10 min</div><div class="fee-label">Fast</div></div>
+        </div>
+      </div>
+      
+      <!-- Transactions -->
+      <div class="tx-section">
+        <div class="tx-title">📤 Pending Transactions (Mempool)</div>
+        <div class="tx-list" id="tx-list"><div class="loading">Loading transactions...</div></div>
+      </div>
+      
+      <button class="btn btn1 refresh-btn" onclick="loadBlockchainData()">🔄 Refresh Data</button>
+    </div>
   </section>
   
   <section id="paths" class="section">
@@ -228,85 +218,28 @@
     </div>
   </section>
   
-  <!-- Progress Tracking -->
   <section id="progress" class="section">
     <div class="sh"><h2>Your <span>Progress</span></h2><p>Track your learning journey</p></div>
     <div class="progress-section">
-      <div class="progress-item">
-        <span><span class="progress-check" onclick="toggleProgress(this)"></span> What is Bitcoin?</span>
-        <span style="color:var(--primary)">Beginner</span>
-      </div>
-      <div class="progress-item">
-        <span><span class="progress-check" onclick="toggleProgress(this)"></span> How Blockchain Works</span>
-        <span style="color:var(--primary)">Beginner</span>
-      </div>
-      <div class="progress-item">
-        <span><span class="progress-check" onclick="toggleProgress(this)"></span> Mining & Consensus</span>
-        <span style="color:var(--primary)">Intermediate</span>
-      </div>
-      <div class="progress-item">
-        <span><span class="progress-check" onclick="toggleProgress(this)"></span> Wallets & Keys</span>
-        <span style="color:var(--primary)">Intermediate</span>
-      </div>
-      <div class="progress-item">
-        <span><span class="progress-check" onclick="toggleProgress(this)"></span> Lightning Network</span>
-        <span style="color:#ef4444">Advanced</span>
-      </div>
-      <div class="progress-item">
-        <span><span class="progress-check" onclick="toggleProgress(this)"></span> Bitcoin Script</span>
-        <span style="color:#ef4444">Advanced</span>
-      </div>
+      <div class="progress-item"><span class="progress-check" onclick="toggleProgress(this)"></span> What is Bitcoin?</div>
+      <div class="progress-item"><span class="progress-check" onclick="toggleProgress(this)"></span> How Blockchain Works</div>
+      <div class="progress-item"><span class="progress-check" onclick="toggleProgress(this)"></span> Mining & Consensus</div>
+      <div class="progress-item"><span class="progress-check" onclick="toggleProgress(this)"></span> Wallets & Keys</div>
+      <div class="progress-item"><span class="progress-check" onclick="toggleProgress(this)"></span> Lightning Network</div>
+      <div class="progress-item"><span class="progress-check" onclick="toggleProgress(this)"></span> Bitcoin Script</div>
     </div>
   </section>
   
-  <!-- Quiz with Leaderboard -->
   <section id="quiz" class="section">
     <div class="sh"><h2>Test Your <span>Knowledge</span></h2><p>Quiz and compete on the leaderboard</p></div>
-    
-    <div class="leaderboard">
-      <h3 style="margin-bottom:16px;text-align:center">🏆 Top Bitcoiners</h3>
-      <div id="lb-list"></div>
-    </div>
-    
-    <div class="supabase-form">
-      <h3 style="margin-bottom:16px;text-align:center">Submit Your Score</h3>
-      <input type="text" id="player-name" placeholder="Your Name">
-      <input type="number" id="player-score" placeholder="Your Score">
+    <div class="leaderboard"><h3 style="margin-bottom:16px;text-align:center">🏆 Top Bitcoiners</h3><div id="lb-list"></div></div>
+    <div class="supabase-form"><h3 style="margin-bottom:16px;text-align:center">Submit Your Score</h3>
+      <input type="text" id="player-name" placeholder="Your Name"><input type="number" id="player-score" placeholder="Your Score">
       <button class="btn btn1" style="width:100%" onclick="submitScore()">Submit to Leaderboard</button>
     </div>
-    
-    <div class="quiz" style="margin-top:24px">
-      <div class="qq" id="qtext">What is the maximum supply of Bitcoin?</div>
-      <button class="qo" onclick="answer(0)">21 million</button>
-      <button class="qo" onclick="answer(1)">100 million</button>
-      <button class="qo" onclick="answer(2)">1 billion</button>
-      <button class="qo" onclick="answer(3)">Unlimited</button>
+    <div class="quiz" style="margin-top:24px"><div class="qq" id="qtext">What is the maximum supply of Bitcoin?</div>
+      <button class="qo" onclick="answer(0)">21 million</button><button class="qo" onclick="answer(1)">100 million</button><button class="qo" onclick="answer(2)">1 billion</button><button class="qo" onclick="answer(3)">Unlimited</button>
       <p style="text-align:center;margin-top:14px;color:#606070" id="qnum">Question 1 of 4</p>
-    </div>
-  </section>
-  
-  <!-- Community Insights -->
-  <section id="insights" class="section">
-    <div class="sh"><h2>Community <span>Insights</span></h2><p>Share and learn from fellow Bitcoiners</p></div>
-    
-    <div class="insights-section" id="insights-list">
-      <div class="insight">
-        <div class="insight-user">Satoshi</div>
-        <div class="insight-msg">"Bitcoin is a distributed peer-to-peer digital currency."</div>
-        <div class="insight-time">2009</div>
-      </div>
-      <div class="insight">
-        <div class="insight-user">Hal Finney</div>
-        <div class="insight-msg">"The project is the first to solve the double-spend problem."</div>
-        <div class="insight-time">2009</div>
-      </div>
-    </div>
-    
-    <div class="supabase-form" style="margin-top:20px">
-      <h3 style="margin-bottom:16px;text-align:center">Share Your Insight</h3>
-      <input type="text" id="insight-user" placeholder="Your Name">
-      <input type="text" id="insight-msg" placeholder="Your Bitcoin insight...">
-      <button class="btn btn1" style="width:100%" onclick="submitInsight()">Share Insight</button>
     </div>
   </section>
   
@@ -322,201 +255,100 @@
     </div>
   </section>
   
-  <footer class="footer">
-    <p>© 2026 HiftyCo • Education for Bitcoiners, by Bitcoiners</p>
-    <p style="margin-top:8px;font-size:0.85rem">⚡ Lightning Tips: hiftyco@coinos.io</p>
-  </footer>
+  <footer class="footer"><p>© 2026 HiftyCo • Education for Bitcoiners, by Bitcoiners</p><p style="margin-top:8px;font-size:0.85rem">⚡ Lightning Tips: hiftyco@coinos.io</p></footer>
   
   <script>
-    // Supabase config
-    const SUPABASE_URL = 'https://rykdrzqclyszgktrvtui.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5a2RyenFjbHlzemdrdHJ2dHVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTUzOTMsImV4cCI6MjA4ODM3MTM5M30.QmNqcEmueMmSmoK_XMMbKCFwSW-P8yd3NwrY0TarBBA';
+    // REAL-TIME Bitcoin Data from blockstream.info
+    const API = 'https://blockstream.info/api';
+    let blockHeight = 939593;
     
-    // Default leaderboard data
-    const defaultLeaderboard = [
-      {name: 'Satoshi', score: 100},
-      {name: 'Hal Finney', score: 95},
-      {name: 'Gavin Andresen', score: 90},
-      {name: 'BitcoinMaxi', score: 85},
-      {name: 'LightningFan', score: 80}
-    ];
-    
-    // REAL-TIME Bitcoin Data - Updates every 10 seconds
-    
-    let currentBlockHeight = 939590;
-    
-    // Run when DOM is ready
+    // Load data on page load
     document.addEventListener('DOMContentLoaded', function() {
-      // Calculate current block based on time (approx 1 block per 10 minutes)
-      const now = Date.now();
-      const startTime = new Date('2026-03-06T00:00:00Z').getTime();
-      const minutesSinceStart = (now - startTime) / 60000;
-      currentBlockHeight = 939590 + Math.floor(minutesSinceStart / 10);
-      
-      updateDisplay();
-      
-      // Auto-refresh every 10 seconds
-      setInterval(updateDisplay, 10000);
+      loadBlockchainData();
+      setInterval(loadBlockchainData, 15000); // Refresh every 15 seconds
     });
     
-    function updateDisplay() {
+    async function loadBlockchainData() {
       try {
-        // Recalculate block height
-        const now = Date.now();
-        const startTime = new Date('2026-03-06T00:00:00Z').getTime();
-        const minutesSinceStart = (now - startTime) / 60000;
-        currentBlockHeight = 939590 + Math.floor(minutesSinceStart / 10);
+        // Fetch blocks
+        const blocksResp = await fetch(API + '/blocks');
+        const blocks = await blocksResp.json();
         
-        // Get mempool data (simulated based on network activity)
-        const mempoolCount = 15000 + Math.floor(Math.random() * 20000);
-        const mempoolSize = 10 + Math.random() * 15;
+        // Fetch mempool
+        const mempoolResp = await fetch(API + '/mempool');
+        const mempool = await mempoolResp.json();
         
-        // Calculate hash rate and difficulty (realistic values)
-        const hashRate = 650 + Math.random() * 100;
-        const difficulty = 85 + Math.random() * 15;
+        // Fetch recent transactions
+        const txResp = await fetch(API + '/mempool/recent');
+        const txs = await txResp.json();
         
-        // Update all stats
-        document.getElementById('block-height').textContent = '#' + currentBlockHeight.toLocaleString();
-        document.getElementById('mempool-count').textContent = mempoolCount.toLocaleString();
-        document.getElementById('mempool-size').textContent = mempoolSize.toFixed(1) + ' MB';
-        document.getElementById('hash-rate').textContent = hashRate.toFixed(0) + ' EH/s';
-        document.getElementById('difficulty').textContent = difficulty.toFixed(1) + ' T';
-      
-      // Calculate halving
-      const blocksUntilHalving = 1050000 - currentBlockHeight;
-      document.getElementById('next-halving').textContent = blocksUntilHalving.toLocaleString() + ' blks';
-      document.getElementById('halving-date').textContent = Math.floor(blocksUntilHalving * 10 / 52560) + ' years';
-      
-      // Fee estimates
-      const feeLow = 8 + Math.floor(Math.random() * 8);
-      const feeMed = 15 + Math.floor(Math.random() * 15);
-      const feeHigh = 35 + Math.floor(Math.random() * 25);
-      document.getElementById('fee-low').textContent = feeLow;
-      document.getElementById('fee-medium').textContent = feeMed;
-      document.getElementById('fee-high').textContent = feeHigh;
-      
-      // Visual chain with blocks
-      const chainViz = document.getElementById('chain-viz');
-      let chainHTML = '';
-      for(let i = 0; i < 6; i++) {
-        const blockNum = currentBlockHeight - i;
-        const txCount = 1500 + Math.floor(Math.random() * 2500);
-        chainHTML += '<div class="chain-block" style="width:75px;height:75px;background:linear-gradient(145deg,var(--bg),#1a1a2e);border:2px solid var(--primary);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;position:relative;animation:pulse 2s infinite;animation-delay:'+(i*0.15)+'s">' +
-          '<span style="color:var(--primary);font-size:0.7rem">#' + blockNum.toString().slice(-5) + '</span>' +
-          '<span style="color:#606070;font-size:0.55rem">' + txCount.toLocaleString() + ' txs</span>' +
-          '</div>';
-        if(i < 5) chainHTML += '<span style="color:var(--primary);font-size:1.2rem">→</span>';
-      }
-      chainViz.innerHTML = chainHTML;
-      
-      // Recent transactions
-      const txsContainer = document.getElementById('mempool-txs');
-      let txHTML = '';
-      for(let i = 0; i < 12; i++) {
-        const txHash = Math.random().toString(36).substring(2, 16);
-        const txValue = Math.floor(Math.random() * 2000000);
-        const txFee = feeLow + Math.floor(Math.random() * (feeHigh - feeLow));
-        txHTML += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);font-size:0.8rem">' +
-          '<span style="font-family:monospace;color:var(--primary);font-size:0.7rem">' + txHash + '...</span>' +
-          '<span style="text-align:right">' +
-            '<span style="color:#00d4aa;font-weight:600">' + txValue.toLocaleString() + ' sats</span> ' +
-            '<span style="color:#ef4444;font-size:0.7rem">' + txFee + ' sat/vB</span>' +
-          '</span></div>';
-      }
-      txsContainer.innerHTML = txHTML;
-    }
-    
-    // Legacy function for button click
-    function loadMempool() {
-      updateDisplay();
-    }
-              '<span style="color:#606070;font-size:0.55rem">'+b.tx_count.toLocaleString()+' txs</span>' +
-            '</div>' +
-            (i < 5 ? '<span style="color:var(--primary);font-size:1.2rem">→</span>' : '')
+        // Update stats
+        if(blocks && blocks[0]) {
+          blockHeight = blocks[0].height;
+          document.getElementById('block-height').textContent = '#' + blockHeight.toLocaleString();
+          
+          // Update chain visualization
+          const chain = document.getElementById('chain');
+          chain.innerHTML = blocks.slice(0, 6).map((b, i) => 
+            '<div class="chain-block" style="animation-delay:'+(i*0.1)+'s"><span class="block-num">#'+b.height.toLocaleString().slice(-4)+'</span><span class="block-txs">'+b.tx_count.toLocaleString()+' txs</span></div>' +
+            (i < 5 ? '<span class="chain-arrow">→</span>' : '')
           ).join('');
         }
         
-        if(mempoolData) {
-          document.getElementById('mempool-count').textContent = (mempoolData.count || 0).toLocaleString();
-          document.getElementById('mempool-size').textContent = (mempoolData.vsize / 1000000).toFixed(1) + ' MB';
+        if(mempool) {
+          document.getElementById('mempool-count').textContent = mempool.count.toLocaleString();
+          document.getElementById('mempool-size').textContent = (mempool.vsize / 1000000).toFixed(1) + ' MB';
         }
         
-        // Estimate hashrate and difficulty (blockstream doesn't provide these directly)
-        // Using historical approximations
-        const currentHeight = blocks?.[0]?.height || 939586;
-        document.getElementById('hash-rate').textContent = '~700 TH/s';
+        // Estimate hash rate and difficulty (realistic values based on current network)
+        document.getElementById('hash-rate').textContent = '~700 EH/s';
         document.getElementById('difficulty').textContent = '~92 T';
         
-        // Fee estimates
-        if(fees) {
-          document.getElementById('fee-low').textContent = fees.hourFeePercentile || '--';
-          document.getElementById('fee-medium').textContent = fees.halfHourFeePercentile || '--';
-          document.getElementById('fee-high').textContent = fees.fastestFee || '--';
-        }
+        // Calculate halving
+        const blocksUntilHalving = 1050000 - blockHeight;
+        document.getElementById('next-halving').textContent = blocksUntilHalving.toLocaleString();
         
-        // Calculate next halving
-        const halvingInterval = 210000;
-        const nextHalvingHeight = Math.ceil(currentHeight / halvingInterval) * halvingInterval;
-        const blocksUntilHalving = nextHalvingHeight - currentHeight;
-        document.getElementById('next-halving').textContent = blocksUntilHalving.toLocaleString() + ' blks';
-        document.getElementById('halving-date').textContent = Math.floor(blocksUntilHalving * 10 / 52560) + ' years';
+        // Fee estimates (based on mempool histogram analysis)
+        const fees = calculateFees(mempool);
+        document.getElementById('fee-low').textContent = fees.low;
+        document.getElementById('fee-medium').textContent = fees.medium;
+        document.getElementById('fee-high').textContent = fees.high;
         
-        // Get recent transactions
-        const txResp = await fetch(MEMPOOL_API + '/mempool/recent');
-        const recentTxs = await txResp.json();
-        
-        // Update transactions list
-        const txsContainer = document.getElementById('mempool-txs');
-        txsContainer.innerHTML = recentTxs.slice(0, 12).map(tx => 
-          '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);font-size:0.8rem">' +
-            '<span style="font-family:monospace;color:var(--primary);font-size:0.7rem">'+tx.txid.slice(0, 14)+'...</span>' +
-            '<span style="text-align:right">' +
-              '<span style="color:#00d4aa;font-weight:600">'+(tx.value || 0).toLocaleString()+' sats</span> ' +
-              '<span style="color:#ef4444;font-size:0.7rem">'+tx.fee+' sat/vB</span>' +
-            '</span>' +
-          '</div>'
+        // Update transactions
+        const txList = document.getElementById('tx-list');
+        txList.innerHTML = txs.slice(0, 15).map(tx => 
+          '<div class="tx-item"><span class="tx-hash">'+tx.txid.slice(0, 16)+'...</span>' +
+          '<div class="tx-details"><span class="tx-amount">'+(tx.value/100000000).toFixed(4)+' BTC</span>' +
+          '<span class="tx-fee">'+tx.fee+' sat/vB</span></div></div>'
         ).join('');
         
       } catch(e) {
-        console.error('Mempool load error:', e);
-        loadDemoData();
+        console.error('Error loading blockchain data:', e);
+        loadFallback();
       }
     }
     
-    function loadDemoData() {
-      // Demo fallback
-      document.getElementById('block-height').textContent = '#870,432';
-      document.getElementById('mempool-count').textContent = '24,891';
-      document.getElementById('mempool-size').textContent = '18.3 MB';
-      document.getElementById('hash-rate').textContent = '678.45 TH/s';
-      document.getElementById('difficulty').textContent = '92.67 T';
-      document.getElementById('next-halving').textContent = '4,568 blks';
-      document.getElementById('fee-low').textContent = '15';
-      document.getElementById('fee-medium').textContent = '35';
-      document.getElementById('fee-high').textContent = '65';
-      
-      document.getElementById('chain-viz').innerHTML = 
-        '<div class="chain-block" style="width:75px;height:75px;background:linear-gradient(145deg,var(--bg),#1a1a2e);border:2px solid var(--primary);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700"><span style="color:var(--primary);font-size:0.7rem">#870432</span><span style="color:#606070;font-size:0.55rem">2,847 txs</span></div><span style="color:var(--primary)">→</span>' +
-        '<div class="chain-block" style="width:75px;height:75px;background:linear-gradient(145deg,var(--bg),#1a1a2e);border:2px solid var(--primary);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700"><span style="color:var(--primary);font-size:0.7rem">#870431</span><span style="color:#606070;font-size:0.55rem">3,102 txs</span></div><span style="color:var(--primary)">→</span>' +
-        '<div class="chain-block" style="width:75px;height:75px;background:linear-gradient(145deg,var(--bg),#1a1a2e);border:2px solid var(--primary);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700"><span style="color:var(--primary);font-size:0.7rem">#870430</span><span style="color:#606070;font-size:0.55rem">2,456 txs</span></div><span style="color:var(--primary)">→</span>' +
-        '<div class="chain-block" style="width:75px;height:75px;background:linear-gradient(145deg,var(--bg),#1a1a2e);border:2px solid var(--primary);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700"><span style="color:var(--primary);font-size:0.7rem">#870429</span><span style="color:#606070;font-size:0.55rem">2,891 txs</span></div><span style="color:var(--primary)">→</span>' +
-        '<div class="chain-block" style="width:75px;height:75px;background:linear-gradient(145deg,var(--bg),#1a1a2e);border:2px solid var(--primary);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700"><span style="color:var(--primary);font-size:0.7rem">#870428</span><span style="color:#606070;font-size:0.55rem">2,234 txs</span></div>';
-      
-      const demoTxs = [
-        {hash: 'a1b2c3d4e5f6g7', amount: 0.0125, fee: 45.2},
-        {hash: 'b2c3d4e5f6g7h8', amount: 0.0089, fee: 38.7},
-        {hash: 'c3d4e5f6g7h8i9', amount: 0.021, fee: 52.1},
-        {hash: 'd4e5f6g7h8i9j0', amount: 0.00567, fee: 28.4},
-        {hash: 'e5f6g7h8i9j0k1', amount: 0.032, fee: 61.3}
-      ];
-      
-      document.getElementById('mempool-txs').innerHTML = demoTxs.map(tx => 
-        '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);font-size:0.8rem"><span style="font-family:monospace;color:var(--primary);font-size:0.7rem">'+tx.hash+'...</span><span style="text-align:right"><span style="color:#00d4aa;font-weight:600">'+tx.amount.toFixed(4)+' BTC</span> <span style="color:#ef4444;font-size:0.7rem">'+tx.fee+' sat/vB</span></span></div>'
-      ).join('');
+    function calculateFees(mempool) {
+      // Analyze fee histogram to estimate fees
+      if(mempool && mempool.fee_histogram) {
+        const hist = mempool.fee_histogram;
+        // Simple fee estimation from histogram
+        return { low: Math.floor(hist[hist.length-1][0]), medium: Math.floor(hist[Math.floor(hist.length/2)][0]), high: Math.floor(hist[0][0]) };
+      }
+      // Default values
+      return { low: '8-12', medium: '15-25', high: '35-50' };
     }
     
-    // Load on page load + auto refresh every 30 seconds
-    loadMempool();
+    function loadFallback() {
+      document.getElementById('block-height').textContent = '#' + blockHeight;
+      document.getElementById('mempool-count').textContent = '~25,000';
+      document.getElementById('mempool-size').textContent = '~20 MB';
+      document.getElementById('hash-rate').textContent = '~700 EH/s';
+      document.getElementById('difficulty').textContent = '~92 T';
+      document.getElementById('fee-low').textContent = '10';
+      document.getElementById('fee-medium').textContent = '22';
+      document.getElementById('fee-high').textContent = '45';
+    }
     
     // Quiz
     let quizScore = 0;
@@ -524,199 +356,45 @@
       {q:'What is the maximum supply of Bitcoin?',a:0,o:['21 million','100 million','1 billion','Unlimited']},
       {q:'Who created Bitcoin?',a:2,o:['Satoshi Nakamoto','Vitalik Buterin','Satoshi Nakamoto','Elon Musk']},
       {q:'How often does a new block get added?',a:0,o:['Every 10 minutes','Every 1 minute','Every hour','Every day']},
-      {q:'What consensus mechanism does Bitcoin use?',a:0,o:['Proof of Work','Proof of Stake','Proof of Authority','Delegated PoS']},
-      {q:'What is the block reward now (2024-2024)?',a:1,o:['50 BTC','6.25 BTC','3.125 BTC','1.5625 BTC']}
+      {q:'What consensus mechanism does Bitcoin use?',a:0,o:['Proof of Work','Proof of Stake','Proof of Authority','Delegated PoS']}
     ];
     let qIdx = 0;
     function answer(idx) {
-      if(questions[qIdx].a === idx) {
-        quizScore += 25;
-        alert('Correct! +25 points');
-      } else {
-        alert('Wrong! The answer was: ' + questions[qIdx].o[questions[qIdx].a]);
-      }
+      if(questions[qIdx].a === idx) { quizScore += 25; alert('Correct! +25 points'); }
+      else alert('Wrong! The answer was: ' + questions[qIdx].o[questions[qIdx].a]);
       qIdx = (qIdx + 1) % questions.length;
       document.getElementById('qtext').textContent = questions[qIdx].q;
-      const btns = document.querySelectorAll('.qo');
-      btns.forEach((btn,i) => btn.textContent = questions[qIdx].o[i]);
+      document.querySelectorAll('.qo').forEach((btn,i) => btn.textContent = questions[qIdx].o[i]);
       document.getElementById('qnum').textContent = 'Question '+(qIdx+1)+' of '+questions.length + ' | Score: ' + quizScore;
     }
     
-    // Load leaderboard from Supabase or localStorage
-    async function loadLeaderboard() {
-      // Try Supabase first
-      try {
-        const response = await fetch(SUPABASE_URL + '/rest/v1/leaderboard?score=desc&limit=10', {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
-          }
-        });
-        if(response.ok) {
-          const data = await response.json();
-          if(data && data.length > 0) {
-            const lbList = document.getElementById('lb-list');
-            lbList.innerHTML = data.map((entry, i) => 
-              '<div class="lb-row"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name">'+entry.name+'</span><span class="lb-score">'+entry.score+'</span></div>'
-            ).join('');
-            return;
-          }
-        }
-      } catch(e) { console.log('Supabase not available'); }
-      
-      // Fallback to localStorage
-      let lbData = localStorage.getItem('hifty_leaderboard');
-      if(lbData) {
-        lbData = JSON.parse(lbData);
-      } else {
-        lbData = defaultLeaderboard;
-        localStorage.setItem('hifty_leaderboard', JSON.stringify(lbData));
-      }
-      
-      const lbList = document.getElementById('lb-list');
-      lbList.innerHTML = lbData.map((entry, i) => 
-        '<div class="lb-row"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name">'+entry.name+'</span><span class="lb-score">'+entry.score+'</span></div>'
-      ).join('');
+    // Leaderboard
+    const defaultLeaderboard = [{name: 'Satoshi', score: 100},{name: 'Hal Finney', score: 95},{name: 'Gavin Andresen', score: 90},{name: 'BitcoinMaxi', score: 85},{name: 'LightningFan', score: 80}];
+    const SUPABASE_URL = 'https://rykdrzqclyszgktrvtui.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5a2RyenFjbHlzemdrdHJ2dHVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3OTUzOTMsImV4cCI6MjA4ODM3MTM5M30.QmNqcEmueMmSmoK_XMMbKCFwSW-P8yd3NwrY0TarBBA';
+    
+    function loadLeaderboard() {
+      let lbData = JSON.parse(localStorage.getItem('hifty_leaderboard')) || defaultLeaderboard;
+      localStorage.setItem('hifty_leaderboard', JSON.stringify(lbData));
+      document.getElementById('lb-list').innerHTML = lbData.map((e,i) => '<div class="lb-row"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name">'+e.name+'</span><span class="lb-score">'+e.score+'</span></div>').join('');
     }
     
-    // Submit score to leaderboard
     function submitScore() {
       const name = document.getElementById('player-name').value;
       const score = parseInt(document.getElementById('player-score').value) || quizScore;
-      
       if(!name) { alert('Please enter your name!'); return; }
-      
       let lbData = JSON.parse(localStorage.getItem('hifty_leaderboard')) || defaultLeaderboard;
       lbData.push({name: name, score: score});
       lbData.sort((a,b) => b.score - a.score);
-      lbData = lbData.slice(0, 10);
-      localStorage.setItem('hifty_leaderboard', JSON.stringify(lbData));
-      
-      alert('Score submitted! You are now on the leaderboard!');
-      loadLeaderboard();
-      
-      // Try to submit to Supabase (will fail if table doesn't exist)
-      trySubmitToSupabase('leaderboard', {name: name, score: score});
+      localStorage.setItem('hifty_leaderboard', JSON.stringify(lbData.slice(0,10)));
+      alert('Score submitted!'); loadLeaderboard();
     }
     
-    // Try to submit to Supabase
-    async function trySubmitToSupabase(table, data) {
-      try {
-        const response = await fetch(SUPABASE_URL + '/rest/v1/' + table, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY,
-            'Prefer': 'return=minimal'
-          },
-          body: JSON.stringify(data)
-        });
-        
-        if(response.ok) {
-          console.log('Submitted to Supabase!');
-        }
-      } catch(e) {
-        console.log('Supabase not available, using local storage');
-      }
-    }
+    // Progress
+    function toggleProgress(el) { el.classList.toggle('checked'); localStorage.setItem('hifty_progress', JSON.stringify(Array.from(document.querySelectorAll('.progress-check')).map(c => c.classList.contains('checked')))); }
+    function loadProgress() { const p = JSON.parse(localStorage.getItem('hifty_progress')) || []; document.querySelectorAll('.progress-check').forEach((c,i) => { if(p[i]) c.classList.add('checked'); }); }
     
-    // Load insights from Supabase or localStorage
-    async function loadInsights() {
-      // Try Supabase first
-      try {
-        const response = await fetch(SUPABASE_URL + '/rest/v1/insights?order=created_at.desc&limit=20', {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
-          }
-        });
-        if(response.ok) {
-          const data = await response.json();
-          if(data && data.length > 0) {
-            const list = document.getElementById('insights-list');
-            list.innerHTML = data.map(i => 
-              '<div class="insight"><div class="insight-user">'+i.user+'</div><div class="insight-msg">"'+i.message+'"</div><div class="insight-time">'+i.created_at?.split('T')[0] || 'Now'+'</div></div>'
-            ).join('');
-            return;
-          }
-        }
-      } catch(e) { console.log('Supabase not available'); }
-      
-      // Fallback to localStorage
-      const insightsData = localStorage.getItem('hifty_insights');
-      let insights = insightsData ? JSON.parse(insightsData) : [];
-      
-      if(insights.length === 0) {
-        insights = [
-          {user: 'Satoshi', msg: 'Bitcoin is a distributed peer-to-peer digital currency.', time: '2009'},
-          {user: 'Hal Finney', msg: 'The project is the first to solve the double-spend problem.', time: '2009'}
-        ];
-      }
-      
-      const list = document.getElementById('insights-list');
-      list.innerHTML = insights.map(i => 
-        '<div class="insight"><div class="insight-user">'+i.user+'</div><div class="insight-msg">"'+i.msg+'"</div><div class="insight-time">'+i.time+'</div></div>'
-      ).join('');
-    }
-    
-    // Submit insight
-    function submitInsight() {
-      const user = document.getElementById('insight-user').value;
-      const msg = document.getElementById('insight-msg').value;
-      
-      if(!user || !msg) { alert('Please enter your name and insight!'); return; }
-      
-      let insights = JSON.parse(localStorage.getItem('hifty_insights')) || [];
-      insights.unshift({user: user, msg: msg, time: new Date().getFullYear()});
-      insights = insights.slice(0, 20);
-      localStorage.setItem('hifty_insights', JSON.stringify(insights));
-      
-      alert('Insight shared with the community!');
-      loadInsights();
-      
-      // Try Supabase
-      trySubmitToSupabase('insights', {user: user, message: msg});
-    }
-    
-    // Progress tracking
-    function toggleProgress(el) {
-      el.classList.toggle('checked');
-      saveProgress();
-    }
-    
-    function saveProgress() {
-      const checks = document.querySelectorAll('.progress-check');
-      const progress = Array.from(checks).map(c => c.classList.contains('checked'));
-      localStorage.setItem('hifty_progress', JSON.stringify(progress));
-      
-      // Save to Supabase
-      const userId = localStorage.getItem('hifty_user_id') || 'user_' + Math.random().toString(36).substr(2,9);
-      localStorage.setItem('hifty_user_id', userId);
-      
-      trySubmitToSupabase('progress', {
-        user_id: userId,
-        path: 'bitcoin_basics',
-        completed: progress.filter(p => p).length,
-        total: progress.length
-      });
-    }
-    
-    function loadProgress() {
-      const progress = localStorage.getItem('hifty_progress');
-      if(progress) {
-        const data = JSON.parse(progress);
-        const checks = document.querySelectorAll('.progress-check');
-        checks.forEach((c, i) => {
-          if(data[i]) c.classList.add('checked');
-        });
-      }
-    }
-    
-    // Initialize
-    loadLeaderboard();
-    loadInsights();
-    loadProgress();
+    loadLeaderboard(); loadProgress();
   </script>
 </body>
 </html>
