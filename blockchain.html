@@ -30,93 +30,161 @@
       color: var(--text-primary); 
       min-height: 100vh; 
       background-image: 
-        radial-gradient(ellipse at 20% 0%, rgba(247,147,26,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 100%, rgba(50,215,75,0.04) 0%, transparent 50%);
+        radial-gradient(ellipse at 20% 0%, rgba(247,147,26,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(50,215,75,0.05) 0%, transparent 50%);
     }
     
-    .nav { 
-      position: fixed; top: 0; left: 0; right: 0; 
-      height: 60px; 
-      background: rgba(8,8,12,0.9); 
-      border-bottom: 1px solid var(--border); 
-      display: flex; align-items: center; justify-content: space-between; 
-      padding: 0 48px; z-index: 1000; 
-      backdrop-filter: blur(30px);
-    }
+    /* Navigation */
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(8,8,12,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 48px; z-index: 1000; backdrop-filter: blur(30px); }
     .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 600; }
-    .logo .btc { color: var(--btc-orange); filter: drop-shadow(0 0 8px var(--glow)); }
+    .logo .btc { color: var(--btc-orange); filter: drop-shadow(0 0 10px var(--glow)); font-size: 1.4rem; }
     .logo .tag { background: linear-gradient(135deg, var(--btc-orange), var(--btc-light)); color: #000; padding: 3px 10px; border-radius: 10px; font-size: 0.6rem; font-weight: 700; }
     .logo a { text-decoration: none; color: inherit; }
     .links { display: flex; gap: 36px; }
-    .links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.85rem; }
+    .links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.85rem; transition: color 0.2s; }
     .links a:hover, .links a.active { color: var(--btc-orange); }
     
     .container { max-width: 1200px; margin: 0 auto; padding: 90px 32px 50px; }
     
+    /* Header */
     .header { text-align: center; margin-bottom: 32px; }
-    .live-indicator { 
-      display: inline-flex; align-items: center; gap: 10px; 
-      background: rgba(50,215,75,0.12); border: 1px solid rgba(50,215,75,0.3); 
-      border-radius: 24px; padding: 8px 18px; font-size: 0.8rem; font-weight: 600; 
-      color: var(--success); margin-bottom: 16px;
-    }
-    .live-indicator .dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: dotBlink 1.5s infinite; box-shadow: 0 0 10px var(--success); }
-    @keyframes dotBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .live-indicator { display: inline-flex; align-items: center; gap: 10px; background: rgba(50,215,75,0.12); border: 1px solid rgba(50,215,75,0.3); border-radius: 24px; padding: 8px 18px; font-size: 0.8rem; font-weight: 600; color: var(--success); margin-bottom: 16px; animation: livePulse 2s ease-in-out infinite; }
+    .live-indicator .dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; box-shadow: 0 0 12px var(--success); animation: dotPulse 1.5s ease-in-out infinite; }
+    @keyframes livePulse { 0%, 100% { box-shadow: 0 0 20px rgba(50,215,75,0.2); } 50% { box-shadow: 0 0 35px rgba(50,215,75,0.4); } }
+    @keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.8); opacity: 0.7; } }
     
-    .header h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, var(--btc-orange), var(--btc-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, var(--btc-orange), var(--btc-light), var(--btc-orange)); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 3s linear infinite; }
+    @keyframes gradientShift { to { background-position: 200% center; } }
     .header p { color: var(--text-secondary); font-size: 1rem; }
     
+    /* Search */
     .search-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 24px; margin-bottom: 32px; }
     .search-title { text-align: center; font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary); }
     .search-box { display: flex; gap: 12px; max-width: 700px; margin: 0 auto; }
-    .search-box input { flex: 1; padding: 14px 18px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 0.9rem; }
-    .search-box input:focus { outline: none; border-color: var(--btc-orange); }
-    .search-box button { padding: 14px 28px; background: linear-gradient(135deg, var(--btc-orange), var(--btc-dark)); border: none; border-radius: 12px; color: #000; font-weight: 600; cursor: pointer; }
+    .search-box input { flex: 1; padding: 14px 18px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 0.9rem; transition: all 0.3s; }
+    .search-box input:focus { outline: none; border-color: var(--btc-orange); box-shadow: 0 0 0 4px rgba(247,147,26,0.15); }
+    .search-box input::placeholder { color: var(--text-muted); }
+    .search-box button { padding: 14px 28px; background: linear-gradient(135deg, var(--btc-orange), var(--btc-dark)); border: none; border-radius: 12px; color: #000; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+    .search-box button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(247,147,26,0.4); }
     
-    .sr-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-top: 16px; }
-    .sr-card.pending { border-color: rgba(247,147,26,0.4); }
-    .sr-card.confirmed { border-color: rgba(50,215,75,0.4); }
+    /* Results */
+    .sr-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-top: 16px; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     .sr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .sr-txid { font-family: monospace; color: var(--btc-orange); font-size: 0.75rem; word-break: break-all; }
+    .sr-txid { font-family: 'SF Mono', Monaco, monospace; color: var(--btc-orange); font-size: 0.75rem; word-break: break-all; }
     .sr-status { padding: 6px 12px; border-radius: 16px; font-size: 0.75rem; font-weight: 600; }
-    .sr-status.pending { background: rgba(247,147,26,0.15); color: var(--btc-orange); }
     .sr-status.confirmed { background: rgba(50,215,75,0.15); color: var(--success); }
-    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; margin-top: 14px; }
-    .sr-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+    .sr-status.pending { background: rgba(247,147,26,0.15); color: var(--btc-orange); }
+    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; }
+    .sr-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .sr-value { font-size: 0.95rem; font-weight: 600; }
     .sr-value.btc { color: var(--btc-orange); }
     
+    /* Stats */
     .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 32px; }
-    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; text-align: center; }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; text-align: center; transition: all 0.3s; }
+    .stat-card:hover { transform: translateY(-3px); border-color: var(--btc-orange); box-shadow: 0 10px 30px rgba(247,147,26,0.2); }
     .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--btc-orange); }
     .stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
     
+    /* Chain - AMAZING ANIMATION */
     .chain-section { margin-bottom: 32px; }
     .chain-title { text-align: center; font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 20px; }
-    .chain-container { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; padding: 24px 0; }
+    .chain-container { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; padding: 30px 0; perspective: 1000px; }
     .block-wrapper { display: flex; align-items: center; }
+    
     .chain-block { 
-      width: 115px; height: 115px; 
-      background: linear-gradient(160deg, var(--bg-elevated), var(--bg-card)); 
-      border: 2px solid var(--btc-orange); border-radius: 18px; 
+      width: 120px; height: 120px; 
+      background: linear-gradient(145deg, var(--bg-elevated), var(--bg-card)); 
+      border: 2px solid var(--btc-orange); border-radius: 20px; 
       display: flex; flex-direction: column; align-items: center; justify-content: center; 
       font-weight: 600; cursor: pointer;
-      transition: all 0.3s ease;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
     }
-    .chain-block:hover { transform: scale(1.1) translateY(-5px); border-color: var(--success); box-shadow: 0 15px 40px rgba(247,147,26,0.3); }
+    
+    /* Glow effect */
+    .chain-block::before {
+      content: ''; position: absolute; inset: -3px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--btc-orange), var(--btc-light), var(--btc-orange), var(--btc-dark));
+      background-size: 300% 300%;
+      z-index: -1;
+      animation: borderGlow 4s ease infinite;
+      opacity: 0.5;
+    }
+    @keyframes borderGlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    
+    /* Shimmer */
+    .chain-block::after {
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      animation: shimmer 3s infinite;
+      border-radius: 20px;
+    }
+    @keyframes shimmer { 0% { left: -100%; } 30%, 100% { left: 200%; } }
+    
+    .chain-block:hover { 
+      transform: scale(1.15) translateY(-10px) rotateX(5deg); 
+      border-color: var(--success);
+      box-shadow: 0 25px 60px rgba(247,147,26,0.5), 0 0 40px rgba(50,215,75,0.3);
+    }
+    
     .chain-block .bh { font-size: 0.75rem; color: var(--btc-orange); font-weight: 700; }
     .chain-block .bt { font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px; }
     .chain-block .bs { font-size: 0.55rem; color: var(--success); margin-top: 2px; }
     .chain-block .btime { font-size: 0.5rem; color: var(--text-muted); margin-top: 6px; padding: 2px 8px; background: rgba(255,255,255,0.05); border-radius: 8px; }
-    .chain-arrow { color: var(--btc-orange); font-size: 1.6rem; margin: 0 4px; }
     
+    /* NEW BLOCK - WOW ANIMATION */
+    .chain-block.new-block {
+      animation: blockExplode 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border-color: var(--success) !important;
+    }
+    .chain-block.new-block::before {
+      background: linear-gradient(135deg, var(--success), #50ff80, var(--success));
+      opacity: 0.9;
+      animation: newBlockPulse 0.5s ease infinite;
+    }
+    
+    @keyframes blockExplode {
+      0% { transform: scale(0) rotateY(180deg); opacity: 0; }
+      50% { transform: scale(1.3) rotateY(-10deg); }
+      75% { transform: scale(0.95) rotateY(5deg); }
+      100% { transform: scale(1) rotateY(0); opacity: 1; }
+    }
+    
+    @keyframes newBlockPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 30px var(--success); }
+      50% { transform: scale(1.05); box-shadow: 0 0 50px var(--success); }
+    }
+    
+    /* Particle burst */
+    .new-block .particles {
+      position: absolute; inset: 0; pointer-events: none; overflow: visible;
+    }
+    .particle {
+      position: absolute; width: 6px; height: 6px; background: var(--success); border-radius: 50%;
+      animation: particleBurst 1s ease-out forwards;
+    }
+    @keyframes particleBurst {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+    }
+    
+    .chain-arrow { color: var(--btc-orange); font-size: 1.6rem; margin: 0 4px; animation: arrowPulse 2s ease-in-out infinite; }
+    @keyframes arrowPulse { 0%, 100% { opacity: 0.3; transform: translateX(0); } 50% { opacity: 1; transform: translateX(3px); } }
+    
+    /* Fees */
     .fee-section { margin-bottom: 32px; }
     .fee-title { text-align: center; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 14px; }
     .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .fee-card { background: var(--bg-card); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid var(--border); }
-    .fee-card.slow { border-color: rgba(50,215,75,0.3); }
-    .fee-card.normal { border-color: rgba(247,147,26,0.3); }
-    .fee-card.fast { border-color: rgba(255,69,58,0.3); }
+    .fee-card { background: var(--bg-card); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid var(--border); transition: all 0.3s; }
+    .fee-card:hover { transform: translateY(-3px); }
+    .fee-card.slow { border-color: rgba(50,215,75,0.4); }
+    .fee-card.normal { border-color: rgba(247,147,26,0.4); }
+    .fee-card.fast { border-color: rgba(255,69,58,0.4); }
     .fee-rate { font-size: 1.8rem; font-weight: 700; }
     .fee-card.slow .fee-rate { color: var(--success); }
     .fee-card.normal .fee-rate { color: var(--btc-orange); }
@@ -124,43 +192,73 @@
     .fee-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
     .fee-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; margin-top: 8px; }
     
+    /* Transactions */
     .tx-section { margin-bottom: 32px; }
     .tx-title { text-align: center; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 14px; }
     .tx-list { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; max-height: 300px; overflow-y: auto; }
-    .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); transition: all 0.2s; cursor: pointer; }
+    .tx-item:hover { background: rgba(247,147,26,0.08); }
     .tx-item:last-child { border-bottom: none; }
     .tx-left { display: flex; align-items: center; gap: 12px; }
-    .tx-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .tx-dot.pending { background: var(--btc-orange); animation: txDot 1.2s infinite; }
+    .tx-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .tx-dot.pending { background: var(--btc-orange); animation: pendingPulse 1.2s infinite; }
     .tx-dot.confirmed { background: var(--success); }
-    @keyframes txDot { 0%, 100% { box-shadow: 0 0 6px var(--btc-orange); } 50% { box-shadow: 0 0 3px var(--btc-orange); } }
-    .tx-hash { font-family: monospace; color: var(--btc-orange); font-size: 0.75rem; }
+    @keyframes pendingPulse { 0%, 100% { box-shadow: 0 0 8px var(--btc-orange); } 50% { box-shadow: 0 0 4px var(--btc-orange); } }
+    .tx-hash { font-family: 'SF Mono', Monaco, monospace; color: var(--btc-orange); font-size: 0.75rem; }
     .tx-right { display: flex; align-items: center; gap: 16px; }
     .tx-amount { color: var(--success); font-weight: 600; font-size: 0.85rem; }
     .tx-fee { color: var(--text-muted); font-size: 0.7rem; }
     
-    .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1999; }
-    .popup-overlay.active { display: block; }
-    .block-popup {
+    /* Popup - Professional */
+    .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1999; backdrop-filter: blur(10px); }
+    .popup-overlay.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    .block-popup, .tx-popup {
       display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 90%; max-width: 750px; max-height: 80vh;
+      width: 90%; max-width: 800px; max-height: 85vh;
       background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px;
       padding: 24px; z-index: 2000; overflow: hidden;
     }
-    .block-popup.active { display: block; }
+    .block-popup.active, .tx-popup.active { display: block; animation: popupSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes popupSlide { from { opacity: 0; transform: translate(-50%, -48%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+    
     .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
     .popup-title { font-size: 1.1rem; font-weight: 700; color: var(--btc-orange); }
-    .popup-close { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
-    .popup-content { max-height: 60vh; overflow-y: auto; }
-    .popup-tx { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
-    .popup-tx:last-child { border-bottom: none; }
-    .popup-tx-hash { font-family: monospace; color: var(--btc-orange); font-size: 0.75rem; }
-    .popup-tx-amt { color: var(--success); font-weight: 600; font-size: 0.85rem; }
-    .popup-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-    .popup-stat { text-align: center; }
-    .popup-stat-value { font-size: 1.1rem; font-weight: 700; color: var(--btc-orange); }
-    .popup-stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
+    .popup-close { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; padding: 4px; transition: all 0.2s; }
+    .popup-close:hover { color: var(--danger); transform: rotate(90deg); }
     
+    .popup-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .popup-stat { text-align: center; padding: 12px; background: var(--bg-dark); border-radius: 12px; }
+    .popup-stat-value { font-size: 1.1rem; font-weight: 700; color: var(--btc-orange); }
+    .popup-stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+    
+    .popup-content { max-height: 55vh; overflow-y: auto; }
+    .popup-content::-webkit-scrollbar { width: 6px; }
+    .popup-content::-webkit-scrollbar-track { background: var(--bg-dark); }
+    .popup-content::-webkit-scrollbar-thumb { background: var(--btc-orange); border-radius: 3px; }
+    
+    /* Transaction details in popup */
+    .tx-detail-section { margin-bottom: 20px; }
+    .tx-detail-title { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .tx-in-row, .tx-out-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .tx-in-row:last-child, .tx-out-row:last-child { border-bottom: none; }
+    .tx-in-label { font-size: 0.7rem; color: var(--danger); font-weight: 600; }
+    .tx-out-label { font-size: 0.7rem; color: var(--success); font-weight: 600; }
+    .tx-addr { font-family: monospace; font-size: 0.7rem; color: var(--btc-orange); cursor: pointer; }
+    .tx-addr:hover { text-decoration: underline; }
+    .tx-addr-amt { font-weight: 600; color: var(--text-primary); }
+    .tx-hash-link { font-family: monospace; font-size: 0.75rem; color: var(--btc-orange); cursor: pointer; text-decoration: none; }
+    .tx-hash-link:hover { text-decoration: underline; }
+    
+    .popup-tx { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+    .popup-tx:hover { background: rgba(247,147,26,0.05); }
+    .popup-tx:last-child { border-bottom: none; }
+    .popup-tx-hash { font-family: monospace; color: var(--btc-orange); font-size: 0.75rem; cursor: pointer; }
+    .popup-tx-hash:hover { text-decoration: underline; }
+    .popup-tx-amt { color: var(--success); font-weight: 600; font-size: 0.85rem; }
+    
+    /* Footer */
     .footer { background: var(--bg-card); border-top: 1px solid var(--border); padding: 24px; text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 40px; }
     .loading { text-align: center; padding: 30px; color: var(--text-muted); }
     
@@ -168,8 +266,9 @@
       .nav { padding: 0 20px; } .links { display: none; }
       .stats-grid { grid-template-columns: repeat(3, 1fr); }
       .fee-grid { grid-template-columns: 1fr; }
-      .chain-block { width: 80px; height: 80px; }
+      .chain-block { width: 85px; height: 85px; }
       .search-box { flex-direction: column; }
+      .popup-stats { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -190,7 +289,7 @@
     <div class="header">
       <div class="live-indicator"><span class="dot"></span> LIVE BITCOIN DATA</div>
       <h1>Bitcoin Blockchain</h1>
-      <p>Click any block to view transactions • 🔔 bell rings on new block</p>
+      <p>Click any block → view txs → click tx for details | 🔔 bell on new block</p>
     </div>
     
     <div class="search-section">
@@ -212,10 +311,8 @@
     </div>
     
     <div class="chain-section">
-      <div class="chain-title">⛓️ Click any block to see all transactions</div>
-      <div class="chain-container" id="chain">
-        <div class="loading">Loading blocks...</div>
-      </div>
+      <div class="chain-title">⛓️ Click block → view txs → click tx for details</div>
+      <div class="chain-container" id="chain"><div class="loading">Loading blocks...</div></div>
     </div>
     
     <div class="fee-section">
@@ -228,70 +325,103 @@
     </div>
     
     <div class="tx-section">
-      <div class="tx-title">📤 Pending Transactions</div>
+      <div class="tx-title">📤 Pending Transactions (click for details)</div>
       <div class="tx-list" id="pending"><div class="loading">Loading...</div></div>
     </div>
     
     <div class="tx-section">
-      <div class="tx-title">✅ Confirmed (Latest Block)</div>
+      <div class="tx-title">✅ Confirmed (click tx for full details)</div>
       <div class="tx-list" id="confirmed"><div class="loading">Loading...</div></div>
     </div>
   </div>
   
   <footer class="footer">₿ HiftyCo - Empowering Bitcoiners | Cura et Celeritas</footer>
   
-  <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+  <!-- Block Popup -->
+  <div class="popup-overlay" id="popupOverlay" onclick="closePopups()"></div>
   <div class="block-popup" id="blockPopup">
     <div class="popup-header">
       <div class="popup-title" id="popupTitle">Block Transactions</div>
-      <button class="popup-close" onclick="closePopup()">✕</button>
+      <button class="popup-close" onclick="closePopups()">✕</button>
     </div>
     <div class="popup-stats" id="popupStats"></div>
     <div class="popup-content" id="popupContent"></div>
   </div>
   
+  <!-- Transaction Detail Popup -->
+  <div class="tx-popup" id="txPopup">
+    <div class="popup-header">
+      <div class="popup-title" id="txPopupTitle">Transaction Details</div>
+      <button class="popup-close" onclick="closePopups()">✕</button>
+    </div>
+    <div class="popup-stats" id="txPopupStats"></div>
+    <div class="popup-content" id="txPopupContent"></div>
+  </div>
+  
   <script>
     // Global state
     let lastBlockHeight = 0;
-    let currentData = null;
+    let cachedBlocks = [];
     
-    // Sound
+    // Meditation bell sound - beautiful harmonic chime
     function playBlockSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 528;
-        gain.gain.setValueAtTime(0, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
-        osc.start();
-        osc.stop(ctx.currentTime + 2.5);
-      } catch(e) {}
+        
+        // Main tone - 528Hz (DNA repair frequency, often used in meditation)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.frequency.value = 528;
+        gain1.gain.setValueAtTime(0, ctx.currentTime);
+        gain1.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.02);
+        gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3);
+        osc1.start();
+        osc1.stop(ctx.currentTime + 3);
+        
+        // Harmonic - 1056Hz
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.frequency.value = 1056;
+        gain2.gain.setValueAtTime(0, ctx.currentTime);
+        gain2.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.02);
+        gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+        osc2.start();
+        osc2.stop(ctx.currentTime + 2.5);
+        
+        // Higher harmonic - 1584Hz
+        const osc3 = ctx.createOscillator();
+        const gain3 = ctx.createGain();
+        osc3.connect(gain3);
+        gain3.connect(ctx.destination);
+        osc3.frequency.value = 1584;
+        gain3.gain.setValueAtTime(0, ctx.currentTime);
+        gain3.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.02);
+        gain3.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2);
+        osc3.start();
+        osc3.stop(ctx.currentTime + 2);
+        
+      } catch(e) { console.log('Audio error:', e); }
     }
     
     // Initialize
     (function init() {
-      // Set initial height estimate
       const now = Date.now();
       const estHeight = 939600 + Math.floor((now - 1772724000000) / 600000);
       lastBlockHeight = estHeight;
       document.getElementById('height').textContent = '#' + estHeight.toLocaleString();
       document.getElementById('halving').textContent = (1050000 - estHeight).toLocaleString();
       
-      // Try load immediately
       loadData();
-      
-      // Refresh every 20 seconds
       setInterval(loadData, 20000);
     })();
     
     async function loadData() {
-      console.log('Fetching data...');
+      console.log('Fetching live data...');
       
-      // Try multiple APIs
       let blocks = null, mempool = null, fees = null, pending = null;
       
       // Try mempool.space
@@ -315,7 +445,7 @@
         if(r.ok) pending = await r.json();
       } catch(e) {}
       
-      // If mempool.space fails, try blockchain.info
+      // Fallback to blockstream
       if(!blocks) {
         try {
           const r = await fetch('https://blockstream.info/api/blocks', { cache: 'no-store' });
@@ -334,18 +464,10 @@
         } catch(e) { console.log('blockstream failed'); }
       }
       
-      if(!mempool && blocks) {
-        try {
-          const r = await fetch('https://blockstream.info/api/mempool', { cache: 'no-store' });
-          if(r.ok) mempool = await r.json();
-        } catch(e) {}
-      }
-      
-      // If we got block data, display it
       if(blocks && blocks[0]) {
         const bh = blocks[0].height;
         
-        // Play sound if new block
+        // Check for new block
         if(lastBlockHeight > 0 && bh > lastBlockHeight) {
           playBlockSound();
         }
@@ -370,22 +492,14 @@
           document.getElementById('fee-fast').textContent = '60+';
         }
         
-        // Render chain
-        let chainHTML = '';
-        for(let i = 0; i < Math.min(blocks.length, 6); i++) {
-          const b = blocks[i];
-          const timeAgo = getTimeAgo(b.timestamp);
-          chainHTML += '<div class="block-wrapper"><div class="chain-block" onclick="showBlockTXs(' + b.height + ')"><span class="bh">#' + b.height.toLocaleString() + '</span><span class="bt">' + (b.extras?.txCount || b.tx_count || 0).toLocaleString() + ' txs</span><span class="bs">' + ((b.size || 0)/1000).toFixed(0) + ' KB</span><span class="btime">' + timeAgo + '</span></div>';
-          if(i < 5) chainHTML += '<span class="chain-arrow">→</span></div>';
-          else chainHTML += '</div>';
-        }
-        document.getElementById('chain').innerHTML = chainHTML;
+        // Render chain with animation for new block
+        renderChain(blocks, bh);
         
         // Render pending
         if(pending && pending.length > 0) {
           document.getElementById('pending').innerHTML = pending.slice(0, 12).map(x => {
             const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
-            return '<div class="tx-item"><div class="tx-left"><span class="tx-dot pending"></span><span class="tx-hash">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
+            return '<div class="tx-item" onclick="showTxDetail(\'' + x.txid + '\')"><div class="tx-left"><span class="tx-dot pending"></span><span class="tx-hash">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
           }).join('');
         }
         
@@ -393,9 +507,34 @@
         loadConfirmed(blocks[0].id);
         
         console.log('Data loaded, height:', bh);
-      } else {
-        console.log('No block data - keeping current display');
       }
+    }
+    
+    function renderChain(blocks, currentHeight) {
+      let chainHTML = '';
+      const isNewBlock = blocks[0]?.height > (cachedBlocks[0]?.height || 0);
+      
+      for(let i = 0; i < Math.min(blocks.length, 6); i++) {
+        const b = blocks[i];
+        const isFirst = i === 0 && isNewBlock;
+        const timeAgo = getTimeAgo(b.timestamp);
+        
+        let particleHTML = '';
+        if(isFirst) {
+          particleHTML = '<div class="particles">' + Array.from({length: 12}, (_, j) => {
+            const angle = (j / 12) * Math.PI * 2;
+            const dist = 60 + Math.random() * 40;
+            return `<div class="particle" style="--tx:${Math.cos(angle) * dist}px;--ty:${Math.sin(angle) * dist}px;animation-delay:${j * 0.05}s"></div>`;
+          }).join('') + '</div>';
+        }
+        
+        chainHTML += '<div class="block-wrapper"><div class="chain-block ' + (isFirst ? 'new-block' : '') + '" onclick="showBlockTXs(' + b.height + ')">' + particleHTML + '<span class="bh">#' + b.height.toLocaleString() + '</span><span class="bt">' + (b.extras?.txCount || b.tx_count || 0).toLocaleString() + ' txs</span><span class="bs">' + ((b.size || 0)/1000).toFixed(0) + ' KB</span><span class="btime">' + timeAgo + '</span></div>';
+        if(i < 5) chainHTML += '<span class="chain-arrow">→</span></div>';
+        else chainHTML += '</div>';
+      }
+      
+      document.getElementById('chain').innerHTML = chainHTML;
+      cachedBlocks = blocks;
     }
     
     function getTimeAgo(ts) {
@@ -417,7 +556,8 @@
             const data = await r.json();
             txs = data.map(tx => ({
               txid: tx.txid,
-              vout: tx.vout?.map(v => ({ value: v.value })) || [],
+              vin: tx.vin?.map(v => ({ prevout: { scriptpubkey_address: v.prevout?.scriptpubkey_address, value: v.prevout?.value } })) || [],
+              vout: tx.vout?.map(v => ({ value: v.value, scriptpubkey_address: v.scriptpubkey_address })) || [],
               fee: tx.fee
             }));
           }
@@ -426,12 +566,13 @@
         if(txs && txs.length > 0) {
           document.getElementById('confirmed').innerHTML = txs.slice(0, 10).map(x => {
             const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
-            return '<div class="tx-item"><div class="tx-left"><span class="tx-dot confirmed"></span><span class="tx-hash" style="color:var(--success)">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
+            return '<div class="tx-item" onclick="showTxDetail(\'' + x.txid + '\')"><div class="tx-left"><span class="tx-dot confirmed"></span><span class="tx-hash" style="color:var(--success)">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
           }).join('');
         }
       } catch(e) { console.log('Confirmed load failed'); }
     }
     
+    // Show block transactions
     async function showBlockTXs(blockHeight) {
       const popup = document.getElementById('blockPopup');
       const overlay = document.getElementById('popupOverlay');
@@ -442,18 +583,21 @@
       overlay.classList.add('active');
       
       try {
-        let blockHash, txs;
+        let blockHash, txs, blockInfo;
         
-        // Get block hash
+        // Try mempool.space
         let r = await fetch('https://mempool.space/api/block-height/' + blockHeight);
         if(r.ok) blockHash = await r.text();
         
         if(blockHash) {
+          r = await fetch('https://mempool.space/api/block/' + blockHash);
+          if(r.ok) blockInfo = await r.json();
+          
           r = await fetch('https://mempool.space/api/block/' + blockHash + '/txs');
           if(r.ok) txs = await r.json();
         }
         
-        // Try blockstream if mempool.space fails
+        // Fallback
         if(!txs) {
           r = await fetch('https://blockstream.info/api/block-height/' + blockHeight);
           if(r.ok) blockHash = await r.text();
@@ -463,7 +607,8 @@
               const data = await r.json();
               txs = data.map(tx => ({
                 txid: tx.txid,
-                vout: tx.vout?.map(v => ({ value: v.value })) || [],
+                vin: tx.vin || [],
+                vout: tx.vout?.map(v => ({ value: v.value, scriptpubkey_address: v.scriptpubkey_address })) || [],
                 fee: tx.fee
               }));
             }
@@ -473,11 +618,6 @@
         if(txs && txs.length > 0) {
           document.getElementById('popupTxCount').textContent = txs.length.toLocaleString();
           
-          // Get block info for stats
-          let blockInfo;
-          r = await fetch('https://mempool.space/api/block/' + blockHash);
-          if(r.ok) blockInfo = await r.json();
-          
           if(blockInfo) {
             document.getElementById('popupSize').textContent = ((blockInfo.size || 0)/1000).toFixed(1) + ' KB';
             document.getElementById('popupTime').textContent = new Date(blockInfo.timestamp * 1000).toLocaleString();
@@ -485,21 +625,110 @@
             document.getElementById('popupSize').textContent = '~' + Math.floor(txs.length * 0.5) + ' KB';
           }
           
-          // Render transactions - organized professionally
-          document.getElementById('popupContent').innerHTML = txs.map((tx, i) => {
+          // Render transactions - clickable to show details
+          document.getElementById('popupContent').innerHTML = txs.map(tx => {
             const amt = (tx.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
-            return '<div class="popup-tx"><span class="popup-tx-hash">' + tx.txid + '</span><span class="popup-tx-amt">' + amt.toFixed(8) + ' BTC</span></div>';
+            return '<div class="popup-tx"><span class="popup-tx-hash" onclick="showTxDetail(\'' + tx.txid + '\'); event.stopPropagation();">' + tx.txid + '</span><span class="popup-tx-amt">' + amt.toFixed(8) + ' BTC</span></div>';
           }).join('');
         } else {
-          document.getElementById('popupContent').innerHTML = '<div class="loading">No transactions found</div>';
+          document.getElementById('popupContent').innerHTML = '<div class="loading">No transactions</div>';
         }
       } catch(e) {
-        document.getElementById('popupContent').innerHTML = '<div class="loading">Error loading transactions</div>';
+        document.getElementById('popupContent').innerHTML = '<div class="loading">Error loading</div>';
       }
     }
     
-    function closePopup() {
+    // Show transaction details - MEMPOOL.SPACE STYLE
+    async function showTxDetail(txid) {
+      const popup = document.getElementById('txPopup');
+      const overlay = document.getElementById('popupOverlay');
+      document.getElementById('txPopupTitle').textContent = 'Transaction Details';
+      document.getElementById('txPopupStats').innerHTML = '<div class="popup-stat"><div class="popup-stat-value" id="txStatHash">--</div><div class="popup-stat-label">TXID</div></div><div class="popup-stat"><div class="popup-stat-value" id="txStatStatus">--</div><div class="popup-stat-label">Status</div></div><div class="popup-stat"><div class="popup-stat-value" id="txStatFee">--</div><div class="popup-stat-label">Fee</div></div><div class="popup-stat"><div class="popup-stat-value" id="txStatSize">--</div><div class="popup-stat-label">Size</div></div>';
+      document.getElementById('txPopupContent').innerHTML = '<div class="loading">Loading transaction...</div>';
+      
+      popup.classList.add('active');
+      
+      try {
+        let tx = null;
+        
+        // Try mempool.space
+        let r = await fetch('https://mempool.space/api/tx/' + txid);
+        if(r.ok) tx = await r.json();
+        
+        if(!tx) {
+          r = await fetch('https://blockstream.info/api/tx/' + txid);
+          if(r.ok) {
+            const data = await r.json();
+            tx = {
+              txid: data.txid,
+              vin: data.vin || [],
+              vout: data.vout?.map(v => ({ value: v.value, scriptpubkey_address: v.scriptpubkey_address, scriptpubkey: v.scriptpubkey })) || [],
+              fee: data.fee,
+              status: data.status,
+              size: data.size
+            };
+          }
+        }
+        
+        if(tx) {
+          // Update stats
+          document.getElementById('txStatHash').textContent = tx.txid?.slice(0, 12) + '...';
+          document.getElementById('txStatStatus').textContent = tx.status?.confirmed ? 'Confirmed' : 'Pending';
+          document.getElementById('txStatFee').textContent = (tx.fee || 0) + ' sat';
+          document.getElementById('txStatSize').textContent = (tx.size || tx.vsize || '?') + ' bytes';
+          
+          const totalIn = (tx.vin?.reduce((s,v) => s + (v.prevout?.value || 0), 0) || 0) / 100000000;
+          const totalOut = (tx.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
+          
+          // Render inputs (where BTC came from)
+          let inputsHTML = '<div class="tx-detail-section"><div class="tx-detail-title">📥 Inputs (' + (tx.vin?.length || 0) + ') - ' + totalIn.toFixed(8) + ' BTC</div>';
+          if(tx.vin && tx.vin.length > 0) {
+            inputsHTML += tx.vin.map(v => {
+              const addr = v.prevout?.scriptpubkey_address || 'Unknown';
+              const amt = (v.prevout?.value || 0) / 100000000;
+              return '<div class="tx-in-row"><span class="tx-in-label">FROM</span><span class="tx-addr" onclick="doSearchFrom(\'' + addr + '\')">' + addr + '</span><span class="tx-addr-amt">' + amt.toFixed(8) + '</span></div>';
+            }).join('');
+          } else {
+            inputsHTML += '<div class="tx-in-row"><span class="tx-in-label">COINBASE</span><span>New coins</span></div>';
+          }
+          inputsHTML += '</div>';
+          
+          // Render outputs (where BTC went)
+          let outputsHTML = '<div class="tx-detail-section"><div class="tx-detail-title">📤 Outputs (' + (tx.vout?.length || 0) + ') - ' + totalOut.toFixed(8) + ' BTC</div>';
+          if(tx.vout && tx.vout.length > 0) {
+            outputsHTML += tx.vout.map((v, idx) => {
+              const addr = v.scriptpubkey_address || 'Unknown';
+              const amt = (v.value || 0) / 100000000;
+              const isSpent = idx < tx.vout.length - 1 || (tx.vin && tx.vin.some(i => i.vout === idx));
+              return '<div class="tx-out-row"><span class="tx-out-label">' + (isSpent ? 'SPENT→' : 'UNSPENT') + '</span><span class="tx-addr" onclick="doSearchFrom(\'' + addr + '\')">' + addr + '</span><span class="tx-addr-amt">' + amt.toFixed(8) + '</span></div>';
+            }).join('');
+          }
+          outputsHTML += '</div>';
+          
+          // Block info if confirmed
+          let blockHTML = '';
+          if(tx.status?.confirmed && tx.status.block_height) {
+            blockHTML = '<div class="tx-detail-section"><div class="tx-detail-title">⛓️ Confirmed in Block #' + tx.status.block_height + '</div></div>';
+          }
+          
+          document.getElementById('txPopupContent').innerHTML = inputsHTML + outputsHTML + blockHTML;
+        } else {
+          document.getElementById('txPopupContent').innerHTML = '<div class="loading">Transaction not found</div>';
+        }
+      } catch(e) {
+        document.getElementById('txPopupContent').innerHTML = '<div class="loading">Error loading transaction</div>';
+      }
+    }
+    
+    function doSearchFrom(addr) {
+      closePopups();
+      document.getElementById('search').value = addr;
+      doSearch();
+    }
+    
+    function closePopups() {
       document.getElementById('blockPopup').classList.remove('active');
+      document.getElementById('txPopup').classList.remove('active');
       document.getElementById('popupOverlay').classList.remove('active');
     }
     
@@ -527,22 +756,14 @@
         
         if(!t) {
           res = await fetch('https://blockstream.info/api/tx/' + tx);
-          if(res.ok) {
-            const data = await res.json();
-            t = {
-              txid: data.txid,
-              vout: data.vout?.map(v => ({ value: v.value })) || [],
-              fee: data.fee,
-              status: data.status
-            };
-          }
+          if(res.ok) t = await res.json();
         }
         
         if(!t) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
         
         const vout = t.vout?.reduce((s,v) => s + (v.value||0), 0) || 0;
         const status = t.status?.confirmed ? 'confirmed' : 'pending';
-        r.innerHTML = '<div class="sr-card ' + status + '"><div class="sr-header"><span class="sr-txid">' + t.txid + '</span><span class="sr-status ' + status + '">' + (status === 'confirmed' ? '✅' : '⏳') + '</span></div><div class="sr-grid"><div><div class="sr-label">Amount</div><div class="sr-value btc">' + (vout/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Fee</div><div class="sr-value">' + t.fee + ' sat</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + (t.size||t.vsize || '?') + ' bytes</div></div>' + (t.status?.block_height ? '<div><div class="sr-label">Block</div><div class="sr-value">#' + t.status.block_height + '</div></div>' : '') + '</div></div>';
+        r.innerHTML = '<div class="sr-card ' + status + '"><div class="sr-header"><span class="sr-txid">' + t.txid + '</span><span class="sr-status ' + status + '">' + (status === 'confirmed' ? '✅ Confirmed' : '⏳ Pending') + '</span></div><div class="sr-grid"><div><div class="sr-label">Amount</div><div class="sr-value btc">' + (vout/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Fee</div><div class="sr-value">' + t.fee + ' sat</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + (t.size||t.vsize || '?') + ' bytes</div></div>' + (t.status?.block_height ? '<div><div class="sr-label">Block</div><div class="sr-value">#' + t.status.block_height + '</div></div>' : '') + '</div></div>';
       } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
@@ -573,12 +794,7 @@
         
         if(!ad) {
           res = await fetch('https://blockstream.info/api/address/' + a);
-          if(res.ok) {
-            const data = await res.json();
-            ad = {
-              chain_stats: { funded_txo_sum: data.chain_stats?.funded_txo_sum || 0, spent_txo_sum: data.chain_stats?.spent_txo_sum || 0, tx_count: data.chain_stats?.tx_count || 0 }
-            };
-          }
+          if(res.ok) ad = await res.json();
         }
         
         if(!ad) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
