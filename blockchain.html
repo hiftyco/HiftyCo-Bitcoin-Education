@@ -494,6 +494,8 @@
     let currentBlock = 939600;
     let lastBlockHeight = 0;
     let blocksData = [];
+    let dataLoaded = false;
+    let demoRendered = false;
     
     // Sound function
     function playBlockSound() {
@@ -533,113 +535,118 @@
       } catch(e) { console.log('Audio not supported'); }
     }
     
-    // Init
-    showDemo();
-    loadLive();
-    setInterval(loadLive, 12000);
-    
-    function showDemo() {
+    // Init - show demo first, then load live
+    (function init() {
+      // Show demo immediately
       const now = Date.now();
       const bh = 939600 + Math.floor((now - 1772724000000) / 600000);
       currentBlock = bh;
       lastBlockHeight = bh;
+      dataLoaded = false;
+      demoRendered = true;
       
-      updateDisplay(bh, '~28K', '~24 MB', (1050000 - bh).toLocaleString(), '15+', '30+', '60+');
-      renderChain(bh, false);
-      renderTXs('pending', false);
-      renderTXs('confirmed', false);
-    }
-    
-    function updateDisplay(height, mempool, size, halving, slow, normal, fast) {
-      document.getElementById('height').textContent = '#' + parseInt(height).toLocaleString();
-      document.getElementById('mempool').textContent = mempool;
-      document.getElementById('size').textContent = size;
-      document.getElementById('halving').textContent = halving;
-      document.getElementById('fee-slow').textContent = slow;
-      document.getElementById('fee-normal').textContent = normal;
-      document.getElementById('fee-fast').textContent = fast;
-    }
-    
-    function renderChain(baseHeight, isLive) {
-      const times = ['just now', '~10m ago', '~20m ago', '~30m ago', '~40m ago', '~50m ago'];
-      let html = '';
-      for(let i = 0; i < 6; i++) {
-        const h = baseHeight - i;
-        const newClass = (isLive && i === 0) ? 'new-block' : '';
-        html += '<div class="block-wrapper"><div class="chain-block ' + newClass + '" onclick="showBlockTXs(' + h + ')"><span class="bh">#' + h.toLocaleString() + '</span><span class="bt">' + (2000 + Math.floor(Math.random()*1000)) + ' txs</span><span class="bs">' + (1+Math.floor(Math.random()*2)) + ' MB</span><span class="btime">' + times[i] + '</span></div>';
-        if(i < 5) html += '<span class="chain-arrow">→</span></div>';
-        else html += '</div>';
-      }
-      document.getElementById('chain').innerHTML = html;
-    }
-    
-    function renderTXs(type, isLive) {
-      const list = document.getElementById(type);
-      let html = '';
-      const count = type === 'pending' ? 12 : 8;
-      for(let i = 0; i < count; i++) {
-        const hash = Math.random().toString(36).slice(2,18) + '...';
-        const amt = (Math.random() * 2).toFixed(4);
-        const fee = 10 + Math.floor(Math.random() * 40);
-        const color = type === 'confirmed' ? 'var(--success)' : 'var(--btc-orange)';
-        html += '<div class="tx-item"><div class="tx-left"><span class="tx-dot ' + type + '"></span><span class="tx-hash" style="color:' + color + '">' + hash + '</span></div><div class="tx-right"><span class="tx-amount">' + amt + ' BTC</span><span class="tx-fee">' + fee + ' sat/vB</span></div></div>';
-      }
-      list.innerHTML = html;
-    }
+      // Render demo
+      document.getElementById('height').textContent = '#' + bh.toLocaleString();
+      document.getElementById('mempool').textContent = 'Loading...';
+      document.getElementById('size').textContent = 'Loading...';
+      document.getElementById('halving').textContent = (1050000 - bh).toLocaleString();
+      document.getElementById('fee-slow').textContent = '...';
+      document.getElementById('fee-normal').textContent = '...';
+      document.getElementById('fee-fast').textContent = '...';
+      document.getElementById('pending').innerHTML = '<div class="loading">Loading...</div>';
+      document.getElementById('confirmed').innerHTML = '<div class="loading">Loading...</div>';
+      
+      // Try load live data
+      loadLive();
+      
+      // Refresh every 15 seconds
+      setInterval(loadLive, 15000);
+    })();
     
     async function loadLive() {
+      console.log('Loading live data...');
+      
       try {
-        const [b, m, f, t] = await Promise.all([
-          fetch('https://mempool.space/api/blocks').then(r => r.ok ? r.json() : null).catch(() => null),
-          fetch('https://mempool.space/api/mempool').then(r => r.ok ? r.json() : null).catch(() => null),
-          fetch('https://mempool.space/api/v1/fees/recommended').then(r => r.ok ? r.json() : null).catch(() => null),
-          fetch('https://mempool.space/api/mempool/recent').then(r => r.ok ? r.json() : null).catch(() => null)
-        ]);
+        // Fetch all data with individual try-catch for resilience
+        let blocksData = null;
+        let mempoolData = null;
+        let feesData = null;
+        let txsData = null;
         
-        if(b) blocksData = b;
+        try {
+          const r1 = await fetch('https://mempool.space/api/blocks');
+          if(r1.ok) blocksData = await r1.json();
+        } catch(e) { console.log('blocks error:', e.message); }
         
-        if(b?.[0]) {
-          const newHeight = b[0].height;
+        try {
+          const r2 = await fetch('https://mempool.space/api/mempool');
+          if(r2.ok) mempoolData = await r2.json();
+        } catch(e) { console.log('mempool error:', e.message); }
+        
+        try {
+          const r3 = await fetch('https://mempool.space/api/v1/fees/recommended');
+          if(r3.ok) feesData = await r3.json();
+        } catch(e) { console.log('fees error:', e.message); }
+        
+        try {
+          const r4 = await fetch('https://mempool.space/api/mempool/recent');
+          if(r4.ok) txsData = await r4.json();
+        } catch(e) { console.log('txs error:', e.message); }
+        
+        // Only update if we got block data
+        if(blocksData && blocksData[0]) {
+          console.log('Got live data, height:', blocksData[0].height);
+          dataLoaded = true;
           
-          // Check for new block
+          const newHeight = blocksData[0].height;
+          
+          // Check for new block sound
           if(lastBlockHeight > 0 && newHeight > lastBlockHeight) {
             playBlockSound();
           }
           lastBlockHeight = newHeight;
           currentBlock = newHeight;
           
-          const mempoolCount = (m?.count || 0).toLocaleString();
-          const mempoolSize = ((m?.vsize || 0) / 1000000).toFixed(1) + ' MB';
-          const halving = (1050000 - newHeight).toLocaleString();
-          const slow = (f?.hourFee || 15) + '+';
-          const normal = (f?.halfHourFee || 30) + '+';
-          const fast = (f?.fastestFee || 60) + '+';
+          // Update stats
+          document.getElementById('height').textContent = '#' + newHeight.toLocaleString();
+          document.getElementById('mempool').textContent = mempoolData ? (mempoolData.count || 0).toLocaleString() : '--';
+          document.getElementById('size').textContent = mempoolData ? ((mempoolData.vsize || 0) / 1000000).toFixed(1) + ' MB' : '--';
+          document.getElementById('halving').textContent = (1050000 - newHeight).toLocaleString();
           
-          updateDisplay(newHeight, mempoolCount, mempoolSize, halving, slow, normal, fast);
-          
-          // Render chain with timestamps
-          let c = '';
-          for(let i = 0; i < Math.min(b.length, 6); i++) {
-            const timeAgo = getTimeAgo(b[i].timestamp);
-            c += '<div class="block-wrapper"><div class="chain-block" onclick="showBlockTXs(' + b[i].height + ')"><span class="bh">#' + b[i].height.toLocaleString() + '</span><span class="bt">' + (b[i].extras?.txCount || 0).toLocaleString() + ' txs</span><span class="bs">' + ((b[i].size || 0)/1000).toFixed(0) + ' KB</span><span class="btime">' + timeAgo + '</span></div>';
-            if(i < 5) c += '<span class="chain-arrow">→</span></div>';
-            else c += '</div>';
+          if(feesData) {
+            document.getElementById('fee-slow').textContent = (feesData.hourFee || 15) + '+';
+            document.getElementById('fee-normal').textContent = (feesData.halfHourFee || 30) + '+';
+            document.getElementById('fee-fast').textContent = (feesData.fastestFee || 60) + '+';
           }
-          document.getElementById('chain').innerHTML = c;
           
-          // Pending TXs
-          if(t?.length) {
-            document.getElementById('pending').innerHTML = t.slice(0, 12).map(x => {
+          // Render chain
+          let chainHTML = '';
+          for(let i = 0; i < Math.min(blocksData.length, 6); i++) {
+            const timeAgo = getTimeAgo(blocksData[i].timestamp);
+            chainHTML += '<div class="block-wrapper"><div class="chain-block" onclick="showBlockTXs(' + blocksData[i].height + ')"><span class="bh">#' + blocksData[i].height.toLocaleString() + '</span><span class="bt">' + (blocksData[i].extras?.txCount || 0).toLocaleString() + ' txs</span><span class="bs">' + ((blocksData[i].size || 0)/1000).toFixed(0) + ' KB</span><span class="btime">' + timeAgo + '</span></div>';
+            if(i < 5) chainHTML += '<span class="chain-arrow">→</span></div>';
+            else chainHTML += '</div>';
+          }
+          document.getElementById('chain').innerHTML = chainHTML;
+          
+          // Render pending TXs
+          if(txsData && txsData.length > 0) {
+            document.getElementById('pending').innerHTML = txsData.slice(0, 12).map(x => {
               const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
               return '<div class="tx-item"><div class="tx-left"><span class="tx-dot pending"></span><span class="tx-hash">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
             }).join('');
           }
           
-          // Confirmed TXs
-          if(b?.[0]) loadConfirmedTXs(b[0].id);
+          // Load confirmed TXs
+          loadConfirmedTXs(blocksData[0].id);
+          
+        } else {
+          console.log('No block data, keeping demo');
         }
         
-      } catch(e) { console.log('Live load failed'); }
+      } catch(e) {
+        console.error('Load error:', e);
+      }
     }
     
     function getTimeAgo(ts) {
