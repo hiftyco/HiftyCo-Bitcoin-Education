@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz - HiftyCo Bitcoin Education</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; backdrop-filter: blur(10px); }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
+    .logo .btc { color: var(--primary); font-size: 1.5rem; }
+    .logo .name { color: var(--text); }
+    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
+    .logo a { text-decoration: none; }
+    .links { display: flex; gap: 28px; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+    .links a:hover, .links a.active { color: var(--primary); }
+    
+    .hero { min-height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 40px; background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247,147,26,0.15) 0%, transparent 60%); }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--primary), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 560px; }
+    
+    .section { padding: 40px 20px 60px; max-width: 800px; margin: 0 auto; }
+    .sh { text-align: center; margin-bottom: 32px; }
+    .sh h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .sh h2 span { color: var(--primary); }
+    .sh p { color: var(--text2); }
+    
+    .quiz { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; max-width: 600px; margin: 0 auto; }
+    .qq { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; }
+    .qo { display: block; width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; text-align: left; color: var(--text); font-size: 0.95rem; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .qo:hover { border-color: var(--primary); }
+    .qo.correct { border-color: var(--success); background: rgba(0,212,170,0.1); }
+    .qo.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); }
+    .quiz-score { text-align: center; font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+    .quiz-result { text-align: center; padding: 20px; }
+    .quiz-result h3 { font-size: 1.5rem; margin-bottom: 10px; }
+    .quiz-result p { color: var(--text2); }
+    
+    .leaderboard { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 500px; margin: 24px auto; }
+    .leaderboard h3 { margin-bottom: 16px; text-align: center; }
+    .lb-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { font-weight: 700; color: var(--primary); width: 40px; }
+    .lb-name { flex: 1; color: var(--text); }
+    .lb-score { font-weight: 600; color: var(--success); }
+    
+    .supabase-form { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 400px; margin: 24px auto; }
+    .supabase-form h3 { margin-bottom: 16px; text-align: center; }
+    .supabase-form input { width: 100%; padding: 12px; margin-bottom: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; }
+    .supabase-form input:focus { outline: none; border-color: var(--primary); }
+    
+    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
+    .footer p { color: #606070; }
+    
+    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><a href="index.html"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></a></div>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="blockchain.html">Blockchain</a>
+      <a href="paths.html">Paths</a>
+      <a href="progress.html">Progress</a>
+      <a href="quiz.html" class="active">Quiz</a>
+      <a href="topics.html">Topics</a>
+    </div>
+  </nav>
+  
+  <section class="hero">
+    <h1>Test Your <span>Knowledge</span></h1>
+    <p>Challenge yourself with Bitcoin questions</p>
+  </section>
+  
+  <section class="section">
+    <div class="sh">
+      <h2>Bitcoin <span>Quiz</span></h2>
+      <p>Answer questions and compete on the leaderboard</p>
+    </div>
+    
+    <div class="quiz" id="quiz-container">
+      <div class="quiz-score">Score: <span id="score">0</span></div>
+      <div class="qq" id="qtext">What is the maximum supply of Bitcoin?</div>
+      <button class="qo" onclick="answer(0)">21 million</button>
+      <button class="qo" onclick="answer(1)">100 million</button>
+      <button class="qo" onclick="answer(2)">1 billion</button>
+      <button class="qo" onclick="answer(3)">Unlimited</button>
+      <p style="text-align:center;margin-top:14px;color:#606070" id="qnum">Question 1 of 4</p>
+    </div>
+    
+    <div class="supabase-form">
+      <h3>Submit Your Score</h3>
+      <input type="text" id="player-name" placeholder="Your Name">
+      <input type="number" id="player-score" placeholder="Your Score">
+      <button class="btn btn1" style="width:100%" onclick="submitScore()">Submit to Leaderboard</button>
+    </div>
+    
+    <div class="leaderboard">
+      <h3>🏆 Top Bitcoiners</h3>
+      <div id="lb-list">
+        <div class="lb-row"><span class="lb-rank">1</span><span class="lb-name">Satoshi</span><span class="lb-score">100</span></div>
+        <div class="lb-row"><span class="lb-rank">2</span><span class="lb-name">HODLer</span><span class="lb-score">75</span></div>
+        <div class="lb-row"><span class="lb-rank">3</span><span class="lb-name">Bitcoiner</span><span class="lb-score">50</span></div>
+      </div>
+    </div>
+  </section>
+  
+  <footer class="footer">
+    <p>₿ HiftyCo - Education for the Bitcoin era</p>
+  </footer>
+  
+  <script>
+    const questions = [
+      { q: "What is the maximum supply of Bitcoin?", a: [ "21 million", "100 million", "1 billion", "Unlimited" ], correct: 0 },
+      { q: "What consensus mechanism does Bitcoin use?", a: [ "Proof of Stake", "Proof of Work", "Delegated Proof", "Practical Byzantine" ], correct: 1 },
+      { q: "Approximately how often is a new block mined?", a: [ "1 minute", "5 minutes", "10 minutes", "1 hour" ], correct: 2 },
+      { q: "What is the smallest unit of Bitcoin?", a: [ "Satoshi", "MilliBTC", "Bit", "Coin" ], correct: 0 }
+    ];
+    
+    let currentQ = 0, score = 0;
+    
+    function showQ() {
+      const q = questions[currentQ];
+      document.getElementById('qtext').textContent = q.q;
+      const btns = document.querySelectorAll('.qo');
+      btns.forEach((b, i) => {
+        b.textContent = q.a[i];
+        b.className = 'qo';
+      });
+      document.getElementById('qnum').textContent = 'Question ' + (currentQ + 1) + ' of ' + questions.length;
+    }
+    
+    function answer(i) {
+      const q = questions[currentQ];
+      const btns = document.querySelectorAll('.qo');
+      if(i === q.correct) {
+        btns[i].classList.add('correct');
+        score += 25;
+        document.getElementById('score').textContent = score;
+      } else {
+        btns[i].classList.add('wrong');
+        btns[q.correct].classList.add('correct');
+      }
+      setTimeout(() => {
+        currentQ++;
+        if(currentQ < questions.length) showQ();
+        else showResult();
+      }, 1000);
+    }
+    
+    function showResult() {
+      const container = document.getElementById('quiz-container');
+      let msg = score === 100 ? 'Perfect! You are a true Bitcoiner!' : score >= 50 ? 'Good job! Keep learning!' : 'Keep studying!';
+      container.innerHTML = '<div class="quiz-result"><h3>Score: ' + score + '%</h3><p>' + msg + '</p><button class="btn btn1" style="margin-top:20px" onclick="restartQuiz()">Try Again</button></div>';
+    }
+    
+    function restartQuiz() {
+      currentQ = 0; score = 0;
+      document.getElementById('score').textContent = '0';
+      document.getElementById('quiz-container').innerHTML = '<div class="quiz-score">Score: <span id="score">0</span></div><div class="qq" id="qtext"></div><div id="answers"></div><p style="text-align:center;margin-top:14px;color:#606070" id="qnum"></p>';
+      showQ();
+    }
+    
+    function submitScore() {
+      const name = document.getElementById('player-name').value;
+      const playerScore = document.getElementById('player-score').value;
+      if(name && playerScore) {
+        alert('Score submitted! (Demo mode - Supabase not connected)');
+        loadLeaderboard();
+      }
+    }
+    
+    function loadLeaderboard() {
+      const lb = JSON.parse(localStorage.getItem('hiftyco_lb') || '[]');
+      lb.sort((a,b) => b.score - a.score);
+      const top5 = lb.slice(0, 5);
+      if(top5.length === 0) {
+        document.getElementById('lb-list').innerHTML = '<div class="lb-row"><span class="lb-rank">-</span><span class="lb-name">No scores yet</span><span class="lb-score">-</span></div>';
+      } else {
+        document.getElementById('lb-list').innerHTML = top5.map((e, i) => '<div class="lb-row"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name">'+e.name+'</span><span class="lb-score">'+e.score+'</span></div>').join('');
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', showQ);
+    document.addEventListener('DOMContentLoaded', loadLeaderboard);
+  </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress - HiftyCo Bitcoin Education</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; backdrop-filter: blur(10px); }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
+    .logo .btc { color: var(--primary); font-size: 1.5rem; }
+    .logo .name { color: var(--text); }
+    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
+    .logo a { text-decoration: none; }
+    .links { display: flex; gap: 28px; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+    .links a:hover, .links a.active { color: var(--primary); }
+    
+    .hero { min-height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 40px; background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247,147,26,0.15) 0%, transparent 60%); }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--primary), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 560px; }
+    
+    .section { padding: 40px 20px 60px; max-width: 800px; margin: 0 auto; }
+    .sh { text-align: center; margin-bottom: 32px; }
+    .sh h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .sh h2 span { color: var(--primary); }
+    .sh p { color: var(--text2); }
+    
+    .progress-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .progress-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+    .progress-item:hover { background: rgba(247,147,26,0.05); border-radius: 8px; }
+    .progress-item:last-child { border-bottom: none; }
+    .progress-check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); margin-right: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+    .progress-check.checked { background: var(--primary); border-color: var(--primary); }
+    .progress-check.checked::after { content: '✓'; color: #000; font-weight: bold; font-size: 0.8rem; }
+    .progress-text { font-size: 1rem; color: var(--text); }
+    .progress-item.completed .progress-text { color: var(--success); text-decoration: line-through; }
+    
+    .progress-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .progress-stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+    .progress-stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .progress-stat-label { font-size: 0.8rem; color: var(--text2); margin-top: 4px; }
+    
+    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
+    .footer p { color: #606070; }
+    
+    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } .progress-stats { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><a href="index.html"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></a></div>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="blockchain.html">Blockchain</a>
+      <a href="paths.html">Paths</a>
+      <a href="progress.html" class="active">Progress</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="topics.html">Topics</a>
+    </div>
+  </nav>
+  
+  <section class="hero">
+    <h1>Your <span>Progress</span></h1>
+    <p>Track your learning journey through Bitcoin education</p>
+  </section>
+  
+  <section class="section">
+    <div class="sh">
+      <h2>Learning <span>Status</span></h2>
+      <p>Click to mark topics as completed</p>
+    </div>
+    
+    <div class="progress-stats">
+      <div class="progress-stat">
+        <div class="progress-stat-value" id="completed-count">0</div>
+        <div class="progress-stat-label">Completed</div>
+      </div>
+      <div class="progress-stat">
+        <div class="progress-stat-value" id="remaining-count">6</div>
+        <div class="progress-stat-label">Remaining</div>
+      </div>
+      <div class="progress-stat">
+        <div class="progress-stat-value" id="percent-complete">0%</div>
+        <div class="progress-stat-label">Complete</div>
+      </div>
+    </div>
+    
+    <div class="progress-section">
+      <div class="progress-item" onclick="toggleProgress(this)">
+        <div class="progress-check"></div>
+        <span class="progress-text">What is Bitcoin?</span>
+      </div>
+      <div class="progress-item" onclick="toggleProgress(this)">
+        <div class="progress-check"></div>
+        <span class="progress-text">How Blockchain Works</span>
+      </div>
+      <div class="progress-item" onclick="toggleProgress(this)">
+        <div class="progress-check"></div>
+        <span class="progress-text">Mining & Consensus</span>
+      </div>
+      <div class="progress-item" onclick="toggleProgress(this)">
+        <div class="progress-check"></div>
+        <span class="progress-text">Wallets & Keys</span>
+      </div>
+      <div class="progress-item" onclick="toggleProgress(this)">
+        <div class="progress-check"></div>
+        <span class="progress-text">Lightning Network</span>
+      </div>
+      <div class="progress-item" onclick="toggleProgress(this)">
+        <div class="progress-check"></div>
+        <span class="progress-text">Bitcoin Script</span>
+      </div>
+    </div>
+  </section>
+  
+  <footer class="footer">
+    <p>₿ HiftyCo - Education for the Bitcoin era</p>
+  </footer>
+  
+  <script>
+    // Progress tracking with localStorage
+    const PROGRESS_KEY = 'hiftyco_progress';
+    
+    function loadProgress() {
+      const saved = localStorage.getItem(PROGRESS_KEY);
+      if (saved) {
+        const completed = JSON.parse(saved);
+        document.querySelectorAll('.progress-item').forEach((item, index) => {
+          if (completed.includes(index)) {
+            item.querySelector('.progress-check').classList.add('checked');
+            item.classList.add('completed');
+          }
+        });
+      }
+      updateStats();
+    }
+    
+    function saveProgress() {
+      const completed = [];
+      document.querySelectorAll('.progress-item').forEach((item, index) => {
+        if (item.querySelector('.progress-check').classList.contains('checked')) {
+          completed.push(index);
+        }
+      });
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(completed));
+      updateStats();
+    }
+    
+    function updateStats() {
+      const total = document.querySelectorAll('.progress-item').length;
+      const completed = document.querySelectorAll('.progress-item .progress-check.checked').length;
+      const remaining = total - completed;
+      const percent = Math.round((completed / total) * 100);
+      
+      document.getElementById('completed-count').textContent = completed;
+      document.getElementById('remaining-count').textContent = remaining;
+      document.getElementById('percent-complete').textContent = percent + '%';
+    }
+    
+    function toggleProgress(item) {
+      const check = item.querySelector('.progress-check');
+      check.classList.toggle('checked');
+      item.classList.toggle('completed');
+      saveProgress();
+    }
+    
+    // Load on page init
+    document.addEventListener('DOMContentLoaded', loadProgress);
+  </script>
+</body>
+</html>

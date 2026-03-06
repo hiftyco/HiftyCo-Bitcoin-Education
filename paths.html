@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HiftyCo - Bitcoin Education</title>
+  <title>Paths - HiftyCo Bitcoin Education</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -38,35 +38,29 @@
     .sh h2 span { color: var(--primary); }
     .sh p { color: var(--text2); }
     
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
-    .feature { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; transition: all 0.3s; text-decoration: none; display: block; }
-    .feature:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 40px rgba(247,147,26,0.15); }
-    .feature-icon { font-size: 2.5rem; margin-bottom: 16px; }
-    .feature h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
-    .feature p { color: var(--text2); font-size: 0.9rem; }
-    
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
-    .stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
-    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-    .stat-label { font-size: 0.8rem; color: var(--text2); text-transform: uppercase; }
+    .paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .path { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: all 0.3s; }
+    .path:hover { transform: translateY(-3px); border-color: var(--primary); }
+    .pathlvl { display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; }
+    .pathlvl.b { background: rgba(0,212,170,0.15); color: #00d4aa; }
+    .pathlvl.i { background: rgba(247,147,26,0.15); color: var(--primary); }
+    .pathlvl.a { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .path h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .path p { color: var(--text2); font-size: 0.9rem; }
     
     .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
     .footer p { color: #606070; }
     
-    @media (max-width: 700px) { 
-      .nav { padding: 0 16px; } 
-      .links { display: none; } 
-      .stats { grid-template-columns: repeat(2, 1fr); }
-    }
+    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } }
   </style>
 </head>
 <body>
   <nav class="nav">
     <div class="logo"><a href="index.html"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></a></div>
     <div class="links">
-      <a href="index.html" class="active">Home</a>
+      <a href="index.html">Home</a>
       <a href="blockchain.html">Blockchain</a>
-      <a href="paths.html">Paths</a>
+      <a href="paths.html" class="active">Paths</a>
       <a href="progress.html">Progress</a>
       <a href="quiz.html">Quiz</a>
       <a href="topics.html">Topics</a>
@@ -74,76 +68,46 @@
   </nav>
   
   <section class="hero">
-    <h1>Master <span>Bitcoin</span></h1>
-    <p>The ultimate education platform for Bitcoiners. Learn, practice, and succeed in the new financial system.</p>
-    <div class="btns">
-      <a href="paths.html" class="btn btn1">Start Learning</a>
-      <a href="blockchain.html" class="btn btn2">View Live Blockchain</a>
-    </div>
+    <h1>Learning <span>Paths</span></h1>
+    <p>Structured courses to take you from beginner to advanced Bitcoin expertise.</p>
   </section>
   
   <section class="section">
     <div class="sh">
-      <h2>Explore <span>Bitcoin</span></h2>
-      <p>Everything you need to become a Bitcoin expert</p>
+      <h2>Choose Your <span>Journey</span></h2>
+      <p>Structured learning paths for every level</p>
     </div>
     
-    <div class="features">
-      <a href="blockchain.html" class="feature">
-        <div class="feature-icon">⛓️</div>
-        <h3>Live Blockchain</h3>
-        <p>Real-time Bitcoin network data, mempool, and transactions</p>
-      </a>
-      <a href="paths.html" class="feature">
-        <div class="feature-icon">📚</div>
-        <h3>Learning Paths</h3>
-        <p>Structured courses from beginner to advanced</p>
-      </a>
-      <a href="progress.html" class="feature">
-        <div class="feature-icon">📊</div>
-        <h3>Track Progress</h3>
-        <p>Monitor your learning journey and achievements</p>
-      </a>
-      <a href="quiz.html" class="feature">
-        <div class="feature-icon">🏆</div>
-        <h3>Quiz & Leaderboard</h3>
-        <p>Test your knowledge and compete with others</p>
-      </a>
-      <a href="topics.html" class="feature">
-        <div class="feature-icon">💡</div>
-        <h3>Deep Topics</h3>
-        <p>Explore mining, Lightning, privacy, and more</p>
-      </a>
-      <a href="quiz.html" class="feature">
-        <div class="feature-icon">🎯</div>
-        <h3>Test Knowledge</h3>
-        <p>Challenge yourself with Bitcoin questions</p>
-      </a>
-    </div>
-  </section>
-  
-  <section class="section">
-    <div class="sh">
-      <h2>Bitcoin <span>Stats</span></h2>
-      <p>Key metrics of the Bitcoin network</p>
-    </div>
-    
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-value">21M</div>
-        <div class="stat-label">Max Supply</div>
+    <div class="paths">
+      <div class="path">
+        <span class="pathlvl b">BEGINNER</span>
+        <h3>Bitcoin Fundamentals</h3>
+        <p>Learn the basics: what is Bitcoin, how it works, and why it matters.</p>
       </div>
-      <div class="stat">
-        <div class="stat-value">10min</div>
-        <div class="stat-label">Block Time</div>
+      <div class="path">
+        <span class="pathlvl b">BEGINNER</span>
+        <h3>Understanding Wallets</h3>
+        <p>Learn about hot vs cold wallets, seed phrases, and keeping your BTC safe.</p>
       </div>
-      <div class="stat">
-        <div class="stat-value">700+ EH/s</div>
-        <div class="stat-label">Hash Rate</div>
+      <div class="path">
+        <span class="pathlvl i">INTERMEDIATE</span>
+        <h3>Blockchain Deep Dive</h3>
+        <p>Understand the technical details: blocks, merkle trees, and consensus.</p>
       </div>
-      <div class="stat">
-        <div class="stat-value">$1.4T+</div>
-        <div class="stat-label">Market Cap</div>
+      <div class="path">
+        <span class="pathlvl i">INTERMEDIATE</span>
+        <h3>Mining & Network</h3>
+        <p>Learn about Proof of Work, mining hardware, and network hashrate.</p>
+      </div>
+      <div class="path">
+        <span class="pathlvl a">ADVANCED</span>
+        <h3>Lightning Network</h3>
+        <p>Master second-layer solutions, channels, and instant micropayments.</p>
+      </div>
+      <div class="path">
+        <span class="pathlvl a">ADVANCED</span>
+        <h3>Bitcoin Scripting</h3>
+        <p>Advanced: Understand multisig, timelocks, and smart contracts on Bitcoin.</p>
       </div>
     </div>
   </section>

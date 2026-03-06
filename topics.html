@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topics - HiftyCo Bitcoin Education</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; backdrop-filter: blur(10px); }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
+    .logo .btc { color: var(--primary); font-size: 1.5rem; }
+    .logo .name { color: var(--text); }
+    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
+    .logo a { text-decoration: none; }
+    .links { display: flex; gap: 28px; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+    .links a:hover, .links a.active { color: var(--primary); }
+    
+    .hero { min-height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 40px; background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247,147,26,0.15) 0%, transparent 60%); }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--primary), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 560px; }
+    
+    .section { padding: 40px 20px 60px; max-width: 1200px; margin: 0 auto; }
+    .sh { text-align: center; margin-bottom: 32px; }
+    .sh h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .sh h2 span { color: var(--primary); }
+    .sh p { color: var(--text2); }
+    
+    .topics { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .topic { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 20px; transition: all 0.3s; cursor: pointer; }
+    .topic:hover { transform: translateY(-3px); border-color: var(--primary); background: #1e1e2a; }
+    .topici { font-size: 1.6rem; margin-bottom: 12px; }
+    .topic h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+    .topic p { color: var(--text2); font-size: 0.85rem; }
+    
+    .topic-detail { display: none; }
+    .topic-detail.active { display: block; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text); font-size: 0.9rem; cursor: pointer; margin-bottom: 24px; transition: all 0.2s; }
+    .back-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .topic-content { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+    .topic-content h2 { color: var(--primary); margin-bottom: 16px; }
+    .topic-content p { color: var(--text2); line-height: 1.7; margin-bottom: 16px; }
+    .topic-content ul { color: var(--text2); line-height: 1.8; margin-left: 20px; }
+    .topic-content li { margin-bottom: 8px; }
+    
+    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
+    .footer p { color: #606070; }
+    
+    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><a href="index.html"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></a></div>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="blockchain.html">Blockchain</a>
+      <a href="paths.html">Paths</a>
+      <a href="progress.html">Progress</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="topics.html" class="active">Topics</a>
+    </div>
+  </nav>
+  
+  <section class="hero">
+    <h1>Explore <span>Topics</span></h1>
+    <p>Deep dive into specific areas of Bitcoin</p>
+  </section>
+  
+  <section class="section" id="topics-section">
+    <div class="sh">
+      <h2>Bitcoin <span>Topics</span></h2>
+      <p>Click on any topic to learn more</p>
+    </div>
+    
+    <div class="topics">
+      <div class="topic" onclick="showTopic('mining')">
+        <div class="topici">⛏️</div>
+        <h3>Mining</h3>
+        <p>How new Bitcoin is created through Proof of Work</p>
+      </div>
+      <div class="topic" onclick="showTopic('wallets')">
+        <div class="topici">💳</div>
+        <h3>Wallets</h3>
+        <p>Store and manage your Bitcoin securely</p>
+      </div>
+      <div class="topic" onclick="showTopic('lightning')">
+        <div class="topici">⚡</div>
+        <h3>Lightning Network</h3>
+        <p>Instant, low-cost transactions on Bitcoin's second layer</p>
+      </div>
+      <div class="topic" onclick="showTopic('halving')">
+        <div class="topici">✂️</div>
+        <h3>Halving</h3>
+        <p>The event that reduces new Bitcoin supply by 50%</p>
+      </div>
+      <div class="topic" onclick="showTopic('privacy')">
+        <div class="topici">🔒</div>
+        <h3>Privacy</h3>
+        <p>Understanding Bitcoin's pseudonymity and privacy tools</p>
+      </div>
+      <div class="topic" onclick="showTopic('nodes')">
+        <div class="topici">🌐</div>
+        <h3>Nodes</h3>
+        <p>Running your own Bitcoin node for full verification</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Topic Detail Views -->
+  <section class="section topic-detail" id="topic-mining">
+    <button class="back-btn" onclick="hideTopics()">← Back to Topics</button>
+    <div class="topic-content">
+      <h2>⛏️ Bitcoin Mining</h2>
+      <p>Bitcoin mining is the process by which new Bitcoin is created and transactions are confirmed on the network.</p>
+      <h3>How It Works</h3>
+      <ul>
+        <li>Miners compete to solve complex mathematical puzzles</li>
+        <li>The first miner to solve the puzzle gets to add the next block</li>
+        <li>They receive newly minted Bitcoin as a reward</li>
+        <li>This process secures the network and confirms transactions</li>
+      </ul>
+      <h3>Key Concepts</h3>
+      <ul>
+        <li><strong>Proof of Work:</strong> Requires computational effort to validate transactions</li>
+        <li><strong>Hash Rate:</strong> Total computing power on the network</li>
+        <li><strong>Difficulty:</strong> Adjusts every 2016 blocks to maintain 10-min block times</li>
+        <li><strong>Block Reward:</strong> Currently 3.125 BTC per block (as of 2024)</li>
+      </ul>
+    </div>
+  </section>
+  
+  <section class="section topic-detail" id="topic-wallets">
+    <button class="back-btn" onclick="hideTopics()">← Back to Topics</button>
+    <div class="topic-content">
+      <h2>💳 Bitcoin Wallets</h2>
+      <p>A Bitcoin wallet is software that allows you to send and receive BTC.</p>
+      <h3>Types of Wallets</h3>
+      <ul>
+        <li><strong>Hot Wallets:</strong> Connected to the internet (mobile, desktop)</li>
+        <li><strong>Cold Wallets:</strong> Offline storage (hardware, paper)</li>
+        <li><strong>Hardware Wallets:</strong> Dedicated devices for maximum security</li>
+        <li><strong>Custodial:</strong> Third-party holds your keys (exchanges)</li>
+      </ul>
+      <h3>Important Terms</h3>
+      <ul>
+        <li><strong>Private Key:</strong> Secret that controls your Bitcoin</li>
+        <li><strong>Public Key:</strong> Shareable address to receive Bitcoin</li>
+        <li><strong>Seed Phrase:</strong> 12-24 word backup of your wallet</li>
+        <li><strong>Multi-sig:</strong> Requires multiple keys to authorize transactions</li>
+      </ul>
+    </div>
+  </section>
+  
+  <section class="section topic-detail" id="topic-lightning">
+    <button class="back-btn" onclick="hideTopics()">← Back to Topics</button>
+    <div class="topic-content">
+      <h2>⚡ Lightning Network</h2>
+      <p>The Lightning Network is Bitcoin's second-layer solution for instant, low-cost transactions.</p>
+      <h3>Why Lightning?</h3>
+      <ul>
+        <li>Enables millions of transactions per second</li>
+        <li>Near-instant confirmation times</li>
+        <li>Extremely low fees (fraction of a cent)</li>
+        <li>Perfect for micropayments and daily transactions</li>
+      </ul>
+      <h3>How It Works</h3>
+      <ul>
+        <li>Create a payment channel between two parties</li>
+        <li>Make unlimited transactions off-chain</li>
+        <li>Only the opening and closing transactions go on main chain</li>
+        <li>Channels can be routed through intermediate nodes</li>
+      </ul>
+    </div>
+  </section>
+  
+  <section class="section topic-detail" id="topic-halving">
+    <button class="back-btn" onclick="hideTopics()">← Back to Topics</button>
+    <div class="topic-content">
+      <h2>✂️ Bitcoin Halving</h2>
+      <p>The halving is a programmed event that cuts the block reward in half.</p>
+      <h3>Schedule</h3>
+      <ul>
+        <li>Occurs every 210,000 blocks (~4 years)</li>
+        <li>2009-2012: 50 BTC per block</li>
+        <li>2012-2016: 25 BTC per block</li>
+        <li>2016-2020: 12.5 BTC per block</li>
+        <li>2020-2024: 6.25 BTC per block</li>
+        <li>2024-2028: 3.125 BTC per block</li>
+      </ul>
+      <h3>Why It Matters</h3>
+      <ul>
+        <li>Creates predictable, diminishing supply</li>
+        <li>Historically followed by price increases</li>
+        <li>Ensures total supply never exceeds 21 million</li>
+        <li>Makes Bitcoin increasingly scarce over time</li>
+      </ul>
+    </div>
+  </section>
+  
+  <section class="section topic-detail" id="topic-privacy">
+    <button class="back-btn" onclick="hideTopics()">← Back to Topics</button>
+    <div class="topic-content">
+      <h2>🔒 Bitcoin Privacy</h2>
+      <p>Bitcoin offers pseudonymous transactions, not complete anonymity.</p>
+      <h3>Understanding Privacy</h3>
+      <ul>
+        <li>All transactions are publicly visible on the blockchain</li>
+        <li>Addresses are pseudonymous (not tied to identity by default)</li>
+        <li>Chain analysis can link addresses to identities</li>
+        <li>Reusing addresses reduces privacy</li>
+      </ul>
+      <h3>Privacy Tools</h3>
+      <ul>
+        <li><strong>CoinJoin:</strong> Mix transactions with other users</li>
+        <li><strong>Lightning Network:</strong> Off-chain transactions</li>
+        <li><strong>New Addresses:</strong> Generate fresh address for each transaction</li>
+        <li><strong>Hardware Wallets:</strong> Keep private keys offline</li>
+      </ul>
+    </div>
+  </section>
+  
+  <section class="section topic-detail" id="topic-nodes">
+    <button class="back-btn" onclick="hideTopics()">← Back to Topics</button>
+    <div class="topic-content">
+      <h2>🌐 Bitcoin Nodes</h2>
+      <p>A node is a computer that runs Bitcoin software and maintains the blockchain.</p>
+      <h3>Why Run a Node?</h3>
+      <ul>
+        <li>Verify your own transactions without trusting others</li>
+        <li>Contribute to network decentralization</li>
+        <li>Full control over your financial sovereignty</li>
+        <li>Privacy: don't leak addresses to third parties</li>
+      </ul>
+      <h3>Types of Nodes</h3>
+      <ul>
+        <li><strong>Full Node:</strong> Downloads and verifies entire blockchain</li>
+        <li><strong>Pruned Node:</strong> Stores only recent blocks</li>
+        <li><strong>Light Node:</strong> Simplified payment verification</li>
+        <li><strong>Lightning Node:</strong> Runs Lightning channels</li>
+      </ul>
+    </div>
+  </section>
+  
+  <footer class="footer">
+    <p>₿ HiftyCo - Education for the Bitcoin era</p>
+  </footer>
+  
+  <script>
+    function showTopic(topic) {
+      document.getElementById('topics-section').style.display = 'none';
+      document.querySelector('.hero').style.display = 'none';
+      document.getElementById('topic-' + topic).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+    
+    function hideTopics() {
+      document.querySelectorAll('.topic-detail').forEach(el => el.classList.remove('active'));
+      document.getElementById('topics-section').style.display = 'block';
+      document.querySelector('.hero').style.display = 'flex';
+      window.scrollTo(0, 0);
+    }
+  </script>
+</body>
+</html>
