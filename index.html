@@ -151,14 +151,35 @@
   </div>
   
   <section id="blockchain" class="section">
-    <div class="sh"><h2>Live Bitcoin <span>Mempool</span> <span class="live-indicator">LIVE</span></h2><p>Real-time unconfirmed transactions</p></div>
+    <div class="sh"><h2>Live Bitcoin <span>Network</span> <span class="live-indicator">LIVE</span></h2><p>Real-time blockchain data & mempool</p></div>
     <div class="viz">
-      <!-- Mempool Stats -->
-      <div class="mempool-stats" id="mempool-stats">
-        <div class="mempool-stat"><div class="mempool-statv" id="mempool-height">--</div><div class="mempool-statl">Block Height</div></div>
-        <div class="mempool-stat"><div class="mempool-statv" id="mempool-count">--</div><div class="mempool-statl">Unconfirmed</div></div>
-        <div class="mempool-stat"><div class="mempool-statv" id="mempool-fees">--</div><div class="mempool-statl">Avg Fee (sat/vB)</div></div>
-        <div class="mempool-stat"><div class="mempool-statv" id="mempool-mempool">--</div><div class="mempool-statl">Mempool Size (MB)</div></div>
+      <!-- Network Stats -->
+      <div class="mempool-stats" id="network-stats">
+        <div class="mempool-stat"><div class="mempool-statv" id="btc-price">$--</div><div class="mempool-statl">BTC Price</div></div>
+        <div class="mempool-stat"><div class="mempool-statv" id="block-height">--</div><div class="mempool-statl">Block Height</div></div>
+        <div class="mempool-stat"><div class="mempool-statv" id="hash-rate">--</div><div class="mempool-statl">Hash Rate (EH/s)</div></div>
+        <div class="mempool-stat"><div class="mempool-statv" id="difficulty">--</div><div class="mempool-statl">Difficulty (T)</div></div>
+        <div class="mempool-stat"><div class="mempool-statv" id="next-halving">--</div><div class="mempool-statl">Next Halving</div></div>
+        <div class="mempool-stat"><div class="mempool-statv" id="mempool-count">--</div><div class="mempool-statl">Unconfirmed Txs</div></div>
+      </div>
+      
+      <!-- Fee Estimates -->
+      <div style="margin:20px 0">
+        <div style="text-align:center;margin-bottom:12px;font-size:0.9rem;color:var(--text2)">Fee Estimates (sat/vB)</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px">
+          <div class="fee-card" style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+            <div style="color:#00d4aa;font-weight:700;font-size:1.2rem" id="fee-low">--</div>
+            <div style="color:var(--text2);font-size:0.7rem">Slow (1hr+)</div>
+          </div>
+          <div class="fee-card" style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+            <div style="color:var(--primary);font-weight:700;font-size:1.2rem" id="fee-medium">--</div>
+            <div style="color:var(--text2);font-size:0.7rem">Normal (~30min)</div>
+          </div>
+          <div class="fee-card" style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+            <div style="color:#ef4444;font-weight:700;font-size:1.2rem" id="fee-high">--</div>
+            <div style="color:var(--text2);font-size:0.7rem">Fast (<10min)</div>
+          </div>
+        </div>
       </div>
       
       <!-- Recent Blocks -->
@@ -168,12 +189,23 @@
       </div>
       
       <!-- Recent Transactions -->
-      <div style="text-align:center;margin-bottom:12px;font-size:0.9rem;color:var(--text2)">Latest Unconfirmed Transactions</div>
+      <div style="text-align:center;margin:20px 0 12px;font-size:0.9rem;color:var(--text2)">Latest Unconfirmed Transactions</div>
       <div class="mempool-txs" id="mempool-txs">
-        <div style="padding:20px;text-align:center;color:var(--text2)">Loading mempool data...</div>
+        <div style="padding:20px;text-align:center;color:var(--text2)">Loading blockchain data...</div>
+      </div>
+      
+      <!-- Mining Info -->
+      <div style="margin-top:20px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:12px">
+        <div style="font-size:0.9rem;font-weight:600;margin-bottom:10px;color:var(--primary)">⛏️ Mining Info</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;font-size:0.8rem">
+          <div><span style="color:var(--text2)">Block Reward:</span> <span style="color:var(--primary);font-weight:600">3.125 BTC</span></div>
+          <div><span style="color:var(--text2)">Avg Block Time:</span> <span style="color:var(--primary);font-weight:600">~10 min</span></div>
+          <div><span style="color:var(--text2)">Total BTC:</span> <span style="color:var(--primary);font-weight:600">19.8M</span></div>
+          <div><span style="color:var(--text2)">Blocks until halving:</span> <span style="color:var(--primary);font-weight:600" id="blocks-halving">--</span></div>
+        </div>
       </div>
     </div>
-    <div class="cta"><button class="btn btn1" onclick="loadMempool()">🔄 Refresh Mempool</button></div>
+    <div class="cta"><button class="btn btn1" onclick="loadMempool()">🔄 Refresh Data</button></div>
   </section>
   
   <section id="paths" class="section">
@@ -298,64 +330,101 @@
       {name: 'LightningFan', score: 80}
     ];
     
-    // Mempool - Live Bitcoin Data
+    // Live Bitcoin Network Data
     const MEMPOOL_API = 'https://mempool.space/api';
+    const PRICE_API = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd';
     
     async function loadMempool() {
       try {
-        // Get block height
+        // Get Bitcoin price
+        try {
+          const priceResp = await fetch(PRICE_API);
+          const priceData = await priceResp.json();
+          document.getElementById('btc-price').textContent = '$' + (priceData.bitcoin?.usd || 0).toLocaleString();
+        } catch(e) { console.log('Price API failed'); }
+        
+        // Get blocks
         const blocksResp = await fetch(MEMPOOL_API + '/blocks');
         const blocks = await blocksResp.json();
         
-        // Get mempool stats
+        // Get mempool data
         const mempoolResp = await fetch(MEMPOOL_API + '/mempool');
         const mempoolData = await mempoolResp.json();
+        
+        // Get fee estimates
+        const feesResp = await fetch(MEMPOOL_API + '/fees/recommended');
+        const fees = await feesResp.json();
+        
+        // Get difficulty & hashrate
+        const difficultyResp = await fetch(MEMPOOL_API + '/difficulty-adjustment');
+        const difficultyData = await difficultyResp.json();
+        
+        // Get mining info
+        const miningResp = await fetch(MEMPOOL_API + '/mining/template');
+        
+        // Update network stats
+        if(blocks && blocks.length > 0) {
+          document.getElementById('block-height').textContent = '#' + blocks[0].height.toLocaleString();
+        }
+        
+        if(mempoolData) {
+          document.getElementById('mempool-count').textContent = (mempoolData.count || 0).toLocaleString();
+        }
+        
+        if(difficultyData) {
+          document.getElementById('hash-rate').textContent = (difficultyData.currentHashrate / 1e18).toFixed(2);
+          document.getElementById('difficulty').textContent = (difficultyData.difficulty / 1e12).toFixed(2);
+        }
+        
+        // Fee estimates
+        if(fees) {
+          document.getElementById('fee-low').textContent = fees.hourFeePercentile || '--';
+          document.getElementById('fee-medium').textContent = fees.halfHourFeePercentile || '--';
+          document.getElementById('fee-high').textContent = fees.fastestFee || '--';
+        }
+        
+        // Calculate next halving
+        const currentHeight = blocks?.[0]?.height || 870000;
+        const halvingInterval = 210000;
+        const nextHalvingHeight = Math.ceil(currentHeight / halvingInterval) * halvingInterval;
+        const blocksUntilHalving = nextHalvingHeight - currentHeight;
+        document.getElementById('next-halving').textContent = blocksUntilHalving.toLocaleString() + ' blks';
+        document.getElementById('blocks-halving').textContent = blocksUntilHalving.toLocaleString();
+        
+        // Update recent blocks
+        const blocksContainer = document.getElementById('mempool-blocks');
+        blocksContainer.innerHTML = blocks.slice(0, 5).map((b, i) => 
+          '<div class="mempool-block" style="animation-delay:'+(i*0.2)+'s"><span class="mempool-blockn">#'+b.height.toLocaleString().slice(-6)+'</span><span class="mempool-blockh">'+b.tx_count.toLocaleString()+' txs</span></div>'
+        ).join('');
         
         // Get recent transactions
         const txResp = await fetch(MEMPOOL_API + '/mempool/recent');
         const recentTxs = await txResp.json();
         
-        // Update stats
-        if(blocks && blocks.length > 0) {
-          document.getElementById('mempool-height').textContent = '#' + blocks[0].height.toLocaleString();
-        }
-        
-        if(mempoolData) {
-          document.getElementById('mempool-count').textContent = (mempoolData.count || 0).toLocaleString();
-          document.getElementById('mempool-mempool').textContent = (mempoolData.vsize / 1000000).toFixed(1) + ' MB';
-        }
-        
-        // Calculate avg fee
-        if(recentTxs && recentTxs.length > 0) {
-          const avgFee = recentTxs.reduce((sum, tx) => sum + tx.fee, 0) / recentTxs.length;
-          document.getElementById('mempool-fees').textContent = avgFee.toFixed(1);
-        }
-        
-        // Update recent blocks
-        const blocksContainer = document.getElementById('mempool-blocks');
-        blocksContainer.innerHTML = blocks.slice(0, 5).map((b, i) => 
-          '<div class="mempool-block" style="animation-delay:'+(i*0.2)+'s"><span class="mempool-blockn">#'+b.height.toLocaleString().slice(-6)+'</span><span class="mempool-blockh">'+b.tx_count+' txs</span></div>'
-        ).join('');
-        
         // Update recent transactions
         const txsContainer = document.getElementById('mempool-txs');
         txsContainer.innerHTML = recentTxs.slice(0, 10).map(tx => 
-          '<div class="mempool-tx"><span class="mempool-txh">'+tx.txid.slice(0, 12)+'...</span><span><span class="mempool-txamt">'+(tx.vout_sats || 0).toLocaleString()+' sats</span> <span class="mempool-txfee">'+tx.fee.toFixed(1)+' sat/vB</span></span></div>'
+          '<div class="mempool-tx"><span class="mempool-txh">'+tx.txid.slice(0, 10)+'...</span><span><span class="mempool-txamt">'+(tx.vout_sats || 0).toLocaleString()+' sats</span> <span class="mempool-txfee">'+tx.fee.toFixed(1)+' sat/vB</span></span></div>'
         ).join('');
         
       } catch(e) {
         console.error('Mempool load error:', e);
-        document.getElementById('mempool-txs').innerHTML = '<div style="padding:20px;text-align:center;color:#ef4444">Unable to load mempool data. Using demo mode.</div>';
-        loadDemoMempool();
+        loadDemoData();
       }
     }
     
-    function loadDemoMempool() {
-      // Demo data if API fails
-      document.getElementById('mempool-height').textContent = '#870,432';
+    function loadDemoData() {
+      // Demo data
+      document.getElementById('btc-price').textContent = '$74,250';
+      document.getElementById('block-height').textContent = '#870,432';
+      document.getElementById('hash-rate').textContent = '678.45';
+      document.getElementById('difficulty').textContent = '92.67';
+      document.getElementById('next-halving').textContent = '4,568 blks';
       document.getElementById('mempool-count').textContent = '24,891';
-      document.getElementById('mempool-fees').textContent = '42.5';
-      document.getElementById('mempool-mempool').textContent = '18.3 MB';
+      document.getElementById('fee-low').textContent = '15';
+      document.getElementById('fee-medium').textContent = '35';
+      document.getElementById('fee-high').textContent = '65';
+      document.getElementById('blocks-halving').textContent = '4,568';
       
       document.getElementById('mempool-blocks').innerHTML = 
         '<div class="mempool-block"><span class="mempool-blockn">#870432</span><span class="mempool-blockh">2,847 txs</span></div>' +
@@ -365,11 +434,11 @@
         '<div class="mempool-block"><span class="mempool-blockn">#870428</span><span class="mempool-blockh">2,234 txs</span></div>';
       
       const demoTxs = [
-        {hash: 'a1b2c3d4e5f6...', amount: 1250000, fee: 45.2},
-        {hash: 'b2c3d4e5f6g7...', amount: 890000, fee: 38.7},
-        {hash: 'c3d4e5f6g7h8...', amount: 2100000, fee: 52.1},
-        {hash: 'd4e5f6g7h8i9...', amount: 567000, fee: 28.4},
-        {hash: 'e5f6g7h8i9j0...', amount: 3200000, fee: 61.3}
+        {hash: 'a1b2c3d4e5...', amount: 1250000, fee: 45.2},
+        {hash: 'b2c3d4e5f6...', amount: 890000, fee: 38.7},
+        {hash: 'c3d4e5f6g7...', amount: 2100000, fee: 52.1},
+        {hash: 'd4e5f6g7h8...', amount: 567000, fee: 28.4},
+        {hash: 'e5f6g7h8i9...', amount: 3200000, fee: 61.3}
       ];
       
       document.getElementById('mempool-txs').innerHTML = demoTxs.map(tx => 
