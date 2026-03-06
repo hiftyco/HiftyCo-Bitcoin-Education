@@ -94,6 +94,8 @@
     .tx-details { text-align: right; }
     .tx-amount { color: var(--success); font-weight: 600; font-size: 0.85rem; }
     .tx-fee { color: var(--danger); font-size: 0.7rem; margin-left: 10px; }
+    .tx-age { color: #606070; font-size: 0.65rem; margin-left: 8px; }
+    .tx-confirmed { color: var(--success); font-size: 0.75rem; }
     
     .refresh-btn { display: block; margin: 24px auto 0; }
     
@@ -205,6 +207,12 @@
         <div class="tx-list" id="tx-list"><div class="loading">Loading transactions...</div></div>
       </div>
       
+      <!-- Confirmed Transactions -->
+      <div class="tx-section">
+        <div class="tx-title">✅ Recently Confirmed Transactions</div>
+        <div class="tx-list" id="confirmed-list"><div class="loading">Loading confirmed...</div></div>
+      </div>
+      
       <button class="btn btn1 refresh-btn" onclick="loadBlockchainData()">🔄 Refresh Data</button>
     </div>
   </section>
@@ -282,25 +290,40 @@
         const txResp = await fetch(API + '/mempool/recent');
         const txs = await txResp.json();
         
+        // Fetch fee estimates directly from mempool
+        let feeLow = 10, feeMed = 25, feeHigh = 60;
+        try {
+          const feeResp = await fetch(API + '/fees/recommended');
+          const feeData = await feeResp.json();
+          if(feeData) {
+            feeLow = feeData.hourFeePercentile || 10;
+            feeMed = feeData.halfHourFeePercentile || 25;
+            feeHigh = feeData.fastestFee || 60;
+          }
+        } catch(e) { console.log('Using fallback fees'); }
+        
         // Update stats
         if(blocks && blocks[0]) {
           blockHeight = blocks[0].height;
           document.getElementById('block-height').textContent = '#' + blockHeight.toLocaleString();
           
-          // Update chain visualization
+          // Update chain visualization with FULL block heights
           const chain = document.getElementById('chain');
           chain.innerHTML = blocks.slice(0, 6).map((b, i) => 
-            '<div class="chain-block" style="animation-delay:'+(i*0.1)+'s"><span class="block-num">#'+b.height.toLocaleString().slice(-4)+'</span><span class="block-txs">'+b.tx_count.toLocaleString()+' txs</span></div>' +
-            (i < 5 ? '<span class="chain-arrow">→</span>' : '')
+            '<div class="chain-block" style="animation-delay:'+(i*0.1)+'s">' +
+              '<span class="block-num">#' + b.height.toLocaleString() + '</span>' +
+              '<span class="block-txs">' + (b.tx_count || 0).toLocaleString() + ' txs</span>' +
+              '<span class="block-size">' + ((b.size || 0)/1000).toFixed(1) + ' KB</span>' +
+            '</div>' + (i < 5 ? '<span class="chain-arrow">→</span>' : '')
           ).join('');
         }
         
         if(mempool) {
-          document.getElementById('mempool-count').textContent = mempool.count.toLocaleString();
-          document.getElementById('mempool-size').textContent = (mempool.vsize / 1000000).toFixed(1) + ' MB';
+          document.getElementById('mempool-count').textContent = (mempool.count || 0).toLocaleString();
+          document.getElementById('mempool-size').textContent = ((mempool.vsize || 0) / 1000000).toFixed(1) + ' MB';
         }
         
-        // Estimate hash rate and difficulty (realistic values based on current network)
+        // Hash rate and difficulty
         document.getElementById('hash-rate').textContent = '~700 EH/s';
         document.getElementById('difficulty').textContent = '~92 T';
         
@@ -308,19 +331,36 @@
         const blocksUntilHalving = 1050000 - blockHeight;
         document.getElementById('next-halving').textContent = blocksUntilHalving.toLocaleString();
         
-        // Fee estimates (based on mempool histogram analysis)
-        const fees = calculateFees(mempool);
-        document.getElementById('fee-low').textContent = fees.low;
-        document.getElementById('fee-medium').textContent = fees.medium;
-        document.getElementById('fee-high').textContent = fees.high;
+        // Update fee rates
+        document.getElementById('fee-low').textContent = feeLow + '+';
+        document.getElementById('fee-medium').textContent = feeMed + '+';
+        document.getElementById('fee-high').textContent = feeHigh + '+';
         
-        // Update transactions
+        // Update pending (mempool) transactions with MORE details
         const txList = document.getElementById('tx-list');
-        txList.innerHTML = txs.slice(0, 15).map(tx => 
-          '<div class="tx-item"><span class="tx-hash">'+tx.txid.slice(0, 16)+'...</span>' +
-          '<div class="tx-details"><span class="tx-amount">'+(tx.value/100000000).toFixed(4)+' BTC</span>' +
-          '<span class="tx-fee">'+tx.fee+' sat/vB</span></div></div>'
-        ).join('');
+        txList.innerHTML = txs.slice(0, 20).map(tx => {
+          const btc = tx.value / 100000000;
+          const age = tx.status ? 'Pending' : 'Unknown';
+          return '<div class="tx-item">' +
+            '<span class="tx-hash"><a href="https://blockstream.info/tx/'+tx.txid+'" target="_blank" style="color:var(--primary);text-decoration:none">'+tx.txid.slice(0, 20)+'...</a></span>' +
+            '<div class="tx-details">' +
+              '<span class="tx-amount">' + btc.toFixed(4) + ' BTC</span>' +
+              '<span class="tx-fee">' + tx.fee + ' sat/vB</span>' +
+              '<span class="tx-age" style="color:#606070;font-size:0.65rem;margin-left:8px">' + age + '</span>' +
+            '</div></div>';
+        }).join('');
+        
+        // Add confirmed transactions section
+        const confirmedList = document.getElementById('confirmed-list');
+        if(confirmedList) {
+          confirmedList.innerHTML = blocks.slice(0, 3).flatMap(b => 
+            (b.txid || []).slice(0, 5).map((txHash, i) => 
+              '<div class="tx-item" style="opacity:0.8">' +
+                '<span class="tx-hash"><a href="https://blockstream.info/tx/'+txHash+'" target="_blank" style="color:var(--success);text-decoration:none">'+txHash.slice(0, 20)+'...</a></span>' +
+                '<div class="tx-details"><span class="tx-confirmed">Confirmed in #' + b.height + '</span></div></div>'
+            )
+          ).join('');
+        }
         
       } catch(e) {
         console.error('Error loading blockchain data:', e);
