@@ -5,709 +5,197 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HiftyCo - Bitcoin Education</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js?x=202603061150?v=20260306"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
     
-    :root {
-      --bg: #0a0a0f;
-      --bg-secondary: #12121a;
-      --bg-card: #1a1a25;
-      --bg-hover: #222230;
-      --primary: #f7931a;
-      --primary-glow: rgba(247,147,26,0.4);
-      --text: #ffffff;
-      --text-secondary: #a0a0b0;
-      --text-muted: #606070;
-      --border: #2a2a3a;
-      --success: #00d4aa;
-      --danger: #ef4444;
-    }
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
+    .logo .btc { color: var(--primary); font-size: 1.5rem; }
+    .logo .name { color: var(--text); }
+    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
+    .links { display: flex; gap: 28px; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+    .links a:hover { color: var(--primary); }
     
-    body {
-      font-family: 'Space Grotesk', 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
+    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 60px; background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247,147,26,0.15) 0%, transparent 60%); }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--primary), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 560px; margin-bottom: 32px; }
+    .btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .btn { padding: 12px 24px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; display: inline-block; }
+    .btn1 { background: var(--primary); color: #000; }
+    .btn1:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,147,26,0.3); }
+    .btn2 { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn2:hover { border-color: var(--primary); color: var(--primary); }
     
-    #root { min-height: 100vh; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; max-width: 900px; margin: 0 auto; padding: 0 20px; }
+    .stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; text-align: center; }
+    .statv { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .statl { color: var(--text2); font-size: 0.85rem; }
     
-    /* Nav */
-    .nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: rgba(10,10,15,0.95);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      z-index: 100;
-    }
+    .section { padding: 60px 20px; max-width: 1000px; margin: 0 auto; }
+    .sh { text-align: center; margin-bottom: 32px; }
+    .sh h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .sh h2 span { color: var(--primary); }
+    .sh p { color: var(--text2); }
     
-    .nav-logo { display: flex; align-items: center; gap: 12px; font-size: 1.4rem; font-weight: 700; }
-    .nav-logo .btc { color: var(--primary); font-size: 1.6rem; }
-    .nav-logo .name { color: var(--text); }
-    .nav-logo .tag { color: var(--success); font-size: 0.75rem; background: rgba(0,212,170,0.15); padding: 4px 10px; border-radius: 20px; }
+    .viz { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 32px; margin-bottom: 24px; }
+    .blocks { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .block { width: 70px; height: 70px; background: linear-gradient(145deg, var(--bg2), #22222e); border: 2px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; transition: all 0.3s; cursor: pointer; position: relative; }
+    .block:hover { transform: scale(1.05); border-color: var(--primary); }
+    .block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), #00d4aa); }
+    .blockn { font-size: 0.9rem; color: var(--primary); }
+    .blockh { font-size: 0.5rem; color: #606070; font-family: monospace; }
+    .arrow { color: var(--primary); font-size: 1.2rem; }
+    .cta { text-align: center; }
     
-    .nav-links { display: flex; gap: 32px; }
-    .nav-links a { color: var(--text-secondary); font-weight: 500; text-decoration: none; transition: color 0.2s; font-size: 0.95rem; }
-    .nav-links a:hover { color: var(--primary); }
+    .paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .path { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: all 0.3s; }
+    .path:hover { transform: translateY(-3px); border-color: var(--primary); }
+    .pathlvl { display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; }
+    .pathlvl.b { background: rgba(0,212,170,0.15); color: #00d4aa; }
+    .pathlvl.i { background: rgba(247,147,26,0.15); color: var(--primary); }
+    .pathlvl.a { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .path h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .path p { color: var(--text2); font-size: 0.9rem; }
     
-    /* Ticker */
-    .ticker-wrap {
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 0;
-      overflow: hidden;
-      margin-top: 70px;
-    }
-    .ticker {
-      display: flex;
-      animation: ticker 30s linear infinite;
-      gap: 48px;
-    }
-    .ticker-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      white-space: nowrap;
-    }
-    .ticker-sym { color: var(--primary); font-weight: 700; }
-    .ticker-price { color: var(--text); font-family: 'JetBrains Mono', monospace; }
-    .ticker-change { font-size: 0.85rem; }
-    .ticker-change.up { color: var(--success); }
-    .ticker-change.down { color: var(--danger); }
+    .topics { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .topic { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 20px; transition: all 0.3s; }
+    .topic:hover { transform: translateY(-3px); border-color: var(--primary); background: #1e1e2a; }
+    .topici { font-size: 1.6rem; margin-bottom: 12px; }
+    .topic h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+    .topic p { color: var(--text2); font-size: 0.85rem; }
     
-    @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .quiz { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; max-width: 600px; margin: 0 auto; }
+    .qq { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; }
+    .qo { display: block; width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; text-align: left; color: var(--text); font-size: 0.95rem; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .qo:hover { border-color: var(--primary); }
     
-    /* Hero */
-    .hero {
-      min-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 100px 24px 60px;
-      background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(247,147,26,0.15) 0%, transparent 60%);
-    }
+    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
+    .footer p { color: #606070; }
     
-    .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; margin-bottom: 20px; letter-spacing: -0.02em; }
-    .hero h1 .highlight { background: linear-gradient(135deg, var(--primary), #ffb347, var(--success)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { font-size: 1.15rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 36px; }
-    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-    
-    .btn { padding: 14px 28px; border-radius: 12px; font-size: 1rem; font-weight: 600; transition: all 0.25s; cursor: pointer; border: none; font-family: inherit; }
-    .btn-primary { background: var(--primary); color: #000; box-shadow: 0 0 30px var(--primary-glow); }
-    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 40px var(--primary-glow); }
-    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-    
-    /* Halving */
-    .halving-section { padding: 40px 24px; max-width: 900px; margin: 0 auto; }
-    .halving-card {
-      background: linear-gradient(135deg, var(--bg-card), var(--bg-hover));
-      border: 2px solid var(--primary);
-      border-radius: 24px;
-      padding: 40px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .halving-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary), var(--success)); }
-    .halving-label { color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; margin-bottom: 12px; }
-    .halving-title { font-size: 2rem; font-weight: 700; margin-bottom: 24px; }
-    .halving-countdown { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
-    .countdown-item { background: var(--bg); border-radius: 12px; padding: 20px 28px; min-width: 100px; }
-    .countdown-num { font-size: 2.5rem; font-weight: 700; color: var(--primary); font-family: 'JetBrains Mono', monospace; }
-    .countdown-label { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
-    .halving-note { color: var(--text-secondary); font-size: 0.95rem; }
-    
-    /* Stats */
-    .stats-section { padding: 60px 24px; }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
-    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; transition: all 0.3s; }
-    .stat-card:hover { transform: translateY(-4px); border-color: var(--primary); }
-    .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
-    .stat-label { color: var(--text-secondary); font-size: 0.85rem; }
-    
-    /* Blockchain Viz */
-    .blockchain-section { padding: 70px 24px; max-width: 1100px; margin: 0 auto; }
-    .section-header { text-align: center; margin-bottom: 40px; }
-    .section-header h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; }
-    .section-header h2 span { color: var(--primary); }
-    .section-header p { color: var(--text-secondary); }
-    
-    .viz-container { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px; padding: 40px; margin-bottom: 28px; }
-    .blockchain-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
-    
-    .block { width: 80px; height: 80px; background: linear-gradient(145deg, var(--bg-card), var(--bg-hover)); border: 2px solid var(--border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; transition: all 0.3s; cursor: pointer; }
-    .block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--success)); width: 100%; }
-    .block:hover { transform: scale(1.08); border-color: var(--primary); }
-    .block-num { font-size: 1rem; color: var(--primary); }
-    .block-hash { font-size: 0.55rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
-    .block.new { background: linear-gradient(145deg, var(--primary), #ffb347); border-color: var(--primary); animation: blockPop 0.5s; }
-    .block.new * { color: #000 !important; }
-    @keyframes blockPop { 0%{transform:scale(0.5)} 100%{transform:scale(1)} }
-    .arrow { color: var(--primary); font-size: 1.4rem; }
-    
-    /* Learning Paths */
-    .paths-section { padding: 70px 24px; max-width: 1100px; margin: 0 auto; }
-    .paths-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .path-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 32px; transition: all 0.3s; cursor: pointer; }
-    .path-card:hover { transform: translateY(-4px); border-color: var(--success); }
-    .path-level { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 16px; }
-    .path-level.beginner { background: rgba(0,212,170,0.15); color: var(--success); }
-    .path-level.intermediate { background: rgba(247,147,26,0.15); color: var(--primary); }
-    .path-level.advanced { background: rgba(239,68,68,0.15); color: var(--danger); }
-    .path-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 10px; }
-    .path-card p { color: var(--text-secondary); font-size: 0.9rem; }
-    .path-items { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
-    .path-tag { background: var(--bg); padding: 4px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-muted); }
-    
-    /* Quiz */
-    .quiz-section { padding: 70px 24px; max-width: 800px; margin: 0 auto; }
-    .quiz-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 36px; }
-    .quiz-question { font-size: 1.3rem; font-weight: 600; margin-bottom: 24px; }
-    .quiz-options { display: flex; flex-direction: column; gap: 12px; }
-    .quiz-option { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; cursor: pointer; transition: all 0.2s; text-align: left; color: var(--text); font-size: 1rem; }
-    .quiz-option:hover { border-color: var(--primary); }
-    .quiz-option.correct { border-color: var(--success); background: rgba(0,212,170,0.1); }
-    .quiz-option.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); }
-    .quiz-result { text-align: center; padding: 20px; }
-    .quiz-score { font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
-    .quiz-next { margin-top: 20px; }
-    
-    /* Topics */
-    .topics-section { padding: 70px 24px; max-width: 1100px; margin: 0 auto; }
-    .topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
-    .topic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 28px; transition: all 0.3s; cursor: pointer; }
-    .topic-card:hover { transform: translateY(-4px); border-color: var(--primary); background: var(--bg-hover); }
-    .topic-icon { width: 50px; height: 50px; background: linear-gradient(135deg, rgba(247,147,26,0.2), rgba(0,212,170,0.2)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px; }
-    .topic-card h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; }
-    .topic-card p { color: var(--text-secondary); font-size: 0.9rem; }
-    
-    /* Mining Calculator */
-    .mining-section { padding: 70px 24px; max-width: 900px; margin: 0 auto; }
-    .mining-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 36px; }
-    .mining-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 28px; }
-    .mining-input { display: flex; flex-direction: column; gap: 8px; }
-    .mining-input label { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; }
-    .mining-input input { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; color: var(--text); font-size: 1rem; font-family: 'JetBrains Mono', monospace; transition: border-color 0.2s; }
-    .mining-input input:focus { outline: none; border-color: var(--primary); }
-    .mining-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
-    .mining-result { background: var(--bg); border-radius: 12px; padding: 20px; text-align: center; }
-    .mining-result-label { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 8px; }
-    .mining-result-value { font-size: 1.4rem; font-weight: 700; color: var(--primary); font-family: 'JetBrains Mono', monospace; }
-    .mining-result-value.profit { color: var(--success); }
-    .mining-result-value.loss { color: var(--danger); }
-    
-    /* Glossary */
-    .glossary-section { padding: 70px 24px; max-width: 900px; margin: 0 auto; }
-    .glossary-search { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; color: var(--text); font-size: 1rem; margin-bottom: 28px; }
-    .glossary-search:focus { outline: none; border-color: var(--primary); }
-    .glossary-grid { display: grid; gap: 14px; }
-    .glossary-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: all 0.2s; }
-    .glossary-item:hover { border-color: var(--primary); }
-    .glossary-term { font-weight: 600; color: var(--primary); margin-bottom: 6px; font-size: 1.05rem; }
-    .glossary-def { color: var(--text-secondary); font-size: 0.9rem; }
-    
-    /* Footer */
-    .footer { background: var(--bg-secondary); border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; }
-    .footer p { color: var(--text-muted); }
-    
-    /* Lightning Network */
-    .lightning-section { padding: 70px 24px; max-width: 1100px; margin: 0 auto; }
-    .lightning-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
-    .lightning-feature { background: linear-gradient(135deg, var(--bg-card), var(--bg-hover)); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; transition: all 0.3s; }
-    .lightning-feature:hover { transform: translateY(-4px); border-color: var(--primary); }
-    .lightning-feature-icon { font-size: 2rem; margin-bottom: 12px; }
-    .lightning-feature h3 { font-size: 1.1rem; margin-bottom: 8px; }
-    .lightning-feature p { color: var(--text-secondary); font-size: 0.9rem; }
-    .lightning-how { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 36px; margin-bottom: 28px; }
-    .lightning-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
-    .lightning-step { text-align: center; }
-    .lightning-step-num { width: 40px; height: 40px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 12px; }
-    .lightning-step h4 { font-size: 1rem; margin-bottom: 6px; }
-    .lightning-step p { color: var(--text-muted); font-size: 0.85rem; }
-    .lightning-cta { text-align: center; padding: 24px; background: rgba(247,147,26,0.1); border-radius: 12px; border: 1px solid rgba(247,147,26,0.3); }
-    .lightning-cta p { color: var(--text-secondary); }
-    .lightning-cta strong { color: var(--primary); }
-    
-    @media (max-width: 768px) { .nav { padding: 0 20px; } .nav-links { display: none; } .hero h1 { font-size: 2rem; } .halving-countdown { gap: 12px; } .countdown-item { padding: 14px 18px; min-width: 70px; } .countdown-num { font-size: 1.8rem; } }
+    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } }
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="logo"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></div>
+    <div class="links"><a href="#paths">Paths</a><a href="#blockchain">Blockchain</a><a href="#quiz">Quiz</a><a href="#topics">Topics</a></div>
+  </nav>
   
-  <script type="text/babel">
-    const { useState, useEffect } = React;
-    
-    // Icons
-    const BtcIcon = () => <span style={{fontSize:'1.4rem'}}>₿</span>;
-    
-    // Navbar
-    const Navbar = () => (
-      <nav className="nav">
-        <div className="nav-logo">
-          <span className="btc"><BtcIcon/></span>
-          <span className="name">HiftyCo</span>
-          <span className="tag">EDUCATION</span>
-        </div>
-        <div className="nav-links">
-          <a href="#paths">Learning Paths</a>
-          <a href="#lightning">Lightning</a>
-          <a href="#blockchain">Blockchain</a>
-          <a href="#mining">Mining</a>
-          <a href="#glossary">Glossary</a>
-          <a href="#quiz">Quiz</a>
-          <a href="#learn">Topics</a>
-        </div>
-      </nav>
-    );
-    
-    // Live Ticker
-    const Ticker = () => {
-      const [data, setData] = useState({BTC:{USD:0}});
-      useEffect(() => {
-        fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD')
-          .then(r=>r.json()).then(d=>setData(d)).catch(()=>{});
-        const i = setInterval(()=>fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD').then(r=>r.json()).then(d=>setData(d)).catch(()=>{}),10000);
-        return ()=>clearInterval(i);
-      }, []);
-      
-      // const items = [
-        {sym:'BTC',name:'Bitcoin'},
-        {sym:'BTC',name:'Bitcoin'}
-      ];
-      
-      return (
-        <div className="ticker-wrap">
-          <div className="ticker">
-            {items.map((item,i) => {
-              const price = data[item.sym]?.USD || 0;
-              const change = (Math.random() * 2 - 0.5).toFixed(2);
-              return (
-                <div key={i} className="ticker-item">
-                  <span className="ticker-sym">{item.sym}</span>
-                  <span className="ticker-price">${price.toLocaleString()}</span>
-                  <span className={`ticker-change ${change>=0?'up':'down'}`}>{change>=0?'▲':'▼'} {Math.abs(change)}%</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      );
-    };
-    
-    // Halving Countdown
-    const HalvingCountdown = () => {
-      const [time, setTime] = useState({days:0,hours:0,mins:0,secs:0});
-      useEffect(() => {
-        const update = () => {
-          const next = new Date('2028-04-20T12:00:00Z');
-          const now = new Date();
-          const diff = Math.max(0, next - now);
-          setTime({
-            days: Math.floor(diff/86400000),
-            hours: Math.floor((diff%86400000)/3600000),
-            mins: Math.floor((diff%3600000)/60000),
-            secs: Math.floor((diff%60000)/1000)
-          });
-        };
-        update(); const i = setInterval(update,1000); return ()=>clearInterval(i);
-      }, []);
-      
-      return (
-        <section className="halving-section">
-          <div className="halving-card">
-            <div className="halving-label">Next Bitcoin Halving</div>
-            <div className="halving-title">Block Reward Reduces from 3.125 BTC → 1.5625 BTC</div>
-            <div className="halving-countdown">
-              <div className="countdown-item"><div className="countdown-num">{time.days}</div><div className="countdown-label">Days</div></div>
-              <div className="countdown-item"><div className="countdown-num">{time.hours}</div><div className="countdown-label">Hours</div></div>
-              <div className="countdown-item"><div className="countdown-num">{time.mins}</div><div className="countdown-label">Minutes</div></div>
-              <div className="countdown-item"><div className="countdown-num">{time.secs}</div><div className="countdown-label">Seconds</div></div>
-            </div>
-            <div className="halving-note">Halving events happen approximately every 4 years • Reduces inflation • Historical price action positive</div>
-          </div>
-        </section>
-      );
-    };
-    
-    // Stats
-    const Stats = () => {
-      return (
-        <section className="stats-section">
-          <div className="stats-grid">
-            <div className="stat-card"><div className="stat-value">21M</div><div className="stat-label">Max Bitcoin Supply</div></div>
-            <div className="stat-card"><div className="stat-value">10min</div><div className="stat-label">Block Time</div></div>
-            <div className="stat-card"><div className="stat-value">200M+</div><div className="stat-label">Global Users</div></div>
-            <div className="stat-card"><div className="stat-value">$1.4T</div><div className="stat-label">Market Cap</div></div>
-          </div>
-        </section>
-      );
-    };
-    
-    // Blockchain Viz
-    const BlockchainViz = () => {
-      const [blocks, setBlocks] = useState([{id:1,h:'0000a3'},{id:2,h:'0000b7'},{id:3,h:'0000c2'},{id:4,h:'0000d1'},{id:5,h:'0000e8'}]);
-      const [newId, setNewId] = useState(null);
-      
-      const addBlock = () => {
-        const next = blocks.length + 1;
-        const h = '0000' + Math.random().toString(16).substr(2,3);
-        setNewId(next);
-        setTimeout(() => { setBlocks([...blocks,{id:next,h}]); setNewId(null); }, 600);
-      };
-      
-      return (
-        <section id="blockchain" className="blockchain-section">
-          <div className="section-header"><h2>How <span>Blockchain</span> Works</h2><p>Each block contains verified transactions, linked cryptographically</p></div>
-          <div className="viz-container">
-            <div className="blockchain-row">
-              {blocks.map((b,i) => (
-                <div key={b.id} style={{display:'flex',alignItems:'center'}}>
-                  <div className={`block ${newId===b.id?'new':''}`}><span className="block-num">#{b.id}</span><span className="block-hash">{b.h}...</span></div>
-                  {i<blocks.length-1 && <span className="arrow">→</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div style={{textAlign:'center'}}><button onClick={addBlock} className="btn btn-primary">+ Add Block</button></div>
-        </section>
-      );
-    };
-    
-    // Learning Paths
-    const LearningPaths = () => {
-      const paths = [
-        {level:'beginner',title:'Bitcoin Fundamentals',desc:'Start here! Learn what Bitcoin is, how it works, and why it matters.',tags:['What is Bitcoin?','Wallets','Basic Transactions','Security']},
-        {level:'intermediate',title:'Trading & Analysis',desc:'Learn technical analysis, indicators, and trading strategies.',tags:['RSI','MACD','Support/Resistance','Risk Management']},
-        {level:'advanced',title:'Mining & Infrastructure',desc:'Deep dive into mining, nodes, Lightning Network, and development.',tags:['Proof of Work','Nodes','Lightning','Protocol Development']}
-      ];
-      
-      return (
-        <section id="paths" className="paths-section">
-          <div className="section-header"><h2>Learning <span>Paths</span></h2><p>Structured curriculum from beginner to advanced</p></div>
-          <div className="paths-grid">
-            {paths.map((p,i) => (
-              <div key={i} className="path-card">
-                <span className={`path-level ${p.level}`}>{p.level}</span>
-                <h3>{p.title}</h3>
-                <p>{p.desc}</p>
-                <div className="path-items">{p.tags.map((t,j)=><span key={j} className="path-tag">{t}</span>)}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-      );
-    };
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Master <span>Bitcoin</span></h1>
+    <p>The ultimate education platform for Bitcoiners. Learn, practice, and succeed in the new financial system.</p>
+    <div class="btns"><a href="#paths" class="btn btn1">Start Learning</a><a href="#quiz" class="btn btn2">Take Quiz</a></div>
+  </section>
+  
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="statv">21M</div><div class="statl">Max Supply</div></div>
+    <div class="stat"><div class="statv">10min</div><div class="statl">Block Time</div></div>
+    <div class="stat"><div class="statv">200M+</div><div class="statl">Global Users</div></div>
+    <div class="stat"><div class="statv">$1.4T</div><div class="statl">Market Cap</div></div>
+  </div>
+  
+  <!-- Blockchain -->
+  <section id="blockchain" class="section">
+    <div class="sh"><h2>How <span>Blockchain</span> Works</h2><p>Each block contains verified transactions</p></div>
+    <div class="viz">
+      <div class="blocks" id="blocks">
+        <div class="block"><span class="blockn">#1</span><span class="blockh">0000..</span></div>
+        <span class="arrow">→</span>
+        <div class="block"><span class="blockn">#2</span><span class="blockh">0000..</span></div>
+        <span class="arrow">→</span>
+        <div class="block"><span class="blockn">#3</span><span class="blockh">0000..</span></div>
+        <span class="arrow">→</span>
+        <div class="block"><span class="blockn">#4</span><span class="blockh">0000..</span></div>
+        <span class="arrow">→</span>
+        <div class="block"><span class="blockn">#5</span><span class="blockh">0000..</span></div>
+      </div>
+    </div>
+    <div class="cta"><button class="btn btn1" onclick="addBlock()">+ Add Block</button></div>
+  </section>
+  
+  <!-- Paths -->
+  <section id="paths" class="section">
+    <div class="sh"><h2>Learning <span>Paths</span></h2><p>Structured curriculum from beginner to advanced</p></div>
+    <div class="paths">
+      <div class="path"><span class="pathlvl b">Beginner</span><h3>Bitcoin Fundamentals</h3><p>Start here! Learn what Bitcoin is, how it works, and why it matters.</p></div>
+      <div class="path"><span class="pathlvl i">Intermediate</span><h3>Trading & Analysis</h3><p>Learn technical analysis, indicators, and trading strategies.</p></div>
+      <div class="path"><span class="pathlvl a">Advanced</span><h3>Mining & Infrastructure</h3><p>Deep dive into mining, nodes, Lightning Network.</p></div>
+    </div>
+  </section>
+  
+  <!-- Quiz -->
+  <section id="quiz" class="section">
+    <div class="sh"><h2>Test Your <span>Knowledge</span></h2><p>Quick quiz to reinforce learning</p></div>
+    <div class="quiz" id="quiz">
+      <div class="qq" id="qtext">What is the maximum supply of Bitcoin?</div>
+      <button class="qo" onclick="answer(0)">21 million</button>
+      <button class="qo" onclick="answer(1)">100 million</button>
+      <button class="qo" onclick="answer(2)">1 billion</button>
+      <button class="qo" onclick="answer(3)">Unlimited</button>
+      <p style="text-align:center;margin-top:14px;color:#606070" id="qnum">Question 1 of 4</p>
+    </div>
+  </section>
+  
+  <!-- Topics -->
+  <section id="topics" class="section">
+    <div class="sh"><h2>Explore <span>Topics</span></h2><p>Deep dive into specific areas</p></div>
+    <div class="topics">
+      <div class="topic"><div class="topici">₿</div><h3>What is Bitcoin?</h3><p>Digital currency, decentralized, limited 21M supply.</p></div>
+      <div class="topic"><div class="topici">⛓️</div><h3>How Blockchain Works</h3><p>Distributed ledger, consensus, immutability.</p></div>
+      <div class="topic"><div class="topici">⛏️</div><h3>Mining & Consensus</h3><p>Proof of Work, miners, hash rate.</p></div>
+      <div class="topic"><div class="topici">🔐</div><h3>Wallets & Keys</h3><p>Public/Private keys, seed phrases.</p></div>
+      <div class="topic"><div class="topici">📊</div><h3>Technical Analysis</h3><p>Charts, indicators, support/resistance.</p></div>
+      <div class="topic"><div class="topici">🧩</div><h3>Bitcoin Script</h3><p>Smart contracts, Taproot, ordinals.</p></div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 HiftyCo • Education for Bitcoiners, by Bitcoiners</p>
+    <p style="margin-top:8px;font-size:0.85rem">⚡ Lightning Tips: hiftyco@coinos.io</p>
+  </footer>
+  
+  <script>
+    // Blockchain
+    let blockCount = 5;
+    function addBlock() {
+      blockCount++;
+      const blocks = document.getElementById('blocks');
+      const arrow = document.createElement('span');
+      arrow.className = 'arrow';
+      arrow.textContent = '→';
+      const block = document.createElement('div');
+      block.className = 'block';
+      block.innerHTML = '<span class="blockn">#'+blockCount+'</span><span class="blockh">0000..</span>';
+      blocks.appendChild(arrow);
+      blocks.appendChild(block);
+    }
     
     // Quiz
-    const Quiz = () => {
-      const q = [
-        {q:'What is the maximum supply of Bitcoin?',a:['21 million','100 million','1 billion','Unlimited'],c:0},
-        {q:'Who created Bitcoin?',a:['Satoshi Nakamoto','Vitalik Buterin','Satoshi Nakamoto','Elon Musk'],c:2},
-        {q:'How often does a new block get added to Bitcoin blockchain?',a:['Every 10 minutes','Every 1 minute','Every hour','Every day'],c:0},
-        {q:'What consensus mechanism does Bitcoin use?',a:['Proof of Work','Proof of Stake','Proof of Authority','Delegated PoS'],c:0}
-      ];
-      
-      const [qIdx, setQIdx] = useState(0);
-      const [score, setScore] = useState(0);
-      const [selected, setSelected] = useState(-1);
-      const [done, setDone] = useState(false);
-      
-      const handle = (i) => {
-        if (selected >= 0) return;
-        setSelected(i);
-        if (i === q[qIdx].c) setScore(s => s + 1);
-        setTimeout(() => {
-          if (qIdx < q.length - 1) { setQIdx(qIdx + 1); setSelected(-1); }
-          else { setDone(true); }
-        }, 1200);
-      };
-      
-      const reset = () => { setQIdx(0); setScore(0); setSelected(-1); setDone(false); };
-      
-      return (
-        <section id="quiz" className="quiz-section">
-          <div className="section-header"><h2>Test Your <span>Knowledge</span></h2><p>Quick quiz to reinforce learning</p></div>
-          <div className="quiz-card">
-            {!done ? (
-              <>
-                <div className="quiz-question">{q[qIdx].q}</div>
-                <div className="quiz-options">
-                  {q[qIdx].a.map((opt,i) => (
-                    <button key={i} className={`quiz-option ${selected>=0?(i===q[qIdx].c?'correct':(i===selected?'wrong':'')):''}`} onClick={()=>handle(i)} disabled={selected>=0}>{opt}</button>
-                  ))}
-                </div>
-                <div style={{textAlign:'center',marginTop:'16px',color:'var(--text-muted)'}}>Question {qIdx+1} of {q.length}</div>
-              </>
-            ) : (
-              <div className="quiz-result">
-                <div className="quiz-score">{score} / {q.length}</div>
-                <p>{score>=3?'Excellent!':'Keep learning!'}</p>
-                <button onClick={reset} className="btn btn-primary quiz-next">Try Again</button>
-              </div>
-            )}
-          </div>
-        </section>
-      );
-    };
-    
-    // Mining Calculator
-    const MiningCalculator = () => {
-      const [hashrate, setHashrate] = useState(100);
-      const [power, setPower] = useState(3000);
-      const [cost, setCost] = useState(0.10);
-      const [btcPrice, setBtcPrice] = useState(85000);
-      const [results, setResults] = useState({daily:0,monthly:0,yearly:0,profit:0});
-      
-      useEffect(() => {
-        // Constants
-        const blockReward = 3.125; // Current post-halving
-        const blockTime = 10 * 60; // 10 minutes in seconds
-        const blocksPerDay = (86400 / blockTime);
-        const btcPerDay = blocksPerDay * blockReward;
-        
-        // Network hashrate ~700 EH/s
-        const networkHashrate = 700e18;
-        const hashrateS = hashrate * 1e12; // TH/s to H/s
-        
-        // Your share of network
-        const share = hashrateS / networkHashrate;
-        const dailyBtc = btcPerDay * share;
-        
-        // Costs
-        const kwhPerDay = (power / 1000) * 24;
-        const dailyCost = kwhPerDay * cost;
-        const dailyRevenue = dailyBtc * btcPrice;
-        const dailyProfit = dailyRevenue - dailyCost;
-        
-        setResults({
-          daily: dailyBtc.toFixed(6),
-          monthly: (dailyBtc * 30).toFixed(4),
-          yearly: (dailyBtc * 365).toFixed(4),
-          profit: dailyProfit.toFixed(2)
-        });
-      }, [hashrate, power, cost, btcPrice]);
-      
-      return (
-        <section id="mining" className="mining-section">
-          <div className="section-header"><h2>Mining <span>Calculator</span></h2><p>Estimate your mining rewards and profitability</p></div>
-          <div className="mining-card">
-            <div className="mining-inputs">
-              <div className="mining-input">
-                <label>Hash Rate (TH/s)</label>
-                <input type="number" value={hashrate} onChange={e=>setHashrate(Number(e.target.value))} placeholder="100" />
-              </div>
-              <div className="mining-input">
-                <label>Power Consumption (W)</label>
-                <input type="number" value={power} onChange={e=>setPower(Number(e.target.value))} placeholder="3000" />
-              </div>
-              <div className="mining-input">
-                <label>Electricity Cost ($/kWh)</label>
-                <input type="number" step="0.01" value={cost} onChange={e=>setCost(Number(e.target.value))} placeholder="0.10" />
-              </div>
-              <div className="mining-input">
-                <label>Bitcoin Price ($)</label>
-                <input type="number" value={btcPrice} onChange={e=>setBtcPrice(Number(e.target.value))} placeholder="85000" />
-              </div>
-            </div>
-            <div className="mining-results">
-              <div className="mining-result">
-                <div className="mining-result-label">Daily BTC</div>
-                <div className="mining-result-value">{results.daily} ₿</div>
-              </div>
-              <div className="mining-result">
-                <div className="mining-result-label">Monthly BTC</div>
-                <div className="mining-result-value">{results.monthly} ₿</div>
-              </div>
-              <div className="mining-result">
-                <div className="mining-result-label">Yearly BTC</div>
-                <div className="mining-result-value">{results.yearly} ₿</div>
-              </div>
-              <div className="mining-result">
-                <div className="mining-result-label">Daily Profit/Loss</div>
-                <div className={`mining-result-value ${Number(results.profit) >= 0 ? 'profit' : 'loss'}`}>${results.profit}</div>
-              </div>
-            </div>
-          </div>
-        </section>
-      );
-    };
-    
-    // Glossary
-    const Glossary = () => {
-      const [search, setSearch] = useState('');
-      const terms = [
-        {t:'Block Reward',d:'The amount of BTC miners receive for adding a new block. Currently 3.125 BTC, halves every ~4 years.'},
-        {t:'Hash Rate',d:'The total computational power of the Bitcoin network, measured in hashes per second (H/s).'},
-        {t:'Proof of Work',d:'Bitcoin\'s consensus mechanism requiring miners to solve complex mathematical puzzles to validate transactions.'},
-        {t:'Difficulty',d:'A measure of how hard it is to find a valid hash for a new block. Adjusts every 2016 blocks.'},
-        {t:'Wallet',d:'Software or hardware that stores your private keys, allowing you to send/receive Bitcoin.'},
-        {t:'Private Key',d:'A secret number that allows you to spend your Bitcoin. Never share this!'},
-        {t:'Public Key',d:'Derived from your private key, used to receive Bitcoin. Safe to share.'},
-        {t:'Address',d:'A hashed version of your public key, similar to an account number for receiving BTC.'},
-        {t:'Seed Phrase',d:'A 12 or 24-word phrase that can regenerate all your private keys. Write it down!'},
-        {t:'Halving',d:'An event that cuts the block reward in half, occurring every 210,000 blocks (~4 years).'},
-        {t:'Satoshi',d:'The smallest unit of Bitcoin, equal to 0.00000001 BTC.'},
-        {t:'Lightning Network',d:'Layer 2 solution for fast, low-cost Bitcoin transactions.'},
-        {t:'Node',d:'A computer running Bitcoin software that validates and relays transactions.'},
-        {t:'Mempool',d:'A waiting area for unconfirmed transactions before they\'re included in a block.'},
-        {t:'Confirmation',d:'When a transaction is included in a block, it gains one confirmation. More = more secure.'}
-      ];
-      
-      const filtered = terms.filter(x => x.t.toLowerCase().includes(search.toLowerCase()) || x.d.toLowerCase().includes(search.toLowerCase()));
-      
-      return (
-        <section id="glossary" className="glossary-section">
-          <div className="section-header"><h2>Bitcoin <span>Glossary</span></h2><p>Essential terms every Bitcoiner should know</p></div>
-          <input className="glossary-search" placeholder="Search terms..." value={search} onChange={e=>setSearch(e.target.value)} />
-          <div className="glossary-grid">
-            {filtered.map((term,i) => (
-              <div key={i} className="glossary-item">
-                <div className="glossary-term">{term.t}</div>
-                <div className="glossary-def">{term.d}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-      );
-    };
-    
-    // Topics
-    const Topics = () => {
-      const topics = [
-        {i:'₿',t:'What is Bitcoin?',d:'Digital currency, decentralized, limited 21M supply.'},
-        {i:'⛓️',t:'How Blockchain Works',d:'Distributed ledger, consensus, immutability.'},
-        {i:'⛏️',t:'Mining & Consensus',d:'Proof of Work, miners, hash rate, difficulty.'},
-        {i:'🔐',t:'Wallets & Keys',d:'Public/Private keys, seed phrases, self-custody.'},
-        {i:'📊',t:'Technical Analysis',d:'Charts, indicators, support/resistance.'},
-        {i:'🧩',t:'Bitcoin Script',d:'Smart contracts, Taproot, ordinals.'}
-      ];
-      
-      return (
-        <section id="learn" className="topics-section">
-          <div className="section-header"><h2>Explore <span>Topics</span></h2><p>Deep dive into specific areas</p></div>
-          <div className="topics-grid">
-            {topics.map((t,i) => (
-              <div key={i} className="topic-card">
-                <div className="topic-icon">{t.i}</div>
-                <h3>{t.t}</h3>
-                <p>{t.d}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      );
-    };
-    
-    // Lightning Network Section
-    const LightningSection = () => {
-      const features = [
-        {icon:'⚡',title:'Instant Payments',desc:'Millisecond to second blockchain payments without block confirmation delays.'},
-        {icon:'📈',title:'Massive Scalability',desc:'Capable of millions to billions of transactions per second.'},
-        {icon:'💰',title:'Ultra-Low Fees',desc:'Exceptionally low fees enabling instant micropayments.'},
-        {icon:'🔄',title:'Cross-Chain',desc:'Atomic swaps across different blockchains without custodians.'}
-      ];
-      
-      const howItWorks = [
-        {step:1,title:'Open a Channel',desc:'Create a 2-of-2 multi-sig wallet on Bitcoin blockchain with another participant.'},
-        {step:2,title:'Fund the Channel',desc:'Deposit BTC to fund the payment channel - this is the only on-chain transaction needed.'},
-        {step:3,title:'Instant Transfers',desc:'Send unlimited instant payments back and forth with the other participant.'},
-        {step:4,title:'Close or Route',desc:'Close the channel to settle on-chain, or route payments through the network.'}
-      ];
-      
-      return (
-        <section id="lightning" className="lightning-section">
-          <div className="section-header"><h2>⚡ Lightning <span>Network</span></h2><p>Bitcoin\'s Layer 2 scaling solution for instant, low-cost payments</p></div>
-          
-          <div className="lightning-features">
-            {features.map((f,i) => (
-              <div key={i} className="lightning-feature">
-                <div className="lightning-feature-icon">{f.icon}</div>
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="lightning-how">
-            <h3 style={{textAlign:'center',marginBottom:'28px',fontSize:'1.4rem'}}>How It Works</h3>
-            <div className="lightning-steps">
-              {howItWorks.map((s,i) => (
-                <div key={i} className="lightning-step">
-                  <div className="lightning-step-num">{s.step}</div>
-                  <h4>{s.title}</h4>
-                  <p>{s.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          <div className="lightning-cta">
-            <p>Ready to try Lightning? Download a wallet like <strong>Phoenix</strong>, <strong>Wallet of Satoshi</strong>, or <strong>Breez</strong></p>
-          </div>
-        </section>
-      );
-    };
-    
-    // Hero
-    const Hero = () => (
-      <section className="hero">
-        <h1>Master <span className="highlight">Bitcoin</span></h1>
-        <p>The ultimate education platform for Bitcoiners. Learn, practice, and succeed in the new financial system.</p>
-        <div className="hero-btns">
-          <a href="#paths" className="btn btn-primary">Start Learning</a>
-          <a href="#quiz" className="btn btn-outline">Take Quiz</a>
-        </div>
-      </section>
-    );
-    
-    // Footer
-    const Footer = () => (
-      <footer className="footer">
-        <p>© 2026 HiftyCo • Education for Bitcoiners, by Bitcoiners</p>
-        <div style={{marginTop:'20px'}}>
-          <p style={{color:'var(--primary)',marginBottom:'12px',fontWeight:600}}>⚡ Support with Lightning</p>
-          <img src={"https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=lightning%3Ahiftyco%40coinos.io"} alt="Lightning Tip" style={{borderRadius:'8px'}} />
-          <p style={{color:'var(--text-muted)',fontSize:'0.85rem',marginTop:'8px'}}>hiftyco@coinos.io</p>
-        </div>
-      </footer>
-    );
-    
-    // App
-    const App = () => (
-      <>
-        <Navbar/>
-        <Ticker/>
-        <Hero/>
-        <HalvingCountdown/>
-        <Stats/>
-        <BlockchainViz/>
-        <LearningPaths/>
-        <LightningSection/>
-        <MiningCalculator/>
-        <Glossary/>
-        <Quiz/>
-        <Topics/>
-        <Footer/>
-      </>
-    );
-    
-    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+    const questions = [
+      {q:'What is the maximum supply of Bitcoin?',a:0,o:['21 million','100 million','1 billion','Unlimited']},
+      {q:'Who created Bitcoin?',a:2,o:['Satoshi Nakamoto','Vitalik Buterin','Satoshi Nakamoto','Elon Musk']},
+      {q:'How often does a new block get added?',a:0,o:['Every 10 minutes','Every 1 minute','Every hour','Every day']},
+      {q:'What consensus mechanism does Bitcoin use?',a:0,o:['Proof of Work','Proof of Stake','Proof of Authority','Delegated PoS']}
+    ];
+    let qIdx = 0;
+    function answer(idx) {
+      if(questions[qIdx].a === idx) alert('Correct!');
+      else alert('Wrong! Try again.');
+      qIdx = (qIdx + 1) % questions.length;
+      document.getElementById('qtext').textContent = questions[qIdx].q;
+      const btns = document.querySelectorAll('.qo');
+      btns.forEach((btn,i) => btn.textContent = questions[qIdx].o[i]);
+      document.getElementById('qnum').textContent = 'Question '+(qIdx+1)+' of '+questions.length;
+    }
   </script>
 </body>
 </html>
