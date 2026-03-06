@@ -9,68 +9,231 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; }
-    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    
     .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; }
     .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
-    .logo .btc { color: var(--primary); }
+    .logo .btc { color: var(--primary); font-size: 1.5rem; }
     .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; }
     .logo a { text-decoration: none; color: inherit; }
     .links { display: flex; gap: 28px; }
-    .links a { color: var(--text2); text-decoration: none; font-weight: 500; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; transition: color 0.2s; }
     .links a:hover, .links a.active { color: var(--primary); }
-    .section { padding: 100px 20px 60px; max-width: 1100px; margin: 0 auto; }
-    .sh { text-align: center; margin-bottom: 24px; }
-    .sh h2 { font-size: 2rem; }
-    .sh h2 span { color: var(--primary); }
+    
+    .section { padding: 100px 20px 60px; max-width: 1200px; margin: 0 auto; }
+    .sh { text-align: center; margin-bottom: 28px; }
+    .sh h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; }
+    .sh h1 span { background: linear-gradient(135deg, var(--primary), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .sh p { color: var(--text2); }
-    .live-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.15); border: 1px solid var(--success); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; color: var(--success); margin-bottom: 16px; }
-    .live-badge::before { content: ''; width: 8px; height: 8px; background: var(--success); border-radius: 50%; }
-    .search-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
-    .search-box input { width: 100%; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: monospace; margin-bottom: 12px; }
-    .search-box input:focus { outline: none; border-color: var(--primary); }
-    .search-box button { width: 100%; padding: 12px; background: var(--primary); border: none; border-radius: 10px; color: #000; font-weight: 600; cursor: pointer; }
+    
+    .live-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.15); border: 1px solid var(--success); border-radius: 20px; padding: 8px 16px; font-size: 0.85rem; font-weight: 600; color: var(--success); margin-bottom: 16px; animation: badgePulse 2s infinite; }
+    .live-badge::before { content: ''; width: 10px; height: 10px; background: var(--success); border-radius: 50%; animation: dotPulse 1s infinite; }
+    @keyframes badgePulse { 0%,100% { box-shadow: 0 0 10px rgba(0,212,170,0.3); } 50% { box-shadow: 0 0 20px rgba(0,212,170,0.6); } }
+    @keyframes dotPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+    
+    /* SEARCH */
+    .search-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 28px; position: relative; overflow: hidden; }
+    .search-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--success), #ff6b6b, var(--primary)); background-size: 300% 100%; animation: gradientFlow 3s linear infinite; }
+    @keyframes gradientFlow { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+    .search-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; text-align: center; }
+    .search-box { display: flex; gap: 12px; max-width: 700px; margin: 0 auto; }
+    .search-box input { flex: 1; padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.95rem; font-family: monospace; transition: all 0.3s; }
+    .search-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 20px rgba(247,147,26,0.2); }
+    .search-box button { padding: 14px 28px; background: var(--primary); border: none; border-radius: 12px; color: #000; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+    .search-box button:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,147,26,0.4); }
     .results { margin-top: 16px; }
-    .sr-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-    .sr-card.pending { border-color: var(--primary); }
-    .sr-card.confirmed { border-color: var(--success); }
-    .sr-header { display: flex; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-    .sr-txid { font-family: monospace; color: var(--primary); font-size: 0.8rem; word-break: break-all; }
-    .sr-status { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+    
+    /* SEARCH RESULT CARDS */
+    .sr-card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; animation: cardIn 0.4s ease-out; }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(-15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .sr-card.pending { border-color: var(--primary); background: linear-gradient(135deg, rgba(247,147,26,0.08) 0%, var(--bg) 100%); }
+    .sr-card.confirmed { border-color: var(--success); background: linear-gradient(135deg, rgba(0,212,170,0.08) 0%, var(--bg) 100%); }
+    .sr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .sr-txid { font-family: monospace; color: var(--primary); font-size: 0.8rem; word-break: break-all; flex: 1; }
+    .sr-status { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
     .sr-status.pending { background: rgba(247,147,26,0.2); color: var(--primary); }
     .sr-status.confirmed { background: rgba(0,212,170,0.2); color: var(--success); }
-    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
-    .sr-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; }
-    .sr-value { font-size: 0.9rem; font-weight: 600; }
-    .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
-    .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
-    .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
-    .stat-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-top: 4px; }
-    .chain { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
-    .chain-block { width: 80px; height: 80px; background: linear-gradient(145deg, #1e1e2e, #252535); border: 2px solid var(--primary); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; animation: glow 2s infinite; }
-    @keyframes glow { 0%,100% { box-shadow: 0 0 15px rgba(247,147,26,0.3); } 50% { box-shadow: 0 0 30px rgba(247,147,26,0.5); } }
-    .chain-block .bn { font-size: 0.65rem; color: var(--primary); }
-    .chain-block .bt { font-size: 0.5rem; color: var(--text2); }
-    .chain-arrow { color: var(--primary); font-size: 1.2rem; }
-    .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-    .fee-card { background: var(--bg2); border-radius: 12px; padding: 16px; text-align: center; }
+    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; }
+    .sr-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .sr-value { font-size: 1rem; font-weight: 600; }
+    .sr-value.btc { color: var(--primary); }
+    .sr-value.sat { color: var(--danger); }
+    
+    /* STATS GRID */
+    .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 28px; }
+    .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; transition: all 0.3s; animation: statFade 0.5s ease-out backwards; }
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.15s; }
+    .stat-card:nth-child(3) { animation-delay: 0.2s; }
+    .stat-card:nth-child(4) { animation-delay: 0.25s; }
+    .stat-card:nth-child(5) { animation-delay: 0.3s; }
+    .stat-card:nth-child(6) { animation-delay: 0.35s; }
+    @keyframes statFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .stat-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(247,147,26,0.15); }
+    .stat-value { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .stat-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* CHAIN VISUALIZATION - UNIQUE ANIMATION */
+    .chain-section { margin-bottom: 28px; }
+    .chain-title { text-align: center; font-size: 1rem; color: var(--text2); margin-bottom: 20px; }
+    .chain-container { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; padding: 20px 0; position: relative; }
+    
+    .block-wrapper { display: flex; align-items: center; }
+    
+    .chain-block { 
+      width: 110px; height: 110px; 
+      background: linear-gradient(145deg, #1a1a28, #252535); 
+      border: 2px solid var(--primary); 
+      border-radius: 16px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      font-weight: 700; 
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s;
+      animation: blockFloat 3s ease-in-out infinite;
+    }
+    .chain-block:nth-child(odd) { animation-delay: -0.5s; }
+    .chain-block:nth-child(even) { animation-delay: -1s; }
+    @keyframes blockFloat {
+      0%, 100% { transform: translateY-shadow: 0(0); box 0 25px rgba(247,147,26,0.4); }
+      50% { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(247,147,26,0.6); }
+    }
+    .chain-block:hover { 
+      transform: scale(1.15) translateY(-10px); 
+      border-color: var(--success); 
+      z-index: 100;
+      box-shadow: 0 25px 60px rgba(247,147,26,0.5);
+    }
+    
+    /* Animated glow ring */
+    .chain-block::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 20px;
+      background: linear-gradient(45deg, var(--primary), var(--success), var(--primary));
+      z-index: -1;
+      opacity: 0.5;
+      animation: ringSpin 2s linear infinite;
+    }
+    @keyframes ringSpin { 100% { transform: rotate(360deg); } }
+    
+    /* Inner shimmer */
+    .chain-block::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer { 100% { left: 100%; } }
+    
+    .chain-block .block-num { font-size: 0.75rem; color: var(--primary); font-weight: 700; margin-bottom: 4px; }
+    .chain-block .block-txs { font-size: 0.6rem; color: var(--text2); }
+    .chain-block .block-size { font-size: 0.55rem; color: var(--success); margin-top: 4px; }
+    .chain-block .block-time { font-size: 0.5rem; color: #666; margin-top: 2px; }
+    
+    .chain-arrow { 
+      color: var(--primary); 
+      font-size: 1.8rem; 
+      animation: arrowPulse 1.5s ease-in-out infinite;
+      margin: 0 4px;
+    }
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 0.4; transform: translateX(0) scale(1); }
+      50% { opacity: 1; transform: translateX(5px) scale(1.2); }
+    }
+    
+    /* FEE CARDS */
+    .fee-section { margin-bottom: 28px; }
+    .fee-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 14px; }
+    .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .fee-card { 
+      background: var(--bg2); 
+      border-radius: 16px; 
+      padding: 24px; 
+      text-align: center; 
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      animation: feeSlide 0.5s ease-out backwards;
+    }
+    .fee-card:nth-child(1) { animation-delay: 0.2s; }
+    .fee-card:nth-child(2) { animation-delay: 0.3s; }
+    .fee-card:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes feeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .fee-card:hover { transform: translateY(-5px); }
+    .fee-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
     .fee-card.slow { border: 1px solid var(--success); }
+    .fee-card.slow::before { background: var(--success); }
     .fee-card.normal { border: 1px solid var(--primary); }
+    .fee-card.normal::before { background: var(--primary); }
     .fee-card.fast { border: 1px solid var(--danger); }
-    .fee-rate { font-size: 1.5rem; font-weight: 700; }
+    .fee-card.fast::before { background: var(--danger); }
+    .fee-rate { font-size: 2rem; font-weight: 700; }
     .fee-card.slow .fee-rate { color: var(--success); }
     .fee-card.normal .fee-rate { color: var(--primary); }
     .fee-card.fast .fee-rate { color: var(--danger); }
-    .fee-time { font-size: 0.7rem; color: var(--text2); }
-    .fee-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; }
-    .tx-section { margin-bottom: 24px; }
-    .tx-title { font-size: 0.9rem; color: var(--text2); margin-bottom: 12px; text-align: center; }
-    .tx-list { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; max-height: 250px; overflow-y: auto; }
-    .tx-item { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .fee-time { font-size: 0.75rem; color: var(--text2); margin-top: 4px; }
+    .fee-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; margin-top: 8px; }
+    
+    /* TRANSACTIONS */
+    .tx-section { margin-bottom: 28px; }
+    .tx-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .tx-icon { animation: txBounce 1s infinite; }
+    @keyframes txBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    .tx-list { 
+      background: var(--bg2); 
+      border: 1px solid var(--border); 
+      border-radius: 16px; 
+      max-height: 320px; 
+      overflow-y: auto; 
+    }
+    .tx-list::-webkit-scrollbar { width: 6px; }
+    .tx-list::-webkit-scrollbar-track { background: var(--bg); }
+    .tx-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+    
+    .tx-item { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 14px 18px; 
+      border-bottom: 1px solid var(--border); 
+      transition: all 0.2s;
+      animation: txSlide 0.3s ease-out backwards;
+    }
+    .tx-item:nth-child(odd) { animation-delay: 0.05s; }
+    @keyframes txSlide { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+    .tx-item:hover { background: rgba(247,147,26,0.08); }
     .tx-item:last-child { border-bottom: none; }
-    .tx-hash { font-family: monospace; color: var(--primary); }
-    .tx-amt { color: var(--success); margin-left: 12px; }
-    .footer { background: var(--bg2); padding: 24px; text-align: center; color: #606070; margin-top: 40px; }
-    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } .stats-grid { grid-template-columns: repeat(3, 1fr); } .fee-grid { grid-template-columns: 1fr; } }
+    .tx-left { display: flex; align-items: center; gap: 12px; }
+    .tx-icon-mini { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: txPulse 1s infinite; }
+    @keyframes txPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+    .tx-hash { font-family: monospace; color: var(--primary); font-size: 0.8rem; }
+    .tx-right { display: flex; align-items: center; gap: 16px; }
+    .tx-amount { color: var(--success); font-weight: 600; font-size: 0.9rem; }
+    .tx-fee { color: var(--danger); font-size: 0.75rem; }
+    .tx-confirmed .tx-icon-mini { background: var(--success); }
+    
+    /* LOADING */
+    .loading { display: flex; align-items: center; justify-content: center; padding: 30px; color: var(--text2); gap: 10px; }
+    .loading::after { content: ''; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 24px; text-align: center; color: #606070; margin-top: 40px; }
+    
+    @media (max-width: 800px) { 
+      .nav { padding: 0 16px; } 
+      .links { display: none; }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .fee-grid { grid-template-columns: 1fr; }
+      .chain-block { width: 80px; height: 80px; }
+      .search-box { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
@@ -88,47 +251,56 @@
   
   <section class="section">
     <div class="sh">
-      <div class="live-badge">⚡ LIVE</div>
-      <h2>Bitcoin <span>Blockchain</span></h2>
-      <p>Real-time data from mempool.space</p>
+      <div class="live-badge">⚡ REAL-TIME DATA</div>
+      <h1>Bitcoin <span>Blockchain</span></h1>
+      <p>Live network data from mempool.space</p>
     </div>
     
     <!-- Search -->
-    <div class="search-box">
-      <input type="text" id="search" placeholder="Search: txid, block #, address">
-      <button onclick="doSearch()">🔍 Search</button>
-      <div id="results"></div>
+    <div class="search-section">
+      <div class="search-title">🔍 Search Transactions, Blocks & Addresses</div>
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Enter txid, block #, block hash, or address...">
+        <button onclick="doSearch()">Search</button>
+      </div>
+      <div id="results" class="results"></div>
     </div>
     
     <!-- Stats -->
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-value" id="height">--</div><div class="stat-label">Block</div></div>
-      <div class="stat-card"><div class="stat-value" id="mempool">--</div><div class="stat-label">Mempool</div></div>
-      <div class="stat-card"><div class="stat-value" id="size">--</div><div class="stat-label">Size</div></div>
-      <div class="stat-card"><div class="stat-value">~700</div><div class="stat-label">EH/s</div></div>
-      <div class="stat-card"><div class="stat-value">~92</div><div class="stat-label">Difficulty</div></div>
-      <div class="stat-card"><div class="stat-value" id="halving">--</div><div class="stat-label">Halving</div></div>
+      <div class="stat-card"><div class="stat-value" id="height">--</div><div class="stat-label">Block Height</div></div>
+      <div class="stat-card"><div class="stat-value" id="mempool">--</div><div class="stat-label">Mempool Txs</div></div>
+      <div class="stat-card"><div class="stat-value" id="size">--</div><div class="stat-label">Mempool Size</div></div>
+      <div class="stat-card"><div class="stat-value">~700</div><div class="stat-label">EH/s Hash Rate</div></div>
+      <div class="stat-card"><div class="stat-value">~92T</div><div class="stat-label">Difficulty</div></div>
+      <div class="stat-card"><div class="stat-value" id="halving">--</div><div class="stat-label">Blocks to Halving</div></div>
     </div>
     
     <!-- Chain -->
-    <div class="chain" id="chain"></div>
+    <div class="chain-section">
+      <div class="chain-title">⛓️ Latest Confirmed Blocks</div>
+      <div class="chain-container" id="chain"></div>
+    </div>
     
     <!-- Fees -->
-    <div class="fee-grid">
-      <div class="fee-card slow"><div class="fee-rate" id="fee-slow">--</div><div class="fee-time">~1 hour</div><div class="fee-label">Slow</div></div>
-      <div class="fee-card normal"><div class="fee-rate" id="fee-normal">--</div><div class="fee-time">~30 min</div><div class="fee-label">Normal</div></div>
-      <div class="fee-card fast"><div class="fee-rate" id="fee-fast">--</div><div class="fee-time">~10 min</div><div class="fee-label">Fast</div></div>
+    <div class="fee-section">
+      <div class="fee-title">⚡ Fee Rates (sat/vB)</div>
+      <div class="fee-grid">
+        <div class="fee-card slow"><div class="fee-rate" id="fee-slow">--</div><div class="fee-time">~1 hour</div><div class="fee-label">Slow</div></div>
+        <div class="fee-card normal"><div class="fee-rate" id="fee-normal">--</div><div class="fee-time">~30 min</div><div class="fee-label">Normal</div></div>
+        <div class="fee-card fast"><div class="fee-rate" id="fee-fast">--</div><div class="fee-time">~10 min</div><div class="fee-label">Fast</div></div>
+      </div>
     </div>
     
     <!-- Pending TXs -->
     <div class="tx-section">
-      <div class="tx-title">📤 Pending Transactions</div>
+      <div class="tx-title"><span class="tx-icon">📤</span> Pending Transactions (Mempool)</div>
       <div class="tx-list" id="pending"></div>
     </div>
     
     <!-- Confirmed TXs -->
     <div class="tx-section">
-      <div class="tx-title">✅ Confirmed</div>
+      <div class="tx-title"><span class="tx-icon">✅</span> Confirmed Transactions (Latest Block)</div>
       <div class="tx-list" id="confirmed"></div>
     </div>
   </section>
@@ -138,18 +310,19 @@
   </footer>
   
   <script>
-    // FAST: Show demo data immediately
-    let blockHeight = 939600;
+    let currentBlock = 939600;
+    
+    // Show demo immediately
     showDemo();
     
-    // Try loading live data in background
+    // Try live data
     loadLive();
-    setInterval(loadLive, 20000);
+    setInterval(loadLive, 15000);
     
     function showDemo() {
       const now = Date.now();
       const bh = 939600 + Math.floor((now - 1772724000000) / 600000);
-      blockHeight = bh;
+      currentBlock = bh;
       
       document.getElementById('height').textContent = '#' + bh.toLocaleString();
       document.getElementById('mempool').textContent = '~25K';
@@ -159,22 +332,27 @@
       document.getElementById('fee-normal').textContent = '25+';
       document.getElementById('fee-fast').textContent = '55+';
       
-      // Demo chain
+      // Demo chain with animations
       let c = '';
+      const times = ['now', '10m ago', '20m ago', '30m ago', '40m ago', '50m ago'];
       for(let i = 0; i < 6; i++) {
-        c += '<div class="chain-block"><span class="bn">#' + (bh - i) + '</span><span class="bt">' + (2000 + Math.floor(Math.random()*1000)) + ' txs</span></div>';
-        if(i < 5) c += '<span class="chain-arrow">→</span>';
+        c += '<div class="block-wrapper"><div class="chain-block" style="animation-delay:' + (i * 0.15) + 's"><span class="block-num">#' + (bh - i) + '</span><span class="block-txs">' + (2000 + Math.floor(Math.random()*1000)) + ' txs</span><span class="block-size">' + (1 + Math.floor(Math.random())) + ' MB</span><span class="block-time">' + times[i] + '</span></div>';
+        if(i < 5) c += '<span class="chain-arrow">→</span></div>';
+        else c += '</div>';
       }
       document.getElementById('chain').innerHTML = c;
       
       // Demo TXs
-      const tx = () => Math.random().toString(36).slice(2,18) + '...';
-      const amt = () => (Math.random() * 2).toFixed(4);
-      document.getElementById('pending').innerHTML = Array(8).fill(0).map(() => 
-        '<div class="tx-item"><span class="tx-hash">' + tx() + '</span><span class="tx-amt">' + amt() + ' BTC</span></div>'
+      const randTx = () => Math.random().toString(36).slice(2,18) + '...';
+      const randAmt = () => (Math.random() * 2).toFixed(4);
+      const randFee = () => 10 + Math.floor(Math.random() * 40);
+      
+      document.getElementById('pending').innerHTML = Array(10).fill(0).map(() => 
+        '<div class="tx-item"><div class="tx-left"><span class="tx-icon-mini"></span><span class="tx-hash">' + randTx() + '</span></div><div class="tx-right"><span class="tx-amount">' + randAmt() + ' BTC</span><span class="tx-fee">' + randFee() + ' sat/vB</span></div></div>'
       ).join('');
-      document.getElementById('confirmed').innerHTML = Array(5).fill(0).map(() => 
-        '<div class="tx-item" style="background:rgba(0,212,170,0.05)"><span class="tx-hash" style="color:var(--success)">' + tx() + '</span><span class="tx-amt">' + amt() + ' BTC</span></div>'
+      
+      document.getElementById('confirmed').innerHTML = Array(6).fill(0).map(() => 
+        '<div class="tx-item tx-confirmed"><div class="tx-left"><span class="tx-icon-mini"></span><span class="tx-hash" style="color:var(--success)">' + randTx() + '</span></div><div class="tx-right"><span class="tx-amount">' + randAmt() + ' BTC</span><span class="tx-fee">' + randFee() + ' sat/vB</span></div></div>'
       ).join('');
     }
     
@@ -185,17 +363,20 @@
           fetch('https://mempool.space/api/mempool').then(r => r.ok ? r.json() : null).catch(() => null),
           fetch('https://mempool.space/api/v1/fees/recommended').then(r => r.ok ? r.json() : null).catch(() => null),
           fetch('https://mempool.space/api/mempool/recent').then(r => r.ok ? r.json() : null).catch(() => null)
-        ].map(p => p.catch(e => null)));
+        ]);
         
         if(b?.[0]) {
-          blockHeight = b[0].height;
+          currentBlock = b[0].height;
           document.getElementById('height').textContent = '#' + b[0].height.toLocaleString();
           document.getElementById('halving').textContent = (1050000 - b[0].height).toLocaleString();
           
+          // Real chain with timestamps
           let c = '';
           for(let i = 0; i < Math.min(b.length, 6); i++) {
-            c += '<div class="chain-block"><span class="bn">#' + b[i].height + '</span><span class="bt">' + (b[i].extras?.txCount || 0) + ' txs</span></div>';
-            if(i < 5) c += '<span class="chain-arrow">→</span>';
+            const timeAgo = getTimeAgo(b[i].timestamp);
+            c += '<div class="block-wrapper"><div class="chain-block" style="animation-delay:' + (i * 0.15) + 's"><span class="block-num">#' + b[i].height.toLocaleString() + '</span><span class="block-txs">' + (b[i].extras?.txCount || 0).toLocaleString() + ' txs</span><span class="block-size">' + ((b[i].size || 0)/1000).toFixed(0) + ' KB</span><span class="block-time">' + timeAgo + '</span></div>';
+            if(i < 5) c += '<span class="chain-arrow">→</span></div>';
+            else c += '</div>';
           }
           document.getElementById('chain').innerHTML = c;
         }
@@ -211,26 +392,39 @@
           document.getElementById('fee-fast').textContent = (f.fastestFee || 55) + '+';
         }
         
+        // Pending TXs
         if(t?.length) {
-          document.getElementById('pending').innerHTML = t.slice(0, 10).map(x => 
-            '<div class="tx-item"><span class="tx-hash">' + x.txid?.slice(0, 16) + '...</span><span class="tx-amt">' + ((x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0)/100000000).toFixed(4) + ' BTC</span></div>'
-          ).join('');
+          document.getElementById('pending').innerHTML = t.slice(0, 12).map(x => {
+            const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
+            const fee = x.fee || 0;
+            return '<div class="tx-item"><div class="tx-left"><span class="tx-icon-mini"></span><span class="tx-hash">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + fee + ' sat/vB</span></div></div>';
+          }).join('');
         }
         
-        // Load confirmed
-        if(b?.[0]) loadConfirmed(b[0].id);
+        // Confirmed TXs
+        if(b?.[0]) loadConfirmedTXs(b[0].id);
         
-      } catch(e) { console.log('Live load failed, using demo'); }
+      } catch(e) { console.log('Live load failed'); }
     }
     
-    async function loadConfirmed(blockId) {
+    function getTimeAgo(timestamp) {
+      const seconds = Math.floor(Date.now() / 1000) - timestamp;
+      if(seconds < 60) return 'just now';
+      if(seconds < 3600) return Math.floor(seconds/60) + 'm ago';
+      if(seconds < 86400) return Math.floor(seconds/3600) + 'h ago';
+      return Math.floor(seconds/86400) + 'd ago';
+    }
+    
+    async function loadConfirmedTXs(blockId) {
       try {
         const r = await fetch('https://mempool.space/api/block/' + blockId + '/txs');
         const t = await r.json();
         if(t?.length) {
-          document.getElementById('confirmed').innerHTML = t.slice(0, 6).map(x => 
-            '<div class="tx-item" style="background:rgba(0,212,170,0.05)"><span class="tx-hash" style="color:var(--success)">' + x.txid?.slice(0, 16) + '...</span><span class="tx-amt">' + ((x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0)/100000000).toFixed(4) + ' BTC</span></div>'
-          ).join('');
+          document.getElementById('confirmed').innerHTML = t.slice(0, 8).map(x => {
+            const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
+            const fee = x.fee || 0;
+            return '<div class="tx-item tx-confirmed"><div class="tx-left"><span class="tx-icon-mini"></span><span class="tx-hash" style="color:var(--success)">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + fee + ' sat/vB</span></div></div>';
+          }).join('');
         }
       } catch(e) {}
     }
@@ -259,7 +453,8 @@
         const t = await res.json();
         const vout = t.vout?.reduce((s,v) => s + (v.value||0), 0) || 0;
         const status = t.status?.confirmed ? 'confirmed' : 'pending';
-        r.innerHTML = '<div class="sr-card ' + status + '"><div class="sr-header"><span class="sr-txid">' + t.txid + '</span><span class="sr-status ' + status + '">' + (status === 'confirmed' ? '✅' : '⏳') + '</span></div><div class="sr-grid"><div><div class="sr-label">Amount</div><div class="sr-value">' + (vout/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Fee</div><div class="sr-value">' + t.fee + ' sat</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + (t.size||t.vsize) + ' b</div></div>' + (t.status?.block_height ? '<div><div class="sr-label">Block</div><div class="sr-value">#' + t.status.block_height + '</div></div>' : '') + '</div></div>';
+        const icon = status === 'confirmed' ? '✅' : '⏳';
+        r.innerHTML = '<div class="sr-card ' + status + '"><div class="sr-header"><span class="sr-txid">' + t.txid + '</span><span class="sr-status ' + status + '">' + icon + '</span></div><div class="sr-grid"><div><div class="sr-label">Amount</div><div class="sr-value btc">' + (vout/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Fee</div><div class="sr-value sat">' + t.fee + ' sat</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + (t.size||t.vsize) + ' bytes</div></div>' + (t.status?.block_height ? '<div><div class="sr-label">Block</div><div class="sr-value">#' + t.status.block_height + '</div></div><div><div class="sr-label">Confirmations</div><div class="sr-value">' + (currentBlock - t.status.block_height + 1) + '</div></div>' : '') + '</div></div>';
       } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
@@ -269,7 +464,7 @@
         const res = await fetch('https://mempool.space/api/block/' + hash);
         if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
         const b = await res.json();
-        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">Block #' + b.height + '</span><span class="sr-status confirmed">🧱</span></div><div class="sr-grid"><div><div class="sr-label">Transactions</div><div class="sr-value">' + (b.extras?.txCount || 0) + '</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + ((b.size||0)/1000).toFixed(2) + ' MB</div></div><div><div class="sr-label">Time</div><div class="sr-value">' + new Date(b.timestamp*1000).toLocaleDateString() + '</div></div></div></div>';
+        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">Block #' + b.height + '</span><span class="sr-status confirmed">🧱 Block</span></div><div class="sr-grid"><div><div class="sr-label">Transactions</div><div class="sr-value">' + (b.extras?.txCount || 0) + '</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + ((b.size||0)/1000).toFixed(2) + ' MB</div></div><div><div class="sr-label">Timestamp</div><div class="sr-value">' + new Date(b.timestamp*1000).toLocaleString() + '</div></div><div><div class="sr-label">Difficulty</div><div class="sr-value">' + ((b.difficulty||0)/1e12).toFixed(2) + ' T</div></div></div></div>';
       } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
@@ -279,7 +474,7 @@
         if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
         const ad = await res.json();
         const bal = ((ad.chain_stats?.funded_txo_sum || 0) - (ad.chain_stats?.spent_txo_sum || 0)) / 100000000;
-        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">' + a + '</span><span class="sr-status confirmed">📍</span></div><div class="sr-grid"><div><div class="sr-label">Balance</div><div class="sr-value">' + bal.toFixed(8) + ' BTC</div></div><div><div class="sr-label">Received</div><div class="sr-value">' + ((ad.chain_stats?.funded_txo_sum || 0)/100000000).toFixed(8) + '</div></div><div><div class="sr-label">Tx Count</div><div class="sr-value">' + (ad.chain_stats?.tx_count || 0) + '</div></div></div></div>';
+        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">' + a + '</span><span class="sr-status confirmed">📍 Address</span></div><div class="sr-grid"><div><div class="sr-label">Balance</div><div class="sr-value btc">' + bal.toFixed(8) + ' BTC</div></div><div><div class="sr-label">Received</div><div class="sr-value">' + ((ad.chain_stats?.funded_txo_sum || 0)/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Sent</div><div class="sr-value">' + ((ad.chain_stats?.spent_txo_sum || 0)/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Confirmed Txs</div><div class="sr-value">' + (ad.chain_stats?.tx_count || 0) + '</div></div><div><div class="sr-label">Mempool Txs</div><div class="sr-value">' + (ad.mempool_stats?.tx_count || 0) + '</div></div></div></div>';
       } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
