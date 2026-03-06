@@ -3,131 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blockchain - HiftyCo Bitcoin Education</title>
+  <title>Blockchain - HiftyCo</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; }
-    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
-    
-    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; backdrop-filter: blur(10px); }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; }
     .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
-    .logo .btc { color: var(--primary); font-size: 1.5rem; }
-    .logo .name { color: var(--text); }
-    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
-    .logo a { text-decoration: none; }
+    .logo .btc { color: var(--primary); }
+    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; }
+    .logo a { text-decoration: none; color: inherit; }
     .links { display: flex; gap: 28px; }
-    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; }
     .links a:hover, .links a.active { color: var(--primary); }
-    
-    .section { padding: 100px 20px 60px; max-width: 1200px; margin: 0 auto; }
-    .sh { text-align: center; margin-bottom: 32px; }
-    .sh h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+    .section { padding: 100px 20px 60px; max-width: 1100px; margin: 0 auto; }
+    .sh { text-align: center; margin-bottom: 24px; }
+    .sh h2 { font-size: 2rem; }
     .sh h2 span { color: var(--primary); }
     .sh p { color: var(--text2); }
-    
-    /* LIVE BADGE */
-    .live-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.15); border: 1px solid var(--success); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 600; color: var(--success); margin-bottom: 20px; animation: pulse 2s infinite; }
+    .live-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.15); border: 1px solid var(--success); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; color: var(--success); margin-bottom: 16px; }
     .live-badge::before { content: ''; width: 8px; height: 8px; background: var(--success); border-radius: 50%; }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
-    
-    /* SEARCH */
-    .search-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 28px; margin-bottom: 32px; position: relative; overflow: hidden; }
-    .search-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--success), var(--primary)); background-size: 200% 100%; animation: gradientMove 3s linear infinite; }
-    @keyframes gradientMove { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-    .search-title { text-align: center; font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: var(--text); }
-    .search-box { display: flex; gap: 12px; max-width: 700px; margin: 0 auto 20px; }
-    .search-box input { flex: 1; padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.95rem; font-family: monospace; transition: all 0.3s; }
-    .search-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 20px rgba(247,147,26,0.2); }
-    .search-box input::placeholder { color: var(--text2); font-family: 'Space Grotesk', sans-serif; }
-    .search-results { max-width: 800px; margin: 0 auto; }
-    
-    .sr-card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; animation: slideIn 0.4s ease-out; }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    .sr-card.pending { border-color: var(--primary); background: linear-gradient(135deg, rgba(247,147,26,0.1) 0%, var(--bg) 100%); }
-    .sr-card.confirmed { border-color: var(--success); background: linear-gradient(135deg, rgba(0,212,170,0.1) 0%, var(--bg) 100%); }
-    .sr-card.error { border-color: var(--danger); }
-    
-    .sr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-    .sr-txid { font-family: monospace; color: var(--primary); font-size: 0.85rem; word-break: break-all; flex: 1; }
-    .sr-status { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    .search-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+    .search-box input { width: 100%; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: monospace; margin-bottom: 12px; }
+    .search-box input:focus { outline: none; border-color: var(--primary); }
+    .search-box button { width: 100%; padding: 12px; background: var(--primary); border: none; border-radius: 10px; color: #000; font-weight: 600; cursor: pointer; }
+    .results { margin-top: 16px; }
+    .sr-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+    .sr-card.pending { border-color: var(--primary); }
+    .sr-card.confirmed { border-color: var(--success); }
+    .sr-header { display: flex; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .sr-txid { font-family: monospace; color: var(--primary); font-size: 0.8rem; word-break: break-all; }
+    .sr-status { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
     .sr-status.pending { background: rgba(247,147,26,0.2); color: var(--primary); }
     .sr-status.confirmed { background: rgba(0,212,170,0.2); color: var(--success); }
-    
-    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
-    .sr-item { }
-    .sr-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
-    .sr-value { font-size: 1rem; font-weight: 600; color: var(--text); }
-    .sr-value.btc { color: var(--primary); }
-    .sr-value.sat { color: var(--danger); }
-    
-    .sr-loading { text-align: center; padding: 30px; color: var(--text2); }
-    .sr-loading::after { content: ''; display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; margin-left: 10px; animation: spin 1s linear infinite; vertical-align: middle; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    
-    .sr-error { text-align: center; padding: 20px; color: var(--danger); background: rgba(239,68,68,0.1); border-radius: 12px; }
-    
-    /* STATS GRID */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 32px; }
-    .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; transition: all 0.3s; animation: fadeIn 0.5s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .stat-card:hover { transform: translateY(-3px); border-color: var(--primary); }
-    .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-    .stat-label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
-    
-    /* CHAIN */
-    .chain-container { margin: 32px 0; }
-    .chain-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 20px; }
-    .chain { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 20px 0; }
-    .chain-block { width: 95px; height: 95px; background: linear-gradient(145deg, #1e1e2e, #252535); border: 2px solid var(--primary); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; position: relative; animation: blockGlow 2s ease-in-out infinite, blockPop 0.4s ease-out forwards; transition: all 0.3s; cursor: pointer; }
-    @keyframes blockGlow { 0%,100% { box-shadow: 0 0 20px rgba(247,147,26,0.3); } 50% { box-shadow: 0 0 40px rgba(247,147,26,0.6); } }
-    @keyframes blockPop { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-    .chain-block:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 20px 50px rgba(247,147,26,0.5); border-color: var(--success); z-index: 10; }
-    .chain-block::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(247,147,26,0.4), transparent); animation: shimmer 2s infinite; }
-    @keyframes shimmer { 100% { left: 100%; } }
-    .chain-block .block-num { font-size: 0.75rem; color: var(--primary); margin-bottom: 2px; font-weight: 700; }
-    .chain-block .block-txs { font-size: 0.55rem; color: var(--text2); }
-    .chain-block .block-size { font-size: 0.5rem; color: var(--success); margin-top: 2px; }
-    .chain-arrow { color: var(--primary); font-size: 1.5rem; animation: arrowBounce 1s ease-in-out infinite; }
-    @keyframes arrowBounce { 0%,100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
-    
-    /* FEES */
-    .fee-section { margin: 32px 0; }
-    .fee-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 16px; }
-    .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .fee-card { background: var(--bg); border-radius: 16px; padding: 24px; text-align: center; position: relative; overflow: hidden; transition: all 0.3s; }
-    .fee-card:hover { transform: translateY(-3px); }
+    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+    .sr-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; }
+    .sr-value { font-size: 0.9rem; font-weight: 600; }
+    .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-top: 4px; }
+    .chain { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
+    .chain-block { width: 80px; height: 80px; background: linear-gradient(145deg, #1e1e2e, #252535); border: 2px solid var(--primary); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; animation: glow 2s infinite; }
+    @keyframes glow { 0%,100% { box-shadow: 0 0 15px rgba(247,147,26,0.3); } 50% { box-shadow: 0 0 30px rgba(247,147,26,0.5); } }
+    .chain-block .bn { font-size: 0.65rem; color: var(--primary); }
+    .chain-block .bt { font-size: 0.5rem; color: var(--text2); }
+    .chain-arrow { color: var(--primary); font-size: 1.2rem; }
+    .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .fee-card { background: var(--bg2); border-radius: 12px; padding: 16px; text-align: center; }
     .fee-card.slow { border: 1px solid var(--success); }
     .fee-card.normal { border: 1px solid var(--primary); }
     .fee-card.fast { border: 1px solid var(--danger); }
-    .fee-card .fee-rate { font-size: 2rem; font-weight: 700; }
+    .fee-rate { font-size: 1.5rem; font-weight: 700; }
     .fee-card.slow .fee-rate { color: var(--success); }
     .fee-card.normal .fee-rate { color: var(--primary); }
     .fee-card.fast .fee-rate { color: var(--danger); }
-    .fee-card .fee-time { font-size: 0.75rem; color: var(--text2); margin-top: 4px; }
-    .fee-card .fee-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; margin-top: 8px; }
-    
-    /* TXS */
-    .tx-section { margin-top: 32px; }
-    .tx-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 16px; }
-    .tx-list { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; max-height: 300px; overflow-y: auto; }
-    .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
-    .tx-item:hover { background: rgba(247,147,26,0.05); }
+    .fee-time { font-size: 0.7rem; color: var(--text2); }
+    .fee-label { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; }
+    .tx-section { margin-bottom: 24px; }
+    .tx-title { font-size: 0.9rem; color: var(--text2); margin-bottom: 12px; text-align: center; }
+    .tx-list { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; max-height: 250px; overflow-y: auto; }
+    .tx-item { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
     .tx-item:last-child { border-bottom: none; }
-    .tx-hash { font-family: monospace; color: var(--primary); font-size: 0.75rem; }
-    .tx-details { text-align: right; display: flex; gap: 12px; align-items: center; }
-    .tx-amount { color: var(--success); font-weight: 600; font-size: 0.85rem; }
-    .tx-fee { color: var(--danger); font-size: 0.7rem; }
-    
-    .refresh-btn { display: block; margin: 32px auto 0; }
-    .loading { display: flex; align-items: center; justify-content: center; padding: 40px; color: var(--text2); }
-    .loading::after { content: ''; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; margin-left: 10px; animation: spin 1s linear infinite; }
-    
-    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; margin-top: 60px; }
-    .footer p { color: #606070; }
-    
-    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } .fee-grid { grid-template-columns: 1fr; } .chain-block { width: 70px; height: 70px; } .search-box { flex-direction: column; } }
+    .tx-hash { font-family: monospace; color: var(--primary); }
+    .tx-amt { color: var(--success); margin-left: 12px; }
+    .footer { background: var(--bg2); padding: 24px; text-align: center; color: #606070; margin-top: 40px; }
+    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } .stats-grid { grid-template-columns: repeat(3, 1fr); } .fee-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -145,441 +88,202 @@
   
   <section class="section">
     <div class="sh">
-      <div class="live-badge">⚡ LIVE DATA</div>
-      <h2>Live Bitcoin <span>Blockchain</span></h2>
-      <p>Real-time network data from mempool.space</p>
+      <div class="live-badge">⚡ LIVE</div>
+      <h2>Bitcoin <span>Blockchain</span></h2>
+      <p>Real-time data from mempool.space</p>
     </div>
     
     <!-- Search -->
-    <div class="search-section">
-      <div class="search-title">🔍 Search Transactions & Addresses</div>
-      <div class="search-box">
-        <input type="text" id="search-input" placeholder="Search: txid, block hash, block #, or address (bc1.../1.../3...)" onkeypress="if(event.key==='Enter')searchTx()">
-        <button class="btn btn1" onclick="searchTx()">Search</button>
-      </div>
-      <div id="search-results"></div>
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Search: txid, block #, address">
+      <button onclick="doSearch()">🔍 Search</button>
+      <div id="results"></div>
     </div>
     
     <!-- Stats -->
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-value" id="block-height">--</div><div class="stat-label">Block Height</div></div>
-      <div class="stat-card"><div class="stat-value" id="mempool-count">--</div><div class="stat-label">Mempool Txs</div></div>
-      <div class="stat-card"><div class="stat-value" id="mempool-size">--</div><div class="stat-label">Mempool Size</div></div>
-      <div class="stat-card"><div class="stat-value" id="hash-rate">--</div><div class="stat-label">Hash Rate</div></div>
-      <div class="stat-card"><div class="stat-value" id="difficulty">--</div><div class="stat-label">Difficulty</div></div>
-      <div class="stat-card"><div class="stat-value" id="next-halving">--</div><div class="stat-label">Blocks to Halving</div></div>
+      <div class="stat-card"><div class="stat-value" id="height">--</div><div class="stat-label">Block</div></div>
+      <div class="stat-card"><div class="stat-value" id="mempool">--</div><div class="stat-label">Mempool</div></div>
+      <div class="stat-card"><div class="stat-value" id="size">--</div><div class="stat-label">Size</div></div>
+      <div class="stat-card"><div class="stat-value">~700</div><div class="stat-label">EH/s</div></div>
+      <div class="stat-card"><div class="stat-value">~92</div><div class="stat-label">Difficulty</div></div>
+      <div class="stat-card"><div class="stat-value" id="halving">--</div><div class="stat-label">Halving</div></div>
     </div>
     
     <!-- Chain -->
-    <div class="chain-container">
-      <div class="chain-title">📜 Recent Blocks</div>
-      <div class="chain" id="chain"><div class="loading">Loading blocks...</div></div>
-    </div>
+    <div class="chain" id="chain"></div>
     
     <!-- Fees -->
-    <div class="fee-section">
-      <div class="fee-title">⚡ Fee Rates (sat/vB)</div>
-      <div class="fee-grid">
-        <div class="fee-card slow"><div class="fee-rate" id="fee-low">--</div><div class="fee-time">~1 hour</div><div class="fee-label">Slow</div></div>
-        <div class="fee-card normal"><div class="fee-rate" id="fee-medium">--</div><div class="fee-time">~30 min</div><div class="fee-label">Normal</div></div>
-        <div class="fee-card fast"><div class="fee-rate" id="fee-high">--</div><div class="fee-time">~10 min</div><div class="fee-label">Fast</div></div>
-      </div>
+    <div class="fee-grid">
+      <div class="fee-card slow"><div class="fee-rate" id="fee-slow">--</div><div class="fee-time">~1 hour</div><div class="fee-label">Slow</div></div>
+      <div class="fee-card normal"><div class="fee-rate" id="fee-normal">--</div><div class="fee-time">~30 min</div><div class="fee-label">Normal</div></div>
+      <div class="fee-card fast"><div class="fee-rate" id="fee-fast">--</div><div class="fee-time">~10 min</div><div class="fee-label">Fast</div></div>
     </div>
     
     <!-- Pending TXs -->
     <div class="tx-section">
-      <div class="tx-title">📤 Pending (Mempool)</div>
-      <div class="tx-list" id="tx-list"><div class="loading">Loading transactions...</div></div>
+      <div class="tx-title">📤 Pending Transactions</div>
+      <div class="tx-list" id="pending"></div>
     </div>
     
     <!-- Confirmed TXs -->
     <div class="tx-section">
       <div class="tx-title">✅ Confirmed</div>
-      <div class="tx-list" id="confirmed-list"><div class="loading">Loading confirmed...</div></div>
+      <div class="tx-list" id="confirmed"></div>
     </div>
-    
-    <button class="btn btn1 refresh-btn" onclick="loadBlockchainData()">🔄 Refresh</button>
   </section>
   
   <footer class="footer">
-    <p>₿ HiftyCo - Education for the Bitcoin era</p>
+    <p>₿ HiftyCo - Bitcoin Education</p>
   </footer>
   
   <script>
-    // Cache for faster loading
-    let cachedData = null;
-    let lastLoad = 0;
-    const CACHE_TIME = 15000;
-    let currentBlockHeight = 939600;
-    let dataLoaded = false;
+    // FAST: Show demo data immediately
+    let blockHeight = 939600;
+    showDemo();
     
-    // Load immediately with fallback, then try API
-    (function init() {
-      // Show fallback immediately
-      loadFallback();
-      // Try to load live data
-      loadBlockchainData();
-      // Refresh every 15 seconds
-      setInterval(loadBlockchainData, 15000);
-    })();
+    // Try loading live data in background
+    loadLive();
+    setInterval(loadLive, 20000);
     
-    async function loadBlockchainData() {
+    function showDemo() {
       const now = Date.now();
-      if(cachedData && (now - lastLoad) < CACHE_TIME) {
-        console.log('Using cached data');
-        return;
-      }
+      const bh = 939600 + Math.floor((now - 1772724000000) / 600000);
+      blockHeight = bh;
       
-      console.log('Loading blockchain data...');
+      document.getElementById('height').textContent = '#' + bh.toLocaleString();
+      document.getElementById('mempool').textContent = '~25K';
+      document.getElementById('size').textContent = '~22 MB';
+      document.getElementById('halving').textContent = (1050000 - bh).toLocaleString();
+      document.getElementById('fee-slow').textContent = '12+';
+      document.getElementById('fee-normal').textContent = '25+';
+      document.getElementById('fee-fast').textContent = '55+';
       
-      try {
-        // Try mempool.space first with timeout
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
-        
-        try {
-          const blocksResp = await fetch('https://mempool.space/api/blocks', { signal: controller.signal });
-          var blocksData = await blocksResp.json();
-        } catch(e) { blocksData = null; clearTimeout(timeout); }
-        
-        try {
-          clearTimeout(controller.timeout);
-          const mempoolResp = await fetch('https://mempool.space/api/mempool', { signal: controller.signal });
-          var mempoolData = await mempoolResp.json();
-        } catch(e) { mempoolData = null; clearTimeout(timeout); }
-        
-        try {
-          clearTimeout(controller.timeout);
-          const feesResp = await fetch('https://mempool.space/api/v1/fees/recommended', { signal: controller.signal });
-          var feesData = await feesResp.json();
-        } catch(e) { feesData = null; clearTimeout(timeout); }
-        
-        try {
-          clearTimeout(controller.timeout);
-          const txsResp = await fetch('https://mempool.space/api/mempool/recent', { signal: controller.signal });
-          var txsData = await txsResp.json();
-        } catch(e) { txsData = null; clearTimeout(timeout); }
-        
-        clearTimeout(controller.timeout);
-        
-        if(blocksData || mempoolData || feesData) {
-          const data = { blocks: blocksData, mempool: mempoolData, fees: feesData, txs: txsData, timestamp: now };
-          cachedData = data;
-          lastLoad = now;
-          dataLoaded = true;
-          updateUI(data);
-          console.log('Live data loaded!');
-        }
-      } catch(e) {
-        console.error('API Error:', e);
-        // Keep showing fallback data
-      }
-    }
-    
-    function updateUI(data) {
-      if(data.loading) return;
-      
-      // Blocks
-      if(data.blocks?.[0]) {
-        currentBlockHeight = data.blocks[0].height;
-        document.getElementById('block-height').textContent = '#' + currentBlockHeight.toLocaleString();
-        
-        // Chain
-        const chain = document.getElementById('chain');
-        chain.innerHTML = data.blocks.slice(0, 6).map((b, i) => `
-          <div class="chain-block" style="animation-delay:${i*0.1}s">
-            <span class="block-num">#${b.height.toLocaleString()}</span>
-            <span class="block-txs">${(b.extras?.txCount || 0).toLocaleString()} txs</span>
-            <span class="block-size">${((b.size || b.extras?.size || 0)/1000).toFixed(0)} KB</span>
-          </div>
-          ${i < 5 ? '<span class="chain-arrow">→</span>' : ''}
-        `).join('');
-      }
-      
-      // Mempool
-      if(data.mempool) {
-        document.getElementById('mempool-count').textContent = (data.mempool.count || 0).toLocaleString();
-        document.getElementById('mempool-size').textContent = ((data.mempool.vsize || 0) / 1000000).toFixed(1) + ' MB';
-      }
-      
-      // Fees
-      const fees = data.fees || {};
-      document.getElementById('fee-low').textContent = (fees.hourFee || 8) + '+';
-      document.getElementById('fee-medium').textContent = (fees.halfHourFee || 15) + '+';
-      document.getElementById('fee-high').textContent = (fees.fastestFee || 25) + '+';
-      
-      // Stats
-      document.getElementById('hash-rate').textContent = '~700 EH/s';
-      document.getElementById('difficulty').textContent = '~92 T';
-      document.getElementById('next-halving').textContent = (1050000 - currentBlockHeight).toLocaleString();
-      
-      // Pending TXs
-      const txList = document.getElementById('tx-list');
-      if(data.txs?.length) {
-        txList.innerHTML = data.txs.slice(0, 12).map(tx => `
-          <div class="tx-item">
-            <span class="tx-hash">${tx.txid?.slice(0, 16)}...</span>
-            <div class="tx-details">
-              <span class="tx-amount">${((tx.vout?.reduce((s,v) => s + (v.value||0), 0) || 0)/100000000).toFixed(4)} BTC</span>
-              <span class="tx-fee">${tx.fee || 0} sat/vB</span>
-            </div>
-          </div>
-        `).join('');
-      }
-      
-      // Confirmed TXs
-      loadConfirmedTXs(data.blocks?.[0]?.id);
-    }
-    
-    async function loadConfirmedTXs(blockId) {
-      if(!blockId) return;
-      try {
-        const resp = await fetch('https://mempool.space/api/block/' + blockId + '/txs');
-        const txs = await resp.json();
-        const confirmedList = document.getElementById('confirmed-list');
-        if(txs?.length) {
-          confirmedList.innerHTML = txs.slice(0, 8).map(tx => `
-            <div class="tx-item" style="background:rgba(0,212,170,0.05)">
-              <span class="tx-hash" style="color:var(--success)">${tx.txid?.slice(0, 16)}...</span>
-              <div class="tx-details">
-                <span class="tx-amount">${((tx.vout?.reduce((s,v) => s + (v.value||0), 0) || 0)/100000000).toFixed(4)} BTC</span>
-                <span class="tx-fee">${tx.fee || 0} sat/vB</span>
-              </div>
-            </div>
-          `).join('');
-        }
-      } catch(e) {}
-    }
-    
-    function loadFallback() {
-      const now = Date.now();
-      const baseHeight = 939600 + Math.floor((now - 1772724000000) / 600000);
-      
-      document.getElementById('block-height').textContent = '#' + baseHeight.toLocaleString();
-      document.getElementById('mempool-count').textContent = '~25,000';
-      document.getElementById('mempool-size').textContent = '~22 MB';
-      document.getElementById('hash-rate').textContent = '~700 EH/s';
-      document.getElementById('difficulty').textContent = '~92 T';
-      document.getElementById('next-halving').textContent = (1050000 - baseHeight).toLocaleString();
-      document.getElementById('fee-low').textContent = '12+';
-      document.getElementById('fee-medium').textContent = '25+';
-      document.getElementById('fee-high').textContent = '55+';
-      
-      // Chain fallback
-      const chain = document.getElementById('chain');
-      let html = '';
+      // Demo chain
+      let c = '';
       for(let i = 0; i < 6; i++) {
-        html += `<div class="chain-block"><span class="block-num">#${(baseHeight - i).toLocaleString()}</span><span class="block-txs">${2000 + Math.floor(Math.random()*2000)} txs</span></div>`;
-        if(i < 5) html += '<span class="chain-arrow">→</span>';
+        c += '<div class="chain-block"><span class="bn">#' + (bh - i) + '</span><span class="bt">' + (2000 + Math.floor(Math.random()*1000)) + ' txs</span></div>';
+        if(i < 5) c += '<span class="chain-arrow">→</span>';
       }
-      chain.innerHTML = html;
+      document.getElementById('chain').innerHTML = c;
       
-      // TX fallback
-      document.getElementById('tx-list').innerHTML = Array(8).fill(0).map(() => 
-        `<div class="tx-item"><span class="tx-hash">${Math.random().toString(36).slice(2,18)}...</span><div class="tx-details"><span class="tx-amount">${(Math.random()*2).toFixed(4)} BTC</span><span class="tx-fee">${10+Math.floor(Math.random()*40)} sat/vB</span></div></div>`
+      // Demo TXs
+      const tx = () => Math.random().toString(36).slice(2,18) + '...';
+      const amt = () => (Math.random() * 2).toFixed(4);
+      document.getElementById('pending').innerHTML = Array(8).fill(0).map(() => 
+        '<div class="tx-item"><span class="tx-hash">' + tx() + '</span><span class="tx-amt">' + amt() + ' BTC</span></div>'
       ).join('');
-      
-      document.getElementById('confirmed-list').innerHTML = Array(5).fill(0).map(() => 
-        `<div class="tx-item" style="background:rgba(0,212,170,0.05)"><span class="tx-hash" style="color:var(--success)">${Math.random().toString(36).slice(2,18)}...</span><div class="tx-details"><span class="tx-amount">${(Math.random()*2).toFixed(4)} BTC</span><span class="tx-fee">${10+Math.floor(Math.random()*40)} sat/vB</span></div></div>`
+      document.getElementById('confirmed').innerHTML = Array(5).fill(0).map(() => 
+        '<div class="tx-item" style="background:rgba(0,212,170,0.05)"><span class="tx-hash" style="color:var(--success)">' + tx() + '</span><span class="tx-amt">' + amt() + ' BTC</span></div>'
       ).join('');
     }
     
-    // Search Functions
-    async function searchTx() {
-      const input = document.getElementById('search-input').value.trim();
-      const results = document.getElementById('search-results');
-      
-      if(!input) { results.innerHTML = '<div class="sr-error">Enter a txid, block hash, address, or block height</div>'; return; }
-      
-      results.innerHTML = '<div class="sr-loading">Searching...</div>';
-      
-      // Detect input type
-      const isTxid = /^[a-fA-F0-9]{64}$/.test(input);
-      const isBlockHash = /^[a-fA-F0-9]{64}$/.test(input);
-      const isBlockHeight = /^\d+$/.test(input);
-      const isAddressLegacy = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(input);
-      const isAddressSegwit = /^bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71}$/.test(input);
-      const isAddress = isAddressLegacy || isAddressSegwit;
-      
-      if(!isTxid && !isBlockHash && !isBlockHeight && !isAddress) {
-        results.innerHTML = '<div class="sr-error">Invalid format. Use txid (64 chars), block hash, block #, or Bitcoin address</div>';
-        return;
-      }
-      
+    async function loadLive() {
       try {
-        if(isTxid || isBlockHash) {
-          // Could be txid or block hash - try tx first, then block
-          await searchTransactionOrBlock(input, results);
-        } else if(isBlockHeight) {
-          await searchBlockByHeight(parseInt(input), results);
-        } else {
-          await searchAddress(input, results);
-        }
-      } catch(e) {
-        results.innerHTML = '<div class="sr-error">Error: ' + e.message + '</div>';
-      }
-    }
-    
-    async function searchTransactionOrBlock(hash, container) {
-      // Try as transaction first
-      try {
-        const r = await fetch('https://mempool.space/api/tx/' + hash);
-        if(r.ok) {
-          const tx = await r.json();
-          showPendingTx(tx, container);
-          return;
-        }
-      } catch(e) {}
-      
-      // Try as confirmed transaction
-      try {
-        const r = await fetch('https://mempool.space/api/tx/' + hash);
-        if(r.ok) {
-          const tx = await r.json();
-          showConfirmedTx(tx, container);
-          return;
-        }
-      } catch(e) {}
-      
-      // Try as block hash
-      try {
-        const r = await fetch('https://mempool.space/api/block/' + hash);
-        if(r.ok) {
-          const block = await r.json();
-          showBlockInfo(block, container);
-          return;
-        }
-      } catch(e) {}
-      
-      container.innerHTML = '<div class="sr-error">Not found - could be txid, block hash, or address</div>';
-    }
-    
-    async function searchBlockByHeight(height, container) {
-      try {
-        const r = await fetch('https://mempool.space/api/block-height/' + height);
-        if(!r.ok) { container.innerHTML = '<div class="sr-error">Block not found</div>'; return; }
+        const [b, m, f, t] = await Promise.all([
+          fetch('https://mempool.space/api/blocks').then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch('https://mempool.space/api/mempool').then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch('https://mempool.space/api/v1/fees/recommended').then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch('https://mempool.space/api/mempool/recent').then(r => r.ok ? r.json() : null).catch(() => null)
+        ].map(p => p.catch(e => null)));
         
-        const hash = await r.text();
-        const blockResp = await fetch('https://mempool.space/api/block/' + hash);
-        const block = await blockResp.json();
-        showBlockInfo(block, container);
-      } catch(e) {
-        container.innerHTML = '<div class="sr-error">Error: ' + e.message + '</div>';
-      }
+        if(b?.[0]) {
+          blockHeight = b[0].height;
+          document.getElementById('height').textContent = '#' + b[0].height.toLocaleString();
+          document.getElementById('halving').textContent = (1050000 - b[0].height).toLocaleString();
+          
+          let c = '';
+          for(let i = 0; i < Math.min(b.length, 6); i++) {
+            c += '<div class="chain-block"><span class="bn">#' + b[i].height + '</span><span class="bt">' + (b[i].extras?.txCount || 0) + ' txs</span></div>';
+            if(i < 5) c += '<span class="chain-arrow">→</span>';
+          }
+          document.getElementById('chain').innerHTML = c;
+        }
+        
+        if(m) {
+          document.getElementById('mempool').textContent = (m.count || 0).toLocaleString();
+          document.getElementById('size').textContent = ((m.vsize || 0) / 1000000).toFixed(1) + ' MB';
+        }
+        
+        if(f) {
+          document.getElementById('fee-slow').textContent = (f.hourFee || 12) + '+';
+          document.getElementById('fee-normal').textContent = (f.halfHourFee || 25) + '+';
+          document.getElementById('fee-fast').textContent = (f.fastestFee || 55) + '+';
+        }
+        
+        if(t?.length) {
+          document.getElementById('pending').innerHTML = t.slice(0, 10).map(x => 
+            '<div class="tx-item"><span class="tx-hash">' + x.txid?.slice(0, 16) + '...</span><span class="tx-amt">' + ((x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0)/100000000).toFixed(4) + ' BTC</span></div>'
+          ).join('');
+        }
+        
+        // Load confirmed
+        if(b?.[0]) loadConfirmed(b[0].id);
+        
+      } catch(e) { console.log('Live load failed, using demo'); }
     }
     
-    function showBlockInfo(block, container) {
-      container.innerHTML = `
-        <div class="sr-card confirmed">
-          <div class="sr-header">
-            <div class="sr-txid">Block #${block.height}</div>
-            <span class="sr-status confirmed">🧱 Block</span>
-          </div>
-          <div class="sr-grid">
-            <div class="sr-item"><div class="sr-label">Hash</div><div class="sr-value" style="font-size:0.75rem;word-break:break-all">${block.id?.slice(0,32)}...</div></div>
-            <div class="sr-item"><div class="sr-label">Transactions</div><div class="sr-value">${block.extras?.txCount || 0}</div></div>
-            <div class="sr-item"><div class="sr-label">Size</div><div class="sr-value">${((block.size || 0)/1000).toFixed(2)} MB</div></div>
-            <div class="sr-item"><div class="sr-label">Weight</div><div class="sr-value">${((block.weight || 0)/1000).toFixed(2)} MWU</div></div>
-            <div class="sr-item"><div class="sr-label">Timestamp</div><div class="sr-value">${new Date(block.timestamp * 1000).toLocaleString()}</div></div>
-            <div class="sr-item"><div class="sr-label">Difficulty</div><div class="sr-value">${((block.difficulty || 0)/1e12).toFixed(2)} T</div></div>
-          </div>
-        </div>
-      `;
-    }
-      // Check mempool first
+    async function loadConfirmed(blockId) {
       try {
-        const r = await fetch('https://mempool.space/api/tx/' + txid);
-        if(r.ok) {
-          const tx = await r.json();
-          showPendingTx(tx, container);
-          return;
+        const r = await fetch('https://mempool.space/api/block/' + blockId + '/txs');
+        const t = await r.json();
+        if(t?.length) {
+          document.getElementById('confirmed').innerHTML = t.slice(0, 6).map(x => 
+            '<div class="tx-item" style="background:rgba(0,212,170,0.05)"><span class="tx-hash" style="color:var(--success)">' + x.txid?.slice(0, 16) + '...</span><span class="tx-amt">' + ((x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0)/100000000).toFixed(4) + ' BTC</span></div>'
+          ).join('');
         }
       } catch(e) {}
+    }
+    
+    // Search
+    function doSearch() {
+      const q = document.getElementById('search').value.trim();
+      const r = document.getElementById('results');
+      if(!q) { r.innerHTML = ''; return; }
+      r.innerHTML = '<div class="sr-card">Searching...</div>';
       
-      // Check confirmed
+      const isTx = /^[a-fA-F0-9]{64}$/.test(q);
+      const isNum = /^\d+$/.test(q);
+      const isAddr = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(q) || /^bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71}$/.test(q);
+      
+      if(isNum) searchBlock(q, r);
+      else if(isAddr) searchAddr(q, r);
+      else if(isTx) searchTx(q, r);
+      else r.innerHTML = '<div class="sr-card">Invalid format</div>';
+    }
+    
+    async function searchTx(tx, r) {
       try {
-        const r = await fetch('https://mempool.space/api/tx/' + txid);
-        if(r.ok) {
-          const tx = await r.json();
-          showConfirmedTx(tx, container);
-          return;
-        }
-      } catch(e) {}
-      
-      container.innerHTML = '<div class="sr-error">Transaction not found</div>';
+        const res = await fetch('https://mempool.space/api/tx/' + tx);
+        if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
+        const t = await res.json();
+        const vout = t.vout?.reduce((s,v) => s + (v.value||0), 0) || 0;
+        const status = t.status?.confirmed ? 'confirmed' : 'pending';
+        r.innerHTML = '<div class="sr-card ' + status + '"><div class="sr-header"><span class="sr-txid">' + t.txid + '</span><span class="sr-status ' + status + '">' + (status === 'confirmed' ? '✅' : '⏳') + '</span></div><div class="sr-grid"><div><div class="sr-label">Amount</div><div class="sr-value">' + (vout/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Fee</div><div class="sr-value">' + t.fee + ' sat</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + (t.size||t.vsize) + ' b</div></div>' + (t.status?.block_height ? '<div><div class="sr-label">Block</div><div class="sr-value">#' + t.status.block_height + '</div></div>' : '') + '</div></div>';
+      } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
-    async function searchAddress(addr, container) {
+    async function searchBlock(h, r) {
       try {
-        const r = await fetch('https://mempool.space/api/address/' + addr);
-        if(!r.ok) { container.innerHTML = '<div class="sr-error">Address not found</div>'; return; }
-        
-        const a = await r.json();
-        const confirmed = (a.chain_stats?.funded_txo_sum || 0) - (a.chain_stats?.spent_txo_sum || 0);
-        
-        container.innerHTML = `
-          <div class="sr-card confirmed">
-            <div class="sr-header">
-              <div class="sr-txid">${addr}</div>
-              <span class="sr-status confirmed">📍 Address</span>
-            </div>
-            <div class="sr-grid">
-              <div class="sr-item"><div class="sr-label">Balance</div><div class="sr-value btc">${(confirmed/100000000).toFixed(8)} BTC</div></div>
-              <div class="sr-item"><div class="sr-label">Received</div><div class="sr-value">${((a.chain_stats?.funded_txo_sum || 0)/100000000).toFixed(8)} BTC</div></div>
-              <div class="sr-item"><div class="sr-label">Sent</div><div class="sr-value">${((a.chain_stats?.spent_txo_sum || 0)/100000000).toFixed(8)} BTC</div></div>
-              <div class="sr-item"><div class="sr-label">Confirmed Txs</div><div class="sr-value">${a.chain_stats?.tx_count || 0}</div></div>
-              <div class="sr-item"><div class="sr-label">Mempool Txs</div><div class="sr-value">${a.mempool_stats?.tx_count || 0}</div></div>
-            </div>
-          </div>
-        `;
-      } catch(e) {
-        container.innerHTML = '<div class="sr-error">Error: ' + e.message + '</div>';
-      }
+        const hash = await fetch('https://mempool.space/api/block-height/' + h).then(x => x.text());
+        const res = await fetch('https://mempool.space/api/block/' + hash);
+        if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
+        const b = await res.json();
+        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">Block #' + b.height + '</span><span class="sr-status confirmed">🧱</span></div><div class="sr-grid"><div><div class="sr-label">Transactions</div><div class="sr-value">' + (b.extras?.txCount || 0) + '</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + ((b.size||0)/1000).toFixed(2) + ' MB</div></div><div><div class="sr-label">Time</div><div class="sr-value">' + new Date(b.timestamp*1000).toLocaleDateString() + '</div></div></div></div>';
+      } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
-    function showPendingTx(tx, container) {
-      const vout = tx.vout?.reduce((s,v) => s + (v.value||0), 0) || 0;
-      const feeRate = tx.fee / (tx.vsize || 1);
-      
-      container.innerHTML = `
-        <div class="sr-card pending">
-          <div class="sr-header">
-            <div class="sr-txid">${tx.txid}</div>
-            <span class="sr-status pending">⏳ Pending</span>
-          </div>
-          <div class="sr-grid">
-            <div class="sr-item"><div class="sr-label">Amount</div><div class="sr-value btc">${(vout/100000000).toFixed(8)} BTC</div></div>
-            <div class="sr-item"><div class="sr-label">Fee</div><div class="sr-value sat">${tx.fee} sat</div></div>
-            <div class="sr-item"><div class="sr-label">Fee Rate</div><div class="sr-value sat">${feeRate.toFixed(1)} sat/vB</div></div>
-            <div class="sr-item"><div class="sr-label">Size</div><div class="sr-value">${tx.size || tx.vsize} bytes</div></div>
-            <div class="sr-item"><div class="sr-label">Inputs</div><div class="sr-value">${tx.vin?.length || 0}</div></div>
-            <div class="sr-item"><div class="sr-label">Outputs</div><div class="sr-value">${tx.vout?.length || 0}</div></div>
-          </div>
-        </div>
-      `;
+    async function searchAddr(a, r) {
+      try {
+        const res = await fetch('https://mempool.space/api/address/' + a);
+        if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
+        const ad = await res.json();
+        const bal = ((ad.chain_stats?.funded_txo_sum || 0) - (ad.chain_stats?.spent_txo_sum || 0)) / 100000000;
+        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">' + a + '</span><span class="sr-status confirmed">📍</span></div><div class="sr-grid"><div><div class="sr-label">Balance</div><div class="sr-value">' + bal.toFixed(8) + ' BTC</div></div><div><div class="sr-label">Received</div><div class="sr-value">' + ((ad.chain_stats?.funded_txo_sum || 0)/100000000).toFixed(8) + '</div></div><div><div class="sr-label">Tx Count</div><div class="sr-value">' + (ad.chain_stats?.tx_count || 0) + '</div></div></div></div>';
+      } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
-    function showConfirmedTx(tx, container) {
-      const vout = tx.vout?.reduce((s,v) => s + (v.value||0), 0) || 0;
-      const feeRate = tx.fee / (tx.vsize || 1);
-      
-      container.innerHTML = `
-        <div class="sr-card confirmed">
-          <div class="sr-header">
-            <div class="sr-txid">${tx.txid}</div>
-            <span class="sr-status confirmed">✅ Confirmed</span>
-          </div>
-          <div class="sr-grid">
-            <div class="sr-item"><div class="sr-label">Block</div><div class="sr-value">#${tx.status?.block_height}</div></div>
-            <div class="sr-item"><div class="sr-label">Amount</div><div class="sr-value btc">${(vout/100000000).toFixed(8)} BTC</div></div>
-            <div class="sr-item"><div class="sr-label">Fee</div><div class="sr-value sat">${tx.fee} sat</div></div>
-            <div class="sr-item"><div class="sr-label">Fee Rate</div><div class="sr-value sat">${feeRate.toFixed(1)} sat/vB</div></div>
-            <div class="sr-item"><div class="sr-label">Size</div><div class="sr-value">${tx.size || tx.vsize} bytes</div></div>
-            <div class="sr-item"><div class="sr-label">Confirmations</div><div class="sr-value">${currentBlockHeight - tx.status?.block_height + 1}</div></div>
-          </div>
-        </div>
-      `;
-    }
+    document.getElementById('search').addEventListener('keypress', e => { if(e.key === 'Enter') doSearch(); });
   </script>
 </body>
 </html>
