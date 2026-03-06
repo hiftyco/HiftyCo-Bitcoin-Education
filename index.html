@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hifty Co. Blockchain Visualizer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #F7931A;
+      --primary-dark: #e5850a;
+      --dark: #0d0d12;
+      --dark-card: #16161e;
+      --dark-hover: #1e1e28;
+      --text: #ffffff;
+      --text-dim: #8b8b9e;
+      --border: #2a2a3a;
+      --accent: #00d4aa;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
+    #root { min-height: 100vh; }
+    
+    /* Navbar */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; }
+    .navbar-logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+    .navbar-logo span { color: var(--text); }
+    .navbar-links { display: flex; gap: 32px; }
+    .navbar-links a { color: var(--text-dim); font-weight: 500; text-decoration: none; transition: color 0.2s; }
+    .navbar-links a:hover { color: var(--primary); }
+    
+    /* Hero */
+    .hero { min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 24px 60px; background: radial-gradient(ellipse at top, rgba(247,147,26,0.12) 0%, transparent 60%); }
+    .hero h1 { font-size: clamp(2.5rem,6vw,4rem); font-weight: 800; margin-bottom: 20px; background: linear-gradient(135deg,#F7931A,#00d4aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 1.125rem; color: var(--text-dim); max-width: 600px; margin-bottom: 40px; }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .btn { padding: 14px 28px; border-radius: 12px; font-size: 1rem; font-weight: 600; transition: all 0.2s; border: none; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: var(--dark); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(247,147,26,0.3); }
+    .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+    
+    /* Sections */
+    .section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; }
+    .section-title { font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 16px; }
+    .section-title span { color: var(--primary); }
+    .section-subtitle { text-align: center; color: var(--text-dim); margin-bottom: 48px; }
+    
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 20px; }
+    .stat-card { background: var(--dark-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; }
+    .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+    .stat-label { color: var(--text-dim); font-size: 0.875rem; }
+    
+    /* Blockchain */
+    .blockchain-container { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 40px 0; }
+    .block { width: 80px; height: 80px; background: linear-gradient(135deg,var(--border),var(--dark-card)); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; transition: all 0.3s; }
+    .block.new { background: linear-gradient(135deg,var(--primary),#ff9a3c); animation: pulse 0.5s; }
+    .block:hover { transform: scale(1.05); border-color: var(--primary); }
+    @keyframes pulse { 0%{transform:scale(0.8)} 100%{transform:scale(1)} }
+    .block-arrow { color: var(--primary); font-size: 1.5rem; }
+    .add-block-btn { margin-top: 24px; }
+    
+    /* Topics */
+    .topics-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 20px; }
+    .topic-card { background: var(--dark-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; border-left: 3px solid var(--primary); transition: all 0.2s; }
+    .topic-card:hover { background: var(--dark-hover); transform: translateX(4px); }
+    .topic-icon { font-size: 2rem; margin-bottom: 12px; }
+    .topic-card h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
+    .topic-card p { color: var(--text-dim); font-size: 0.875rem; }
+    
+    /* Features */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 20px; }
+    .feature-card { background: var(--dark-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: all 0.2s; }
+    .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); }
+    .feature-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: rgba(247,147,26,0.1); border-radius: 12px; color: var(--primary); font-size: 1.5rem; margin-bottom: 16px; }
+    .feature-card h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-dim); font-size: 0.875rem; }
+    
+    /* Footer */
+    .footer { background: var(--dark-card); border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; }
+    .footer p { color: var(--text-dim); }
+    
+    @media (max-width: 768px) { .navbar { padding: 0 16px; } .navbar-links { display: none; } .hero h1 { font-size: 2rem; } .block { width: 60px; height: 60px; font-size: 1rem; } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+    
+    const Navbar = () => (
+      <nav className="navbar">
+        <div className="navbar-logo"><span>₿</span> Hifty<span>Co.</span></div>
+        <div className="navbar-links">
+          <a href="#learn">Learn</a>
+          <a href="#blockchain">Blockchain</a>
+          <a href="#resources">Resources</a>
+        </div>
+      </nav>
+    );
+    
+    const Hero = () => (
+      <section className="hero">
+        <h1>Blockchain Visualizer</h1>
+        <p>Explore and visualize the complex world of blockchain technology with Hifty Co.'s interactive tool.</p>
+        <div className="hero-buttons">
+          <button className="btn btn-primary">Get Started</button>
+          <button className="btn btn-secondary">Learn More</button>
+        </div>
+      </section>
+    );
+    
+    const Stats = () => {
+      const stats = [{v:'21M',l:'Bitcoin Supply'},{v:'10min',l:'Block Time'},{v:'200M+',l:'Active Users'},{v:'$1T+',l:'Market Cap'}];
+      return (
+        <section className="section">
+          <div className="stats-grid">{stats.map((s,i)=><div key={i} className="stat-card"><div className="stat-number">{s.v}</div><div className="stat-label">{s.l}</div></div>)}</div>
+        </section>
+      );
+    };
+    
+    const BlockchainViz = () => {
+      const [blocks, setBlocks] = useState([1,2,3,4,5]);
+      const [newBlock, setNewBlock] = useState(null);
+      const addBlock = () => { const n=blocks.length+1; setNewBlock(n); setTimeout(()=>{setBlocks([...blocks,n]); setNewBlock(null)},500); };
+      return (
+        <section id="blockchain" className="section">
+          <h2 className="section-title">How <span>Blockchain</span> Works</h2>
+          <p className="section-subtitle">Each block contains verified transactions, connected cryptographically</p>
+          <div className="blockchain-container">
+            {blocks.map((n,i)=><div key={i} style={{display:'flex',alignItems:'center'}}><div className={`block ${newBlock===n?'new':''}`}>#{n}</div>{i<blocks.length-1&&<span className="block-arrow">→</span>}</div>)}
+          </div>
+          <div style={{textAlign:'center'}}><button onClick={addBlock} className="btn btn-secondary add-block-btn">+ Add Block</button></div>
+        </section>
+      );
+    };
+    
+    const LearnTopics = () => {
+      const topics = [{i:'₿',t:'What is Bitcoin?',d:'Digital gold, decentralized currency created in 2009.'},{i:'⛓️',t:'How Blockchain Works',d:'Distributed ledger technology.'},{i:'⛏️',t:'Mining & Consensus',d:'Proof of Work mechanism.'},{i:'🔐',t:'Wallets & Keys',d:'Public keys, private keys, security.'},{i:'📈',t:'Trading Basics',d:'Market analysis and risk management.'},{i:'🌐',t:'DeFi & Web3',d:'Decentralized finance applications.'}];
+      return (
+        <section id="learn" className="section">
+          <h2 className="section-title">Start <span>Learning</span></h2>
+          <div className="topics-grid">{topics.map((t,i)=><div key={i} className="topic-card"><div className="topic-icon">{t.i}</div><h3>{t.t}</h3><p>{t.d}</p></div>)}</div>
+        </section>
+      );
+    };
+    
+    const Features = () => {
+      const f = [{t:'Expert-Led Education',d:'Learn from experienced traders.'},{t:'Real-Time Data',d:'Access live market data.'},{t:'Risk-Focused',d:'Capital preservation.'},{t:'1% Mindset',d:'Join top traders.'},{t:'Latest Research',d:'Cutting-edge strategies.'},{t:'Community',d:'Work toward freedom.'}];
+      return (
+        <section id="resources" className="section">
+          <h2 className="section-title">Why <span>Hifty Co.</span></h2>
+          <div className="features-grid">{f.map((x,i)=><div key={i} className="feature-card"><div className="feature-icon">✦</div><h3>{x.t}</h3><p>{x.d}</p></div>)}</div>
+        </section>
+      );
+    };
+    
+    const Footer = () => <footer className="footer"><p>© 2026 Hifty Co. All rights reserved.</p></footer>;
+    
+    const App = () => (<><Navbar /><Hero /><Stats /><BlockchainViz /><LearnTopics /><Features /><Footer /></>);
+    
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
