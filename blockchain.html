@@ -25,289 +25,95 @@
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
-      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif; 
+      font-family: 'Space Grotesk', -apple-system, sans-serif; 
       background: var(--bg-dark); 
       color: var(--text-primary); 
       min-height: 100vh; 
-      overflow-x: hidden; 
       background-image: 
-        radial-gradient(ellipse at 20% 0%, rgba(247,147,26,0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 100%, rgba(50,215,75,0.05) 0%, transparent 50%);
+        radial-gradient(ellipse at 20% 0%, rgba(247,147,26,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(50,215,75,0.04) 0%, transparent 50%);
     }
     
-    /* Apple-style Navigation */
     .nav { 
       position: fixed; top: 0; left: 0; right: 0; 
       height: 60px; 
-      background: rgba(8,8,12,0.85); 
+      background: rgba(8,8,12,0.9); 
       border-bottom: 1px solid var(--border); 
       display: flex; align-items: center; justify-content: space-between; 
       padding: 0 48px; z-index: 1000; 
-      backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+      backdrop-filter: blur(30px);
     }
     .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 600; }
-    .logo .btc { 
-      color: var(--btc-orange); 
-      font-size: 1.4rem;
-      filter: drop-shadow(0 0 8px var(--glow));
-    }
-    .logo .tag { 
-      background: linear-gradient(135deg, var(--btc-orange), var(--btc-light)); 
-      color: #000; 
-      padding: 3px 10px; 
-      border-radius: 10px; 
-      font-size: 0.6rem; 
-      font-weight: 700;
-    }
+    .logo .btc { color: var(--btc-orange); filter: drop-shadow(0 0 8px var(--glow)); }
+    .logo .tag { background: linear-gradient(135deg, var(--btc-orange), var(--btc-light)); color: #000; padding: 3px 10px; border-radius: 10px; font-size: 0.6rem; font-weight: 700; }
     .logo a { text-decoration: none; color: inherit; }
     .links { display: flex; gap: 36px; }
-    .links a { 
-      color: var(--text-secondary); 
-      text-decoration: none; 
-      font-weight: 500; 
-      font-size: 0.85rem; 
-      transition: all 0.25s ease;
-    }
-    .links a:hover { color: var(--text-primary); }
-    .links a.active { color: var(--btc-orange); }
+    .links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.85rem; }
+    .links a:hover, .links a.active { color: var(--btc-orange); }
     
-    /* Main Container */
     .container { max-width: 1200px; margin: 0 auto; padding: 90px 32px 50px; }
     
-    /* Header */
-    .header { text-align: center; margin-bottom: 36px; }
+    .header { text-align: center; margin-bottom: 32px; }
     .live-indicator { 
       display: inline-flex; align-items: center; gap: 10px; 
-      background: rgba(50,215,75,0.12); 
-      border: 1px solid rgba(50,215,75,0.3); 
-      border-radius: 24px; 
-      padding: 8px 18px; 
-      font-size: 0.8rem; 
-      font-weight: 600; 
-      color: var(--success); 
-      margin-bottom: 16px;
-      animation: livePulse 2.5s ease-in-out infinite;
+      background: rgba(50,215,75,0.12); border: 1px solid rgba(50,215,75,0.3); 
+      border-radius: 24px; padding: 8px 18px; font-size: 0.8rem; font-weight: 600; 
+      color: var(--success); margin-bottom: 16px;
     }
-    .live-indicator .dot { 
-      width: 8px; height: 8px; 
-      background: var(--success); 
-      border-radius: 50%; 
-      animation: dotBlink 1.5s ease-in-out infinite;
-      box-shadow: 0 0 10px var(--success);
-    }
-    @keyframes livePulse { 0%, 100% { box-shadow: 0 0 20px rgba(50,215,75,0.2); } 50% { box-shadow: 0 0 30px rgba(50,215,75,0.35); } }
-    @keyframes dotBlink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+    .live-indicator .dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: dotBlink 1.5s infinite; box-shadow: 0 0 10px var(--success); }
+    @keyframes dotBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     
-    .header h1 { 
-      font-size: 2.8rem; 
-      font-weight: 700; 
-      margin-bottom: 8px; 
-      background: linear-gradient(135deg, var(--btc-orange) 0%, var(--btc-light) 50%, var(--btc-orange) 100%);
-      background-size: 200% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: gradientMove 4s ease infinite;
-    }
-    @keyframes gradientMove { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .header h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, var(--btc-orange), var(--btc-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .header p { color: var(--text-secondary); font-size: 1rem; }
     
-    /* Search */
-    .search-section { 
-      background: var(--bg-card); 
-      border: 1px solid var(--border); 
-      border-radius: 24px; 
-      padding: 24px; 
-      margin-bottom: 32px; 
-    }
+    .search-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 24px; margin-bottom: 32px; }
     .search-title { text-align: center; font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary); }
     .search-box { display: flex; gap: 12px; max-width: 700px; margin: 0 auto; }
-    .search-box input { 
-      flex: 1; 
-      padding: 14px 18px; 
-      background: var(--bg-dark); 
-      border: 1px solid var(--border); 
-      border-radius: 12px; 
-      color: var(--text-primary); 
-      font-size: 0.9rem; 
-      font-family: inherit;
-      transition: all 0.3s ease;
-    }
-    .search-box input:focus { 
-      outline: none; 
-      border-color: var(--btc-orange); 
-      box-shadow: 0 0 0 4px rgba(247,147,26,0.15);
-    }
-    .search-box input::placeholder { color: var(--text-muted); }
-    .search-box button { 
-      padding: 14px 28px; 
-      background: linear-gradient(135deg, var(--btc-orange), var(--btc-dark)); 
-      border: none; 
-      border-radius: 12px; 
-      color: #000; 
-      font-weight: 600; 
-      cursor: pointer; 
-      transition: all 0.3s ease;
-    }
-    .search-box button:hover { 
-      transform: translateY(-1px); 
-      box-shadow: 0 8px 24px rgba(247,147,26,0.35); 
-    }
-    .search-results { margin-top: 16px; }
+    .search-box input { flex: 1; padding: 14px 18px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 0.9rem; }
+    .search-box input:focus { outline: none; border-color: var(--btc-orange); }
+    .search-box button { padding: 14px 28px; background: linear-gradient(135deg, var(--btc-orange), var(--btc-dark)); border: none; border-radius: 12px; color: #000; font-weight: 600; cursor: pointer; }
     
-    /* Result Card */
-    .sr-card { 
-      background: var(--bg-dark); 
-      border: 1px solid var(--border); 
-      border-radius: 16px; 
-      padding: 20px; 
-      margin-top: 16px;
-      animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes cardIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+    .sr-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-top: 16px; }
     .sr-card.pending { border-color: rgba(247,147,26,0.4); }
     .sr-card.confirmed { border-color: rgba(50,215,75,0.4); }
-    .sr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
-    .sr-txid { font-family: 'SF Mono', Monaco, monospace; color: var(--btc-orange); font-size: 0.75rem; word-break: break-all; }
+    .sr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .sr-txid { font-family: monospace; color: var(--btc-orange); font-size: 0.75rem; word-break: break-all; }
     .sr-status { padding: 6px 12px; border-radius: 16px; font-size: 0.75rem; font-weight: 600; }
     .sr-status.pending { background: rgba(247,147,26,0.15); color: var(--btc-orange); }
     .sr-status.confirmed { background: rgba(50,215,75,0.15); color: var(--success); }
-    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; }
-    .sr-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .sr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; margin-top: 14px; }
+    .sr-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
     .sr-value { font-size: 0.95rem; font-weight: 600; }
     .sr-value.btc { color: var(--btc-orange); }
     
-    /* Stats */
     .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 32px; }
-    .stat-card { 
-      background: var(--bg-card); 
-      border: 1px solid var(--border); 
-      border-radius: 16px; 
-      padding: 18px; 
-      text-align: center; 
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      animation: statIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-    }
-    .stat-card:nth-child(1) { animation-delay: 0.05s; }
-    .stat-card:nth-child(2) { animation-delay: 0.1s; }
-    .stat-card:nth-child(3) { animation-delay: 0.15s; }
-    .stat-card:nth-child(4) { animation-delay: 0.2s; }
-    .stat-card:nth-child(5) { animation-delay: 0.25s; }
-    .stat-card:nth-child(6) { animation-delay: 0.3s; }
-    @keyframes statIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-    .stat-card:hover { transform: translateY(-4px); border-color: var(--btc-orange); box-shadow: 0 12px 32px rgba(247,147,26,0.15); }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; text-align: center; }
     .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--btc-orange); }
-    .stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+    .stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
     
-    /* Chain - Main Visual */
     .chain-section { margin-bottom: 32px; }
     .chain-title { text-align: center; font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 20px; }
-    
-    .chain-container { 
-      display: flex; align-items: center; justify-content: center; 
-      gap: 0; flex-wrap: wrap; 
-      padding: 24px 0;
-    }
-    
+    .chain-container { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; padding: 24px 0; }
     .block-wrapper { display: flex; align-items: center; }
-    
     .chain-block { 
       width: 115px; height: 115px; 
-      background: linear-gradient(160deg, var(--bg-elevated) 0%, var(--bg-card) 100%); 
-      border: 2px solid var(--btc-orange); 
-      border-radius: 18px; 
-      display: flex; flex-direction: column; 
-      align-items: center; justify-content: center; 
-      font-weight: 600; 
-      cursor: pointer;
-      position: relative;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      animation: blockEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      background: linear-gradient(160deg, var(--bg-elevated), var(--bg-card)); 
+      border: 2px solid var(--btc-orange); border-radius: 18px; 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+      font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .block-wrapper:nth-child(1) .chain-block { animation-delay: 0s; }
-    .block-wrapper:nth-child(3) .chain-block { animation-delay: 0.08s; }
-    .block-wrapper:nth-child(5) .chain-block { animation-delay: 0.16s; }
-    .block-wrapper:nth-child(7) .chain-block { animation-delay: 0.24s; }
-    .block-wrapper:nth-child(9) .chain-block { animation-delay: 0.32s; }
-    .block-wrapper:nth-child(11) .chain-block { animation-delay: 0.4s; }
-    @keyframes blockEnter { from { opacity: 0; transform: scale(0.6) rotateX(45deg); } to { opacity: 1; transform: scale(1) rotateX(0); } }
-    
-    /* Animated glow */
-    .chain-block::before {
-      content: '';
-      position: absolute; inset: -2px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, var(--btc-orange), var(--btc-light), var(--btc-orange));
-      background-size: 200% 200%;
-      z-index: -1;
-      animation: borderGlow 3s ease infinite;
-      opacity: 0.4;
-    }
-    @keyframes borderGlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-    
-    /* Shimmer */
-    .chain-block::after {
-      content: ''; position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-      animation: shimmer 4s infinite;
-    }
-    @keyframes shimmer { 0% { left: -100%; } 30%, 100% { left: 200%; } }
-    
-    .chain-block:hover { 
-      transform: scale(1.12) translateY(-8px); 
-      border-color: var(--success);
-      box-shadow: 0 20px 50px rgba(247,147,26,0.4);
-    }
-    .chain-block:hover::before { opacity: 0.7; }
-    
+    .chain-block:hover { transform: scale(1.1) translateY(-5px); border-color: var(--success); box-shadow: 0 15px 40px rgba(247,147,26,0.3); }
     .chain-block .bh { font-size: 0.75rem; color: var(--btc-orange); font-weight: 700; }
     .chain-block .bt { font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px; }
     .chain-block .bs { font-size: 0.55rem; color: var(--success); margin-top: 2px; }
     .chain-block .btime { font-size: 0.5rem; color: var(--text-muted); margin-top: 6px; padding: 2px 8px; background: rgba(255,255,255,0.05); border-radius: 8px; }
+    .chain-arrow { color: var(--btc-orange); font-size: 1.6rem; margin: 0 4px; }
     
-    /* NEW BLOCK ANIMATION */
-    .chain-block.new-block {
-      animation: newBlockFound 1s cubic-bezier(0.16, 1, 0.3, 1);
-      border-color: var(--success) !important;
-    }
-    .chain-block.new-block::before {
-      background: linear-gradient(135deg, var(--success), #32d74b, var(--success));
-      opacity: 0.8;
-    }
-    @keyframes newBlockFound {
-      0% { transform: scale(0.5); opacity: 0; }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    
-    .chain-arrow { 
-      color: var(--btc-orange); 
-      font-size: 1.6rem; 
-      animation: arrowMove 2s ease-in-out infinite;
-      margin: 0 4px;
-    }
-    @keyframes arrowMove { 0%, 100% { opacity: 0.4; transform: translateX(0); } 50% { opacity: 1; transform: translateX(4px); } }
-    
-    /* Fees */
     .fee-section { margin-bottom: 32px; }
     .fee-title { text-align: center; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 14px; }
     .fee-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .fee-card { 
-      background: var(--bg-card); 
-      border-radius: 16px; 
-      padding: 20px; 
-      text-align: center; 
-      border: 1px solid var(--border);
-      transition: all 0.3s ease;
-      animation: feeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-    }
-    .fee-card:nth-child(1) { animation-delay: 0.2s; }
-    .fee-card:nth-child(2) { animation-delay: 0.3s; }
-    .fee-card:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes feeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .fee-card:hover { transform: translateY(-3px); }
+    .fee-card { background: var(--bg-card); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid var(--border); }
     .fee-card.slow { border-color: rgba(50,215,75,0.3); }
     .fee-card.normal { border-color: rgba(247,147,26,0.3); }
     .fee-card.fast { border-color: rgba(255,69,58,0.3); }
@@ -318,85 +124,48 @@
     .fee-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
     .fee-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; margin-top: 8px; }
     
-    /* Transactions */
     .tx-section { margin-bottom: 32px; }
     .tx-title { text-align: center; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 14px; }
-    .tx-list { 
-      background: var(--bg-card); 
-      border: 1px solid var(--border); 
-      border-radius: 16px; 
-      max-height: 320px; 
-      overflow-y: auto; 
-    }
-    .tx-list::-webkit-scrollbar { width: 6px; }
-    .tx-list::-webkit-scrollbar-track { background: var(--bg-dark); }
-    .tx-list::-webkit-scrollbar-thumb { background: var(--btc-orange); border-radius: 3px; }
-    
-    .tx-item { 
-      display: flex; justify-content: space-between; align-items: center; 
-      padding: 14px 18px; border-bottom: 1px solid var(--border); 
-      transition: all 0.2s ease;
-    }
-    .tx-item:hover { background: rgba(247,147,26,0.05); }
+    .tx-list { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; max-height: 300px; overflow-y: auto; }
+    .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); }
     .tx-item:last-child { border-bottom: none; }
     .tx-left { display: flex; align-items: center; gap: 12px; }
     .tx-dot { width: 8px; height: 8px; border-radius: 50%; }
     .tx-dot.pending { background: var(--btc-orange); animation: txDot 1.2s infinite; }
     .tx-dot.confirmed { background: var(--success); }
     @keyframes txDot { 0%, 100% { box-shadow: 0 0 6px var(--btc-orange); } 50% { box-shadow: 0 0 3px var(--btc-orange); } }
-    .tx-hash { font-family: 'SF Mono', Monaco, monospace; color: var(--btc-orange); font-size: 0.75rem; }
+    .tx-hash { font-family: monospace; color: var(--btc-orange); font-size: 0.75rem; }
     .tx-right { display: flex; align-items: center; gap: 16px; }
     .tx-amount { color: var(--success); font-weight: 600; font-size: 0.85rem; }
     .tx-fee { color: var(--text-muted); font-size: 0.7rem; }
     
-    /* Popup */
-    .popup-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
-      z-index: 1999;
-      animation: fadeIn 0.3s ease;
-    }
+    .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1999; }
     .popup-overlay.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    
     .block-popup {
-      display: none;
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%; max-width: 700px;
-      max-height: 80vh;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 24px;
-      z-index: 2000;
-      overflow: hidden;
-      animation: popupSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 90%; max-width: 750px; max-height: 80vh;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px;
+      padding: 24px; z-index: 2000; overflow: hidden;
     }
     .block-popup.active { display: block; }
-    @keyframes popupSlide { from { opacity: 0; transform: translate(-50%, -48%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
     .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
     .popup-title { font-size: 1.1rem; font-weight: 700; color: var(--btc-orange); }
-    .popup-close { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; padding: 4px; transition: color 0.2s; }
-    .popup-close:hover { color: var(--danger); }
+    .popup-close { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
     .popup-content { max-height: 60vh; overflow-y: auto; }
-    .popup-tx { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .popup-tx { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .popup-tx:last-child { border-bottom: none; }
-    .popup-tx-hash { font-family: monospace; color: var(--btc-orange); }
-    .popup-tx-amt { color: var(--success); font-weight: 600; }
+    .popup-tx-hash { font-family: monospace; color: var(--btc-orange); font-size: 0.75rem; }
+    .popup-tx-amt { color: var(--success); font-weight: 600; font-size: 0.85rem; }
+    .popup-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .popup-stat { text-align: center; }
+    .popup-stat-value { font-size: 1.1rem; font-weight: 700; color: var(--btc-orange); }
+    .popup-stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
     
-    /* Footer */
     .footer { background: var(--bg-card); border-top: 1px solid var(--border); padding: 24px; text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 40px; }
-    
-    /* Loading */
     .loading { text-align: center; padding: 30px; color: var(--text-muted); }
     
     @media (max-width: 900px) { 
-      .nav { padding: 0 20px; } 
-      .links { display: none; }
+      .nav { padding: 0 20px; } .links { display: none; }
       .stats-grid { grid-template-columns: repeat(3, 1fr); }
       .fee-grid { grid-template-columns: 1fr; }
       .chain-block { width: 80px; height: 80px; }
@@ -421,10 +190,9 @@
     <div class="header">
       <div class="live-indicator"><span class="dot"></span> LIVE BITCOIN DATA</div>
       <h1>Bitcoin Blockchain</h1>
-      <p>Real-time network • Click any block to view transactions • 🔔 plays when new block found</p>
+      <p>Click any block to view transactions • 🔔 bell rings on new block</p>
     </div>
     
-    <!-- Search -->
     <div class="search-section">
       <div class="search-title">🔍 Search transactions, blocks & addresses</div>
       <div class="search-box">
@@ -434,9 +202,8 @@
       <div id="results"></div>
     </div>
     
-    <!-- Stats -->
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-value" id="height">--</div><div class="stat-label">Block Height</div></div>
+      <div class="stat-card"><div class="stat-value" id="height">Loading...</div><div class="stat-label">Block Height</div></div>
       <div class="stat-card"><div class="stat-value" id="mempool">--</div><div class="stat-label">Mempool Txs</div></div>
       <div class="stat-card"><div class="stat-value" id="size">--</div><div class="stat-label">Mempool Size</div></div>
       <div class="stat-card"><div class="stat-value">~700</div><div class="stat-label">EH/s</div></div>
@@ -444,13 +211,13 @@
       <div class="stat-card"><div class="stat-value" id="halving">--</div><div class="stat-label">To Halving</div></div>
     </div>
     
-    <!-- Chain -->
     <div class="chain-section">
       <div class="chain-title">⛓️ Click any block to see all transactions</div>
-      <div class="chain-container" id="chain"></div>
+      <div class="chain-container" id="chain">
+        <div class="loading">Loading blocks...</div>
+      </div>
     </div>
     
-    <!-- Fees -->
     <div class="fee-section">
       <div class="fee-title">⚡ Fee Rates (sat/vB)</div>
       <div class="fee-grid">
@@ -460,240 +227,274 @@
       </div>
     </div>
     
-    <!-- Pending -->
     <div class="tx-section">
       <div class="tx-title">📤 Pending Transactions</div>
-      <div class="tx-list" id="pending"></div>
+      <div class="tx-list" id="pending"><div class="loading">Loading...</div></div>
     </div>
     
-    <!-- Confirmed -->
     <div class="tx-section">
       <div class="tx-title">✅ Confirmed (Latest Block)</div>
-      <div class="tx-list" id="confirmed"></div>
+      <div class="tx-list" id="confirmed"><div class="loading">Loading...</div></div>
     </div>
   </div>
   
-  <footer class="footer">₿ HiftyCo - Empowering Bitcoiners</footer>
+  <footer class="footer">₿ HiftyCo - Empowering Bitcoiners | Cura et Celeritas</footer>
   
-  <!-- Block Popup -->
   <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
   <div class="block-popup" id="blockPopup">
     <div class="popup-header">
       <div class="popup-title" id="popupTitle">Block Transactions</div>
       <button class="popup-close" onclick="closePopup()">✕</button>
     </div>
+    <div class="popup-stats" id="popupStats"></div>
     <div class="popup-content" id="popupContent"></div>
   </div>
   
-  <!-- Meditation Bell Sound (base64) -->
-  <audio id="blockSound" preload="auto">
-    <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU" type="audio/wav">
-  </audio>
-  
   <script>
-    let currentBlock = 939600;
+    // Global state
     let lastBlockHeight = 0;
-    let blocksData = [];
-    let dataLoaded = false;
-    let demoRendered = false;
+    let currentData = null;
     
-    // Sound function
+    // Sound
     function playBlockSound() {
       try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        
-        // Meditation bell - multiple harmonics
-        oscillator.frequency.setValueAtTime(528, audioCtx.currentTime);
-        oscillator.type = 'sine';
-        
-        // Bell envelope
-        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.01);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
-        
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 2);
-        
-        // Second harmonic
-        const osc2 = audioCtx.createOscillator();
-        const gain2 = audioCtx.createGain();
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.frequency.setValueAtTime(1056, audioCtx.currentTime);
-        osc2.type = 'sine';
-        gain2.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain2.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.01);
-        gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
-        osc2.start(audioCtx.currentTime);
-        osc2.stop(audioCtx.currentTime + 1.5);
-        
-      } catch(e) { console.log('Audio not supported'); }
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 528;
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+        osc.start();
+        osc.stop(ctx.currentTime + 2.5);
+      } catch(e) {}
     }
     
-    // Init - show demo first, then load live
+    // Initialize
     (function init() {
-      // Show demo immediately
+      // Set initial height estimate
       const now = Date.now();
-      const bh = 939600 + Math.floor((now - 1772724000000) / 600000);
-      currentBlock = bh;
-      lastBlockHeight = bh;
-      dataLoaded = false;
-      demoRendered = true;
+      const estHeight = 939600 + Math.floor((now - 1772724000000) / 600000);
+      lastBlockHeight = estHeight;
+      document.getElementById('height').textContent = '#' + estHeight.toLocaleString();
+      document.getElementById('halving').textContent = (1050000 - estHeight).toLocaleString();
       
-      // Render demo
-      document.getElementById('height').textContent = '#' + bh.toLocaleString();
-      document.getElementById('mempool').textContent = 'Loading...';
-      document.getElementById('size').textContent = 'Loading...';
-      document.getElementById('halving').textContent = (1050000 - bh).toLocaleString();
-      document.getElementById('fee-slow').textContent = '...';
-      document.getElementById('fee-normal').textContent = '...';
-      document.getElementById('fee-fast').textContent = '...';
-      document.getElementById('pending').innerHTML = '<div class="loading">Loading...</div>';
-      document.getElementById('confirmed').innerHTML = '<div class="loading">Loading...</div>';
+      // Try load immediately
+      loadData();
       
-      // Try load live data
-      loadLive();
-      
-      // Refresh every 15 seconds
-      setInterval(loadLive, 15000);
+      // Refresh every 20 seconds
+      setInterval(loadData, 20000);
     })();
     
-    async function loadLive() {
-      console.log('Loading live data...');
+    async function loadData() {
+      console.log('Fetching data...');
+      
+      // Try multiple APIs
+      let blocks = null, mempool = null, fees = null, pending = null;
+      
+      // Try mempool.space
+      try {
+        const r = await fetch('https://mempool.space/api/blocks', { cache: 'no-store' });
+        if(r.ok) blocks = await r.json();
+      } catch(e) { console.log('mempool.space blocks failed'); }
       
       try {
-        // Fetch all data with individual try-catch for resilience
-        let blocksData = null;
-        let mempoolData = null;
-        let feesData = null;
-        let txsData = null;
-        
+        const r = await fetch('https://mempool.space/api/mempool', { cache: 'no-store' });
+        if(r.ok) mempool = await r.json();
+      } catch(e) {}
+      
+      try {
+        const r = await fetch('https://mempool.space/api/v1/fees/recommended', { cache: 'no-store' });
+        if(r.ok) fees = await r.json();
+      } catch(e) {}
+      
+      try {
+        const r = await fetch('https://mempool.space/api/mempool/recent', { cache: 'no-store' });
+        if(r.ok) pending = await r.json();
+      } catch(e) {}
+      
+      // If mempool.space fails, try blockchain.info
+      if(!blocks) {
         try {
-          const r1 = await fetch('https://mempool.space/api/blocks');
-          if(r1.ok) blocksData = await r1.json();
-        } catch(e) { console.log('blocks error:', e.message); }
-        
+          const r = await fetch('https://blockstream.info/api/blocks', { cache: 'no-store' });
+          if(r.ok) {
+            const data = await r.json();
+            if(data && data[0]) {
+              blocks = data.map(b => ({
+                height: b.height,
+                id: b.id,
+                timestamp: b.timestamp,
+                size: b.size,
+                extras: { txCount: b.tx_count }
+              }));
+            }
+          }
+        } catch(e) { console.log('blockstream failed'); }
+      }
+      
+      if(!mempool && blocks) {
         try {
-          const r2 = await fetch('https://mempool.space/api/mempool');
-          if(r2.ok) mempoolData = await r2.json();
-        } catch(e) { console.log('mempool error:', e.message); }
+          const r = await fetch('https://blockstream.info/api/mempool', { cache: 'no-store' });
+          if(r.ok) mempool = await r.json();
+        } catch(e) {}
+      }
+      
+      // If we got block data, display it
+      if(blocks && blocks[0]) {
+        const bh = blocks[0].height;
         
-        try {
-          const r3 = await fetch('https://mempool.space/api/v1/fees/recommended');
-          if(r3.ok) feesData = await r3.json();
-        } catch(e) { console.log('fees error:', e.message); }
+        // Play sound if new block
+        if(lastBlockHeight > 0 && bh > lastBlockHeight) {
+          playBlockSound();
+        }
+        lastBlockHeight = bh;
         
-        try {
-          const r4 = await fetch('https://mempool.space/api/mempool/recent');
-          if(r4.ok) txsData = await r4.json();
-        } catch(e) { console.log('txs error:', e.message); }
+        // Update stats
+        document.getElementById('height').textContent = '#' + bh.toLocaleString();
+        document.getElementById('halving').textContent = (1050000 - bh).toLocaleString();
         
-        // Only update if we got block data
-        if(blocksData && blocksData[0]) {
-          console.log('Got live data, height:', blocksData[0].height);
-          dataLoaded = true;
-          
-          const newHeight = blocksData[0].height;
-          
-          // Check for new block sound
-          if(lastBlockHeight > 0 && newHeight > lastBlockHeight) {
-            playBlockSound();
-          }
-          lastBlockHeight = newHeight;
-          currentBlock = newHeight;
-          
-          // Update stats
-          document.getElementById('height').textContent = '#' + newHeight.toLocaleString();
-          document.getElementById('mempool').textContent = mempoolData ? (mempoolData.count || 0).toLocaleString() : '--';
-          document.getElementById('size').textContent = mempoolData ? ((mempoolData.vsize || 0) / 1000000).toFixed(1) + ' MB' : '--';
-          document.getElementById('halving').textContent = (1050000 - newHeight).toLocaleString();
-          
-          if(feesData) {
-            document.getElementById('fee-slow').textContent = (feesData.hourFee || 15) + '+';
-            document.getElementById('fee-normal').textContent = (feesData.halfHourFee || 30) + '+';
-            document.getElementById('fee-fast').textContent = (feesData.fastestFee || 60) + '+';
-          }
-          
-          // Render chain
-          let chainHTML = '';
-          for(let i = 0; i < Math.min(blocksData.length, 6); i++) {
-            const timeAgo = getTimeAgo(blocksData[i].timestamp);
-            chainHTML += '<div class="block-wrapper"><div class="chain-block" onclick="showBlockTXs(' + blocksData[i].height + ')"><span class="bh">#' + blocksData[i].height.toLocaleString() + '</span><span class="bt">' + (blocksData[i].extras?.txCount || 0).toLocaleString() + ' txs</span><span class="bs">' + ((blocksData[i].size || 0)/1000).toFixed(0) + ' KB</span><span class="btime">' + timeAgo + '</span></div>';
-            if(i < 5) chainHTML += '<span class="chain-arrow">→</span></div>';
-            else chainHTML += '</div>';
-          }
-          document.getElementById('chain').innerHTML = chainHTML;
-          
-          // Render pending TXs
-          if(txsData && txsData.length > 0) {
-            document.getElementById('pending').innerHTML = txsData.slice(0, 12).map(x => {
-              const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
-              return '<div class="tx-item"><div class="tx-left"><span class="tx-dot pending"></span><span class="tx-hash">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
-            }).join('');
-          }
-          
-          // Load confirmed TXs
-          loadConfirmedTXs(blocksData[0].id);
-          
-        } else {
-          console.log('No block data, keeping demo');
+        if(mempool) {
+          document.getElementById('mempool').textContent = (mempool.count || 0).toLocaleString();
+          document.getElementById('size').textContent = ((mempool.vsize || 0) / 1000000).toFixed(1) + ' MB';
         }
         
-      } catch(e) {
-        console.error('Load error:', e);
+        if(fees) {
+          document.getElementById('fee-slow').textContent = (fees.hourFee || 15) + '+';
+          document.getElementById('fee-normal').textContent = (fees.halfHourFee || 30) + '+';
+          document.getElementById('fee-fast').textContent = (fees.fastestFee || 60) + '+';
+        } else {
+          document.getElementById('fee-slow').textContent = '15+';
+          document.getElementById('fee-normal').textContent = '30+';
+          document.getElementById('fee-fast').textContent = '60+';
+        }
+        
+        // Render chain
+        let chainHTML = '';
+        for(let i = 0; i < Math.min(blocks.length, 6); i++) {
+          const b = blocks[i];
+          const timeAgo = getTimeAgo(b.timestamp);
+          chainHTML += '<div class="block-wrapper"><div class="chain-block" onclick="showBlockTXs(' + b.height + ')"><span class="bh">#' + b.height.toLocaleString() + '</span><span class="bt">' + (b.extras?.txCount || b.tx_count || 0).toLocaleString() + ' txs</span><span class="bs">' + ((b.size || 0)/1000).toFixed(0) + ' KB</span><span class="btime">' + timeAgo + '</span></div>';
+          if(i < 5) chainHTML += '<span class="chain-arrow">→</span></div>';
+          else chainHTML += '</div>';
+        }
+        document.getElementById('chain').innerHTML = chainHTML;
+        
+        // Render pending
+        if(pending && pending.length > 0) {
+          document.getElementById('pending').innerHTML = pending.slice(0, 12).map(x => {
+            const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
+            return '<div class="tx-item"><div class="tx-left"><span class="tx-dot pending"></span><span class="tx-hash">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
+          }).join('');
+        }
+        
+        // Load confirmed
+        loadConfirmed(blocks[0].id);
+        
+        console.log('Data loaded, height:', bh);
+      } else {
+        console.log('No block data - keeping current display');
       }
     }
     
     function getTimeAgo(ts) {
       const s = Math.floor(Date.now()/1000) - ts;
-      if(s < 60) return 'just now';
-      if(s < 3600) return '~' + Math.floor(s/60) + 'm ago';
-      if(s < 86400) return '~' + Math.floor(s/3600) + 'h ago';
-      return '~' + Math.floor(s/86400) + 'd ago';
+      if(s < 60) return 'now';
+      if(s < 3600) return '~' + Math.floor(s/60) + 'm';
+      if(s < 86400) return '~' + Math.floor(s/3600) + 'h';
+      return '~' + Math.floor(s/86400) + 'd';
     }
     
-    async function loadConfirmedTXs(blockId) {
+    async function loadConfirmed(blockId) {
       try {
-        const r = await fetch('https://mempool.space/api/block/' + blockId + '/txs');
-        const t = await r.json();
-        if(t?.length) {
-          document.getElementById('confirmed').innerHTML = t.slice(0, 10).map(x => {
+        let r = await fetch('https://mempool.space/api/block/' + blockId + '/txs', { cache: 'no-store' });
+        let txs = r.ok ? await r.json() : null;
+        
+        if(!txs) {
+          r = await fetch('https://blockstream.info/api/block/' + blockId + '/txs', { cache: 'no-store' });
+          if(r.ok) {
+            const data = await r.json();
+            txs = data.map(tx => ({
+              txid: tx.txid,
+              vout: tx.vout?.map(v => ({ value: v.value })) || [],
+              fee: tx.fee
+            }));
+          }
+        }
+        
+        if(txs && txs.length > 0) {
+          document.getElementById('confirmed').innerHTML = txs.slice(0, 10).map(x => {
             const amt = (x.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
             return '<div class="tx-item"><div class="tx-left"><span class="tx-dot confirmed"></span><span class="tx-hash" style="color:var(--success)">' + (x.txid?.slice(0, 16) || '...') + '...</span></div><div class="tx-right"><span class="tx-amount">' + amt.toFixed(4) + ' BTC</span><span class="tx-fee">' + (x.fee || 0) + ' sat/vB</span></div></div>';
           }).join('');
         }
-      } catch(e) {}
+      } catch(e) { console.log('Confirmed load failed'); }
     }
     
     async function showBlockTXs(blockHeight) {
       const popup = document.getElementById('blockPopup');
       const overlay = document.getElementById('popupOverlay');
-      document.getElementById('popupTitle').textContent = 'Block #' + blockHeight.toLocaleString() + ' - Transactions';
-      document.getElementById('popupContent').innerHTML = '<div class="loading">Loading...</div>';
+      document.getElementById('popupTitle').textContent = 'Block #' + blockHeight.toLocaleString();
+      document.getElementById('popupStats').innerHTML = '<div class="popup-stat"><div class="popup-stat-value">#' + blockHeight.toLocaleString() + '</div><div class="popup-stat-label">Block</div></div><div class="popup-stat"><div class="popup-stat-value" id="popupTxCount">--</div><div class="popup-stat-label">Transactions</div></div><div class="popup-stat"><div class="popup-stat-value" id="popupSize">--</div><div class="popup-stat-label">Size</div></div><div class="popup-stat"><div class="popup-stat-value" id="popupTime">--</div><div class="popup-stat-label">Time</div></div>';
+      document.getElementById('popupContent').innerHTML = '<div class="loading">Loading transactions...</div>';
       popup.classList.add('active');
       overlay.classList.add('active');
       
       try {
-        const hashResp = await fetch('https://mempool.space/api/block-height/' + blockHeight);
-        const blockHash = await hashResp.text();
-        const txResp = await fetch('https://mempool.space/api/block/' + blockHash + '/txs');
-        const txs = await txResp.json();
+        let blockHash, txs;
+        
+        // Get block hash
+        let r = await fetch('https://mempool.space/api/block-height/' + blockHeight);
+        if(r.ok) blockHash = await r.text();
+        
+        if(blockHash) {
+          r = await fetch('https://mempool.space/api/block/' + blockHash + '/txs');
+          if(r.ok) txs = await r.json();
+        }
+        
+        // Try blockstream if mempool.space fails
+        if(!txs) {
+          r = await fetch('https://blockstream.info/api/block-height/' + blockHeight);
+          if(r.ok) blockHash = await r.text();
+          if(blockHash) {
+            r = await fetch('https://blockstream.info/api/block/' + blockHash + '/txs');
+            if(r.ok) {
+              const data = await r.json();
+              txs = data.map(tx => ({
+                txid: tx.txid,
+                vout: tx.vout?.map(v => ({ value: v.value })) || [],
+                fee: tx.fee
+              }));
+            }
+          }
+        }
         
         if(txs && txs.length > 0) {
-          document.getElementById('popupContent').innerHTML = txs.map(tx => {
+          document.getElementById('popupTxCount').textContent = txs.length.toLocaleString();
+          
+          // Get block info for stats
+          let blockInfo;
+          r = await fetch('https://mempool.space/api/block/' + blockHash);
+          if(r.ok) blockInfo = await r.json();
+          
+          if(blockInfo) {
+            document.getElementById('popupSize').textContent = ((blockInfo.size || 0)/1000).toFixed(1) + ' KB';
+            document.getElementById('popupTime').textContent = new Date(blockInfo.timestamp * 1000).toLocaleString();
+          } else {
+            document.getElementById('popupSize').textContent = '~' + Math.floor(txs.length * 0.5) + ' KB';
+          }
+          
+          // Render transactions - organized professionally
+          document.getElementById('popupContent').innerHTML = txs.map((tx, i) => {
             const amt = (tx.vout?.reduce((s,v) => s + (v.value||0), 0) || 0) / 100000000;
             return '<div class="popup-tx"><span class="popup-tx-hash">' + tx.txid + '</span><span class="popup-tx-amt">' + amt.toFixed(8) + ' BTC</span></div>';
           }).join('');
         } else {
-          document.getElementById('popupContent').innerHTML = '<div class="loading">No transactions</div>';
+          document.getElementById('popupContent').innerHTML = '<div class="loading">No transactions found</div>';
         }
       } catch(e) {
-        document.getElementById('popupContent').innerHTML = '<div class="loading">Error loading</div>';
+        document.getElementById('popupContent').innerHTML = '<div class="loading">Error loading transactions</div>';
       }
     }
     
@@ -721,31 +522,66 @@
     
     async function searchTx(tx, r) {
       try {
-        const res = await fetch('https://mempool.space/api/tx/' + tx);
-        if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
-        const t = await res.json();
+        let res = await fetch('https://mempool.space/api/tx/' + tx);
+        let t = res.ok ? await res.json() : null;
+        
+        if(!t) {
+          res = await fetch('https://blockstream.info/api/tx/' + tx);
+          if(res.ok) {
+            const data = await res.json();
+            t = {
+              txid: data.txid,
+              vout: data.vout?.map(v => ({ value: v.value })) || [],
+              fee: data.fee,
+              status: data.status
+            };
+          }
+        }
+        
+        if(!t) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
+        
         const vout = t.vout?.reduce((s,v) => s + (v.value||0), 0) || 0;
         const status = t.status?.confirmed ? 'confirmed' : 'pending';
-        const icon = status === 'confirmed' ? '✅' : '⏳';
-        r.innerHTML = '<div class="sr-card ' + status + '"><div class="sr-header"><span class="sr-txid">' + t.txid + '</span><span class="sr-status ' + status + '">' + icon + '</span></div><div class="sr-grid"><div><div class="sr-label">Amount</div><div class="sr-value btc">' + (vout/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Fee</div><div class="sr-value">' + t.fee + ' sat</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + (t.size||t.vsize) + ' bytes</div></div>' + (t.status?.block_height ? '<div><div class="sr-label">Block</div><div class="sr-value">#' + t.status.block_height + '</div></div>' : '') + '</div></div>';
+        r.innerHTML = '<div class="sr-card ' + status + '"><div class="sr-header"><span class="sr-txid">' + t.txid + '</span><span class="sr-status ' + status + '">' + (status === 'confirmed' ? '✅' : '⏳') + '</span></div><div class="sr-grid"><div><div class="sr-label">Amount</div><div class="sr-value btc">' + (vout/100000000).toFixed(8) + ' BTC</div></div><div><div class="sr-label">Fee</div><div class="sr-value">' + t.fee + ' sat</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + (t.size||t.vsize || '?') + ' bytes</div></div>' + (t.status?.block_height ? '<div><div class="sr-label">Block</div><div class="sr-value">#' + t.status.block_height + '</div></div>' : '') + '</div></div>';
       } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
     async function searchBlock(h, r) {
       try {
-        const hash = await fetch('https://mempool.space/api/block-height/' + h).then(x => x.text());
-        const res = await fetch('https://mempool.space/api/block/' + hash);
-        if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
-        const b = await res.json();
-        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">Block #' + b.height + '</span><span class="sr-status confirmed">🧱</span></div><div class="sr-grid"><div><div class="sr-label">Transactions</div><div class="sr-value">' + (b.extras?.txCount || 0).toLocaleString() + '</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + ((b.size||0)/1000).toFixed(2) + ' MB</div></div><div><div class="sr-label">Time</div><div class="sr-value">' + new Date(b.timestamp*1000).toLocaleString() + '</div></div></div></div>';
+        let hash = await fetch('https://mempool.space/api/block-height/' + h).then(x => x.text()).catch(() => null);
+        let b = null;
+        if(hash) {
+          const res = await fetch('https://mempool.space/api/block/' + hash);
+          if(res.ok) b = await res.json();
+        }
+        if(!b) {
+          hash = await fetch('https://blockstream.info/api/block-height/' + h).then(x => x.text()).catch(() => null);
+          if(hash) {
+            const res = await fetch('https://blockstream.info/api/block/' + hash);
+            if(res.ok) b = await res.json();
+          }
+        }
+        if(!b) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
+        r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">Block #' + b.height + '</span><span class="sr-status confirmed">🧱</span></div><div class="sr-grid"><div><div class="sr-label">Transactions</div><div class="sr-value">' + (b.extras?.txCount || b.tx_count || '?') + '</div></div><div><div class="sr-label">Size</div><div class="sr-value">' + ((b.size||0)/1000).toFixed(2) + ' MB</div></div><div><div class="sr-label">Time</div><div class="sr-value">' + new Date(b.timestamp*1000).toLocaleString() + '</div></div></div></div>';
       } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
     }
     
     async function searchAddr(a, r) {
       try {
-        const res = await fetch('https://mempool.space/api/address/' + a);
-        if(!res.ok) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
-        const ad = await res.json();
+        let res = await fetch('https://mempool.space/api/address/' + a);
+        let ad = res.ok ? await res.json() : null;
+        
+        if(!ad) {
+          res = await fetch('https://blockstream.info/api/address/' + a);
+          if(res.ok) {
+            const data = await res.json();
+            ad = {
+              chain_stats: { funded_txo_sum: data.chain_stats?.funded_txo_sum || 0, spent_txo_sum: data.chain_stats?.spent_txo_sum || 0, tx_count: data.chain_stats?.tx_count || 0 }
+            };
+          }
+        }
+        
+        if(!ad) { r.innerHTML = '<div class="sr-card">Not found</div>'; return; }
         const bal = ((ad.chain_stats?.funded_txo_sum || 0) - (ad.chain_stats?.spent_txo_sum || 0)) / 100000000;
         r.innerHTML = '<div class="sr-card confirmed"><div class="sr-header"><span class="sr-txid">' + a + '</span><span class="sr-status confirmed">📍</span></div><div class="sr-grid"><div><div class="sr-label">Balance</div><div class="sr-value btc">' + bal.toFixed(8) + ' BTC</div></div><div><div class="sr-label">Received</div><div class="sr-value">' + ((ad.chain_stats?.funded_txo_sum || 0)/100000000).toFixed(8) + '</div></div><div><div class="sr-label">Txs</div><div class="sr-value">' + (ad.chain_stats?.tx_count || 0) + '</div></div></div></div>';
       } catch(e) { r.innerHTML = '<div class="sr-card">Error</div>'; }
