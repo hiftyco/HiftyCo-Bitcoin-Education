@@ -42,6 +42,26 @@
     .sh h2 span { color: var(--primary); }
     .sh p { color: var(--text2); }
     
+    .mempool-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .mempool-stat { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .mempool-statv { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .mempool-statl { font-size: 0.75rem; color: var(--text2); }
+    .mempool-blocks { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .mempool-block { width: 90px; height: 90px; background: linear-gradient(145deg, var(--bg), #1a1a2e); border: 2px solid var(--primary); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; animation: pulse 2s infinite; position: relative; overflow: hidden; }
+    .mempool-block::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(247,147,26,0.3), transparent); animation: shimmer 2s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 10px rgba(247,147,26,0.3); } 50% { box-shadow: 0 0 25px rgba(247,147,26,0.6); } }
+    @keyframes shimmer { 100% { left: 100%; } }
+    .mempool-blockn { font-size: 0.8rem; color: var(--primary); }
+    .mempool-blockh { font-size: 0.45rem; color: #606070; font-family: monospace; }
+    .mempool-txs { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; max-height: 300px; overflow-y: auto; }
+    .mempool-tx { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .mempool-tx:last-child { border-bottom: none; }
+    .mempool-txh { font-family: monospace; color: var(--primary); font-size: 0.7rem; }
+    .mempool-txamt { color: #00d4aa; font-weight: 600; }
+    .mempool-txfee { color: #ef4444; font-size: 0.75rem; }
+    .live-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #00d4aa; margin-left: 10px; }
+    .live-indicator::before { content: ''; width: 8px; height: 8px; background: #00d4aa; border-radius: 50%; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
     .viz { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 32px; margin-bottom: 24px; }
     .blocks { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
     .block { width: 70px; height: 70px; background: linear-gradient(145deg, var(--bg2), #22222e); border: 2px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; transition: all 0.3s; cursor: pointer; position: relative; }
@@ -131,21 +151,29 @@
   </div>
   
   <section id="blockchain" class="section">
-    <div class="sh"><h2>How <span>Blockchain</span> Works</h2><p>Each block contains verified transactions</p></div>
+    <div class="sh"><h2>Live Bitcoin <span>Mempool</span> <span class="live-indicator">LIVE</span></h2><p>Real-time unconfirmed transactions</p></div>
     <div class="viz">
-      <div class="blocks" id="blocks">
-        <div class="block"><span class="blockn">#1</span><span class="blockh">0000..</span></div>
-        <span class="arrow">→</span>
-        <div class="block"><span class="blockn">#2</span><span class="blockh">0000..</span></div>
-        <span class="arrow">→</span>
-        <div class="block"><span class="blockn">#3</span><span class="blockh">0000..</span></div>
-        <span class="arrow">→</span>
-        <div class="block"><span class="blockn">#4</span><span class="blockh">0000..</span></div>
-        <span class="arrow">→</span>
-        <div class="block"><span class="blockn">#5</span><span class="blockh">0000..</span></div>
+      <!-- Mempool Stats -->
+      <div class="mempool-stats" id="mempool-stats">
+        <div class="mempool-stat"><div class="mempool-statv" id="mempool-height">--</div><div class="mempool-statl">Block Height</div></div>
+        <div class="mempool-stat"><div class="mempool-statv" id="mempool-count">--</div><div class="mempool-statl">Unconfirmed</div></div>
+        <div class="mempool-stat"><div class="mempool-statv" id="mempool-fees">--</div><div class="mempool-statl">Avg Fee (sat/vB)</div></div>
+        <div class="mempool-stat"><div class="mempool-statv" id="mempool-mempool">--</div><div class="mempool-statl">Mempool Size (MB)</div></div>
+      </div>
+      
+      <!-- Recent Blocks -->
+      <div style="text-align:center;margin-bottom:12px;font-size:0.9rem;color:var(--text2)">Recent Confirmed Blocks</div>
+      <div class="mempool-blocks" id="mempool-blocks">
+        <div class="mempool-block"><span class="mempool-blockn">#--</span><span class="mempool-blockh">Loading...</span></div>
+      </div>
+      
+      <!-- Recent Transactions -->
+      <div style="text-align:center;margin-bottom:12px;font-size:0.9rem;color:var(--text2)">Latest Unconfirmed Transactions</div>
+      <div class="mempool-txs" id="mempool-txs">
+        <div style="padding:20px;text-align:center;color:var(--text2)">Loading mempool data...</div>
       </div>
     </div>
-    <div class="cta"><button class="btn btn1" onclick="addBlock()">+ Add Block</button></div>
+    <div class="cta"><button class="btn btn1" onclick="loadMempool()">🔄 Refresh Mempool</button></div>
   </section>
   
   <section id="paths" class="section">
@@ -270,20 +298,88 @@
       {name: 'LightningFan', score: 80}
     ];
     
-    // Blockchain
-    let blockCount = 5;
-    function addBlock() {
-      blockCount++;
-      const blocks = document.getElementById('blocks');
-      const arrow = document.createElement('span');
-      arrow.className = 'arrow';
-      arrow.textContent = '→';
-      const block = document.createElement('div');
-      block.className = 'block';
-      block.innerHTML = '<span class="blockn">#'+blockCount+'</span><span class="blockh">'+Math.random().toString(16).substr(2,4)+'..</span>';
-      blocks.appendChild(arrow);
-      blocks.appendChild(block);
+    // Mempool - Live Bitcoin Data
+    const MEMPOOL_API = 'https://mempool.space/api';
+    
+    async function loadMempool() {
+      try {
+        // Get block height
+        const blocksResp = await fetch(MEMPOOL_API + '/blocks');
+        const blocks = await blocksResp.json();
+        
+        // Get mempool stats
+        const mempoolResp = await fetch(MEMPOOL_API + '/mempool');
+        const mempoolData = await mempoolResp.json();
+        
+        // Get recent transactions
+        const txResp = await fetch(MEMPOOL_API + '/mempool/recent');
+        const recentTxs = await txResp.json();
+        
+        // Update stats
+        if(blocks && blocks.length > 0) {
+          document.getElementById('mempool-height').textContent = '#' + blocks[0].height.toLocaleString();
+        }
+        
+        if(mempoolData) {
+          document.getElementById('mempool-count').textContent = (mempoolData.count || 0).toLocaleString();
+          document.getElementById('mempool-mempool').textContent = (mempoolData.vsize / 1000000).toFixed(1) + ' MB';
+        }
+        
+        // Calculate avg fee
+        if(recentTxs && recentTxs.length > 0) {
+          const avgFee = recentTxs.reduce((sum, tx) => sum + tx.fee, 0) / recentTxs.length;
+          document.getElementById('mempool-fees').textContent = avgFee.toFixed(1);
+        }
+        
+        // Update recent blocks
+        const blocksContainer = document.getElementById('mempool-blocks');
+        blocksContainer.innerHTML = blocks.slice(0, 5).map((b, i) => 
+          '<div class="mempool-block" style="animation-delay:'+(i*0.2)+'s"><span class="mempool-blockn">#'+b.height.toLocaleString().slice(-6)+'</span><span class="mempool-blockh">'+b.tx_count+' txs</span></div>'
+        ).join('');
+        
+        // Update recent transactions
+        const txsContainer = document.getElementById('mempool-txs');
+        txsContainer.innerHTML = recentTxs.slice(0, 10).map(tx => 
+          '<div class="mempool-tx"><span class="mempool-txh">'+tx.txid.slice(0, 12)+'...</span><span><span class="mempool-txamt">'+(tx.vout_sats || 0).toLocaleString()+' sats</span> <span class="mempool-txfee">'+tx.fee.toFixed(1)+' sat/vB</span></span></div>'
+        ).join('');
+        
+      } catch(e) {
+        console.error('Mempool load error:', e);
+        document.getElementById('mempool-txs').innerHTML = '<div style="padding:20px;text-align:center;color:#ef4444">Unable to load mempool data. Using demo mode.</div>';
+        loadDemoMempool();
+      }
     }
+    
+    function loadDemoMempool() {
+      // Demo data if API fails
+      document.getElementById('mempool-height').textContent = '#870,432';
+      document.getElementById('mempool-count').textContent = '24,891';
+      document.getElementById('mempool-fees').textContent = '42.5';
+      document.getElementById('mempool-mempool').textContent = '18.3 MB';
+      
+      document.getElementById('mempool-blocks').innerHTML = 
+        '<div class="mempool-block"><span class="mempool-blockn">#870432</span><span class="mempool-blockh">2,847 txs</span></div>' +
+        '<div class="mempool-block"><span class="mempool-blockn">#870431</span><span class="mempool-blockh">3,102 txs</span></div>' +
+        '<div class="mempool-block"><span class="mempool-blockn">#870430</span><span class="mempool-blockh">2,456 txs</span></div>' +
+        '<div class="mempool-block"><span class="mempool-blockn">#870429</span><span class="mempool-blockh">2,891 txs</span></div>' +
+        '<div class="mempool-block"><span class="mempool-blockn">#870428</span><span class="mempool-blockh">2,234 txs</span></div>';
+      
+      const demoTxs = [
+        {hash: 'a1b2c3d4e5f6...', amount: 1250000, fee: 45.2},
+        {hash: 'b2c3d4e5f6g7...', amount: 890000, fee: 38.7},
+        {hash: 'c3d4e5f6g7h8...', amount: 2100000, fee: 52.1},
+        {hash: 'd4e5f6g7h8i9...', amount: 567000, fee: 28.4},
+        {hash: 'e5f6g7h8i9j0...', amount: 3200000, fee: 61.3}
+      ];
+      
+      document.getElementById('mempool-txs').innerHTML = demoTxs.map(tx => 
+        '<div class="mempool-tx"><span class="mempool-txh">'+tx.hash+'</span><span><span class="mempool-txamt">'+tx.amount.toLocaleString()+' sats</span> <span class="mempool-txfee">'+tx.fee+' sat/vB</span></span></div>'
+      ).join('');
+    }
+    
+    // Load on page load + auto refresh every 30 seconds
+    loadMempool();
+    setInterval(loadMempool, 30000);
     
     // Quiz
     let quizScore = 0;
