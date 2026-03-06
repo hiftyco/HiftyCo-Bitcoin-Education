@@ -59,6 +59,29 @@
     .chain-arrow { color: var(--primary); font-size: 1.5rem; animation: arrowBounce 1s ease-in-out infinite; }
     @keyframes arrowBounce { 0%,100% { transform: translateX(0); opacity: 0.6; } 50% { transform: translateX(5px); opacity: 1; } }
     
+    /* SEARCH SECTION */
+    .search-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 32px; }
+    .search-title { text-align: center; font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+    .search-box { display: flex; gap: 12px; max-width: 600px; margin: 0 auto 20px; }
+    .search-box input { flex: 1; padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.95rem; font-family: monospace; }
+    .search-box input:focus { outline: none; border-color: var(--primary); }
+    .search-box input::placeholder { color: var(--text2); font-family: 'Space Grotesk', sans-serif; }
+    .search-results { max-width: 800px; margin: 0 auto; }
+    .search-result-item { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+    .search-result-item.pending { border-color: var(--primary); background: rgba(247,147,26,0.05); }
+    .search-result-item.confirmed { border-color: var(--success); background: rgba(0,212,170,0.05); }
+    .search-result-item.error { border-color: var(--danger); background: rgba(239,68,68,0.05); }
+    .sr-txid { font-family: monospace; color: var(--primary); font-size: 0.9rem; word-break: break-all; margin-bottom: 12px; }
+    .sr-status { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; }
+    .sr-status.pending { background: rgba(247,147,26,0.2); color: var(--primary); }
+    .sr-status.confirmed { background: rgba(0,212,170,0.2); color: var(--success); }
+    .sr-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .sr-detail { }
+    .sr-detail-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; margin-bottom: 2px; }
+    .sr-detail-value { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .sr-loading { text-align: center; padding: 20px; color: var(--text2); }
+    .sr-error { text-align: center; padding: 20px; color: var(--danger); }
+    
     /* FEE RATES */
     .fee-section { margin: 32px 0; }
     .fee-title { text-align: center; font-size: 0.95rem; color: var(--text2); margin-bottom: 16px; }
@@ -128,6 +151,16 @@
         <div class="stat-card"><div class="stat-value" id="hash-rate">--</div><div class="stat-label">Hash Rate</div></div>
         <div class="stat-card"><div class="stat-value" id="difficulty">--</div><div class="stat-label">Difficulty</div></div>
         <div class="stat-card"><div class="stat-value" id="next-halving">--</div><div class="stat-label">Blocks to Halving</div></div>
+      </div>
+      
+      <!-- Transaction Search -->
+      <div class="search-section">
+        <div class="search-title">🔍 Search Bitcoin Transactions & Addresses</div>
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="Enter Transaction ID (txid) or Address..." onkeypress="handleSearch(event)">
+          <button class="btn btn1" onclick="searchTx()">Search</button>
+        </div>
+        <div id="search-results" class="search-results"></div>
       </div>
       
       <!-- Chain Visualization -->
@@ -359,6 +392,128 @@
         confirmedList.innerHTML += '<div class="tx-item" style="background:rgba(0,212,170,0.05)"><span class="tx-hash" style="color:var(--success)">' + Math.random().toString(36).slice(2,20) + '...</span><div class="tx-details"><span class="tx-amount">' + (Math.random() * 2).toFixed(4) + ' BTC</span><span class="tx-fee">' + (10 + Math.floor(Math.random()*40)) + ' sat/vB</span></div></div>';
       }
     }
+      confirmedList.innerHTML = '';
+      for(let i = 0; i < 5; i++) {
+        confirmedList.innerHTML += '<div class="tx-item" style="background:rgba(0,212,170,0.05)"><span class="tx-hash" style="color:var(--success)">' + Math.random().toString(36).slice(2,20) + '...</span><div class="tx-details"><span class="tx-amount">' + (Math.random() * 2).toFixed(4) + ' BTC</span><span class="tx-fee">' + (10 + Math.floor(Math.random()*40)) + ' sat/vB</span></div></div>';
+      }
+    }
+    
+    // Transaction Search Functions
+    function handleSearch(e) {
+      if(e.key === 'Enter') searchTx();
+    }
+    
+    async function searchTx() {
+      const input = document.getElementById('search-input').value.trim();
+      const resultsDiv = document.getElementById('search-results');
+      
+      if(!input) {
+        resultsDiv.innerHTML = '<div class="sr-error">Please enter a transaction ID or address</div>';
+        return;
+      }
+      
+      resultsDiv.innerHTML = '<div class="sr-loading">Searching...</div>';
+      
+      // Determine if it's a txid (64 hex chars) or address
+      const isTxid = /^[a-fA-F0-9]{64}$/.test(input);
+      const isAddress = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(input) || /^bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71}$/.test(input);
+      
+      if(!isTxid && !isAddress) {
+        resultsDiv.innerHTML = '<div class="sr-error">Invalid format. Enter a valid Bitcoin txid (64 chars) or address (bc1... or 1.../3...)</div>';
+        return;
+      }
+      
+      try {
+        if(isTxid) {
+          // Search for transaction
+          await searchTransaction(input, resultsDiv);
+        } else {
+          // Search for address
+          await searchAddress(input, resultsDiv);
+        }
+      } catch(e) {
+        resultsDiv.innerHTML = '<div class="sr-error">Error: ' + e.message + '</div>';
+      }
+    }
+    
+    async function searchTransaction(txid, container) {
+      // First check mempool
+      try {
+        const mempoolResp = await fetch('https://mempool.space/api/tx/' + txid);
+        if(mempoolResp.ok) {
+          const tx = await mempoolResp.json();
+          displayPendingTx(tx, container);
+          return;
+        }
+      } catch(e) {}
+      
+      // Then check confirmed
+      try {
+        const confirmedResp = await fetch('https://mempool.space/api/tx/' + txid);
+        if(confirmedResp.ok) {
+          const tx = await confirmedResp.json();
+          displayConfirmedTx(tx, container);
+          return;
+        }
+      } catch(e) {}
+      
+      container.innerHTML = '<div class="sr-error">Transaction not found</div>';
+    }
+    
+    async function searchAddress(address, container) {
+      try {
+        const resp = await fetch('https://mempool.space/api/address/' + address);
+        if(!resp.ok) {
+          container.innerHTML = '<div class="sr-error">Address not found</div>';
+          return;
+        }
+        
+        const addr = await resp.json();
+        
+        let html = '<div class="search-result-item confirmed">';
+        html += '<div class="sr-txid">' + address + '</div>';
+        html += '<span class="sr-status confirmed">Address</span>';
+        html += '<div class="sr-details">';
+        html += '<div class="sr-detail"><div class="sr-detail-label">Confirmed Balance</div><div class="sr-detail-value">' + (addr.chain_stats?.funded_txo_sum - addr.chain_stats?.spent_txo_sum || 0) / 100000000 + ' BTC</div></div>';
+        html += '<div class="sr-detail"><div class="sr-detail-label">Total Received</div><div class="sr-detail-value">' + ((addr.chain_stats?.funded_txo_sum || 0) / 100000000).toFixed(8) + ' BTC</div></div>';
+        html += '<div class="sr-detail"><div class="sr-detail-label">Total Sent</div><div class="sr-detail-value">' + ((addr.chain_stats?.spent_txo_sum || 0) / 100000000).toFixed(8) + ' BTC</div></div>';
+        html += '<div class="sr-detail"><div class="sr-detail-label">Confirmed Txs</div><div class="sr-detail-value">' + (addr.chain_stats?.tx_count || 0) + '</div></div>';
+        if(addr.mempool_stats) {
+          html += '<div class="sr-detail"><div class="sr-detail-label">Mempool Txs</div><div class="sr-detail-value">' + (addr.mempool_stats.tx_count || 0) + '</div></div>';
+        }
+        html += '</div></div>';
+        
+        container.innerHTML = html;
+      } catch(e) {
+        container.innerHTML = '<div class="sr-error">Error fetching address: ' + e.message + '</div>';
+      }
+    }
+    
+    function displayPendingTx(tx, container) {
+      const feeRate = tx.fee / (tx.vsize || tx.weight / 4);
+      let html = '<div class="search-result-item pending">';
+      html += '<div class="sr-txid">' + tx.txid + '</div>';
+      html += '<span class="sr-status pending">⏳ Pending (Mempool)</span>';
+      html += '<div class="sr-details">';
+      html += '<div class="sr-detail"><div class="sr-detail-label">Amount</div><div class="sr-detail-value">' + (tx.vout?.reduce((sum, v) => sum + (v.value || 0), 0) / 100000000).toFixed(8) + ' BTC</div></div>';
+      html += '<div class="sr-detail"><div class="sr-detail-label">Fee</div><div class="sr-detail-value">' + tx.fee + ' sat</div></div>';
+      html += '<div class="sr-detail"><div class="sr-detail-label">Fee Rate</div><div class="sr-detail-value">' + feeRate.toFixed(1) + ' sat/vB</div></div>';
+      html += '<div class="sr-detail"><div class="sr-detail-label">Size</div><div class="sr-detail-value">' + (tx.size || tx.vsize) + ' bytes</div></div>';
+      html += '</div></div>';
+      container.innerHTML = html;
+    }
+    
+    function displayConfirmedTx(tx, container) {
+      const feeRate = tx.fee / (tx.vsize || tx.weight / 4);
+      let html = '<div class="search-result-item confirmed">';
+      html += '<div class="sr-txid">' + tx.txid + '</div>';
+      html += '<span class="sr-status confirmed">✅ Confirmed</span>';
+      html += '<div class="sr-details">';
+      html += '<div class="sr-detail"><div class="sr-detail-label">Block</div><div class="sr-detail-value">#' + tx.status?.block_height + '</div></div>';
+      html += '<div class="sr-detail"><div class="sr-detail-label">Amount</div><div class="sr-detail-value">' + (tx.vout?.reduce((sum, v) => sum + (v.value || 0), 0) / 100000000).toFixed(8) + ' BTC</div></div>';
+      html += '<div class="sr-detail"><div class="sr-detail-label">Fee</div><div class="sr-detail-value">' + tx.fee + ' sat</div></div>';
+      html += '<div class="sr-detail"><div class="sr-detail-label">Fee Rate</div><div class="sr-detail-value">' + feeRate.toFixed(1) + ' sat/vB</div></div>';
+      html += '</div></div>';
+      container.innerHTML = html;
+    }
   </script>
-</body>
-</html>
