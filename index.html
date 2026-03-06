@@ -341,17 +341,18 @@
       {name: 'LightningFan', score: 80}
     ];
     
-    // REAL-TIME Bitcoin Data - Using blockstream.info (works from browser)
+    // REAL-TIME Bitcoin Data - Using blockstream via CORS proxy
     const BLOCKSTREAM_API = 'https://blockstream.info/api';
+    const CORS_PROXY = 'https://corsproxy.io/?';
     
     async function loadMempool() {
       try {
-        // Get blocks from blockstream
-        const blocksResp = await fetch(BLOCKSTREAM_API + '/blocks');
+        // Get blocks from blockstream via proxy
+        const blocksResp = await fetch(CORS_PROXY + encodeURIComponent(BLOCKSTREAM_API + '/blocks'));
         const blocks = await blocksResp.json();
         
-        // Get mempool data
-        const mempoolResp = await fetch(BLOCKSTREAM_API + '/mempool');
+        // Get mempool data via proxy
+        const mempoolResp = await fetch(CORS_PROXY + encodeURIComponent(BLOCKSTREAM_API + '/mempool'));
         const mempool = await mempoolResp.json();
         
         // Get current block height
@@ -398,8 +399,8 @@
           }
         }
         
-        // Get recent transactions
-        const txResp = await fetch(BLOCKSTREAM_API + '/mempool/recent');
+        // Get recent transactions via proxy
+        const txResp = await fetch(CORS_PROXY + encodeURIComponent(BLOCKSTREAM_API + '/mempool/recent'));
         const txs = await txResp.json();
         
         const txsContainer = document.getElementById('mempool-txs');
