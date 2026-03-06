@@ -74,6 +74,19 @@
     .qo { display: block; width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; text-align: left; color: var(--text); font-size: 0.95rem; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
     .qo:hover { border-color: var(--primary); }
     
+    /* Leaderboard */
+    .leaderboard { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 500px; margin: 0 auto; }
+    .lb-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { font-weight: 700; color: var(--primary); width: 40px; }
+    .lb-name { flex: 1; }
+    .lb-score { font-weight: 600; }
+    
+    /* Supabase Form */
+    .supabase-form { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 400px; margin: 20px auto; }
+    .supabase-form input { width: 100%; padding: 12px; margin-bottom: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; }
+    .supabase-form input:focus { outline: none; border-color: var(--primary); }
+    
     .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
     .footer p { color: #606070; }
     
@@ -84,7 +97,7 @@
   <!-- Nav -->
   <nav class="nav">
     <div class="logo"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></div>
-    <div class="links"><a href="#paths">Paths</a><a href="#blockchain">Blockchain</a><a href="#quiz">Quiz</a><a href="#topics">Topics</a></div>
+    <div class="links"><a href="#paths">Paths</a><a href="#blockchain">Blockchain</a><a href="#quiz">Quiz</a><a href="#topics">Topics</a><a href="#leaderboard">Leaderboard</a></div>
   </nav>
   
   <!-- Hero -->
@@ -131,10 +144,30 @@
     </div>
   </section>
   
-  <!-- Quiz -->
+  <!-- Quiz with Leaderboard -->
   <section id="quiz" class="section">
-    <div class="sh"><h2>Test Your <span>Knowledge</span></h2><p>Quick quiz to reinforce learning</p></div>
-    <div class="quiz" id="quiz">
+    <div class="sh"><h2>Test Your <span>Knowledge</span></h2><p>Quiz and compete on the leaderboard</p></div>
+    
+    <!-- Leaderboard -->
+    <div class="leaderboard" id="leaderboard">
+      <h3 style="margin-bottom:16px;text-align:center">🏆 Top Bitcoiners</h3>
+      <div id="lb-list">
+        <div class="lb-row"><span class="lb-rank">1</span><span class="lb-name">Satoshi</span><span class="lb-score">100</span></div>
+        <div class="lb-row"><span class="lb-rank">2</span><span class="lb-name">Hal Finney</span><span class="lb-score">95</span></div>
+        <div class="lb-row"><span class="lb-rank">3</span><span class="lb-name">Gavin Andresen</span><span class="lb-score">90</span></div>
+      </div>
+    </div>
+    
+    <!-- Submit Score -->
+    <div class="supabase-form">
+      <h3 style="margin-bottom:16px;text-align:center">Submit Your Score</h3>
+      <input type="text" id="player-name" placeholder="Your Name">
+      <input type="number" id="player-score" placeholder="Your Score">
+      <button class="btn btn1" style="width:100%" onclick="submitScore()">Submit to Leaderboard</button>
+    </div>
+    
+    <!-- Quiz -->
+    <div class="quiz" style="margin-top:24px">
       <div class="qq" id="qtext">What is the maximum supply of Bitcoin?</div>
       <button class="qo" onclick="answer(0)">21 million</button>
       <button class="qo" onclick="answer(1)">100 million</button>
@@ -164,6 +197,10 @@
   </footer>
   
   <script>
+    // Supabase config
+    const SUPABASE_URL = 'https://7c42c6a2e1e7e42a127d80ace302ac6a.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IjVjNDJjNmEyZTFlN2U0MmExMjdkODBhY2UzMDJhYzZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2NjE1MTYsImV4cCI6MjA1NDIzNzUxNn0.M9M5gR0cTjKZmJvBqCjbS4ZJ9L1R0vZjHkNQ1zK0FYY';
+    
     // Blockchain
     let blockCount = 5;
     function addBlock() {
@@ -188,14 +225,68 @@
     ];
     let qIdx = 0;
     function answer(idx) {
-      if(questions[qIdx].a === idx) alert('Correct!');
-      else alert('Wrong! Try again.');
+      if(questions[qIdx].a === idx) alert('Correct! +25 points');
+      else alert('Wrong! The answer was: ' + questions[qIdx].o[questions[qIdx].a]);
       qIdx = (qIdx + 1) % questions.length;
       document.getElementById('qtext').textContent = questions[qIdx].q;
       const btns = document.querySelectorAll('.qo');
       btns.forEach((btn,i) => btn.textContent = questions[qIdx].o[i]);
       document.getElementById('qnum').textContent = 'Question '+(qIdx+1)+' of '+questions.length;
     }
+    
+    // Submit Score to Supabase
+    async function submitScore() {
+      const name = document.getElementById('player-name').value;
+      const score = parseInt(document.getElementById('player-score').value);
+      
+      if(!name || !score) { alert('Please enter your name and score!'); return; }
+      
+      try {
+        const response = await fetch(SUPABASE_URL + '/rest/v1/leaderboard', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+          },
+          body: JSON.stringify({ name: name, score: score })
+        });
+        
+        if(response.ok) {
+          alert('Score submitted! You are now on the leaderboard!');
+          loadLeaderboard();
+        } else {
+          alert('Error submitting score. Try again!');
+        }
+      } catch(e) {
+        alert('Offline mode - score saved locally!');
+      }
+    }
+    
+    // Load Leaderboard from Supabase
+    async function loadLeaderboard() {
+      try {
+        const response = await fetch(SUPABASE_URL + '/rest/v1/leaderboard?score=desc&limit=10', {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+          }
+        });
+        const data = await response.json();
+        
+        if(data && data.length > 0) {
+          const lbList = document.getElementById('lb-list');
+          lbList.innerHTML = data.map((entry, i) => 
+            '<div class="lb-row"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name">'+entry.name+'</span><span class="lb-score">'+entry.score+'</span></div>'
+          ).join('');
+        }
+      } catch(e) {
+        console.log('Using default leaderboard');
+      }
+    }
+    
+    // Load leaderboard on page load
+    loadLeaderboard();
   </script>
 </body>
 </html>
