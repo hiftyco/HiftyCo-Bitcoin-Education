@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Journal - HiftyCo</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; --warning: #f59e0b; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    
+    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; backdrop-filter: blur(10px); }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
+    .logo .btc { color: var(--primary); font-size: 1.5rem; }
+    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
+    .logo a { text-decoration: none; color: inherit; }
+    .links { display: flex; gap: 28px; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+    .links a:hover, .links a.active { color: var(--primary); }
+    
+    .hero { min-height: 40vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 40px; background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247,147,26,0.15) 0%, transparent 60%); }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--primary), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text2); font-size: 1.1rem; }
+    
+    .section { padding: 40px 20px 60px; max-width: 900px; margin: 0 auto; }
+    
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .kpi-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+    .kpi-value { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+    .kpi-value.green { color: var(--success); }
+    .kpi-value.red { color: var(--danger); }
+    .kpi-label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; margin-top: 4px; }
+    
+    .section-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .section-title span { color: var(--primary); }
+    
+    .trade-table { width: 100%; border-collapse: collapse; background: var(--bg2); border-radius: 12px; overflow: hidden; }
+    .trade-table th { background: rgba(247,147,26,0.1); padding: 14px 16px; text-align: left; font-size: 0.75rem; color: var(--text2); text-transform: uppercase; }
+    .trade-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .trade-table tr:last-child td { border-bottom: none; }
+    .trade-table tr:hover { background: rgba(247,147,26,0.05); }
+    
+    .status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .status.win { background: rgba(0,212,170,0.15); color: var(--success); }
+    .status.loss { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .status.active { background: rgba(247,147,26,0.15); color: var(--primary); }
+    
+    .profit { color: var(--success); font-weight: 600; }
+    .loss { color: var(--danger); font-weight: 600; }
+    
+    .strategy-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 32px; }
+    .strategy-box h3 { font-size: 1.1rem; margin-bottom: 16px; color: var(--primary); }
+    .strategy-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .strategy-row:last-child { border-bottom: none; }
+    .strategy-label { color: var(--text2); font-size: 0.9rem; }
+    .strategy-value { font-weight: 600; }
+    
+    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
+    .footer p { color: #606070; }
+    
+    @media (max-width: 700px) { 
+      .nav { padding: 0 16px; } 
+      .links { display: none; } 
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .trade-table { font-size: 0.8rem; }
+      .trade-table th, .trade-table td { padding: 10px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><a href="index.html"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></a></div>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="blockchain.html">Blockchain</a>
+      <a href="paths.html">Paths</a>
+      <a href="journal.html" class="active">Journal</a>
+      <a href="journal.html">Journal</a>
+      <a href="progress.html">Progress</a>
+      <a href="quiz.html">Quiz</a>
+    </div>
+  </nav>
+  
+  <section class="hero">
+    <h1>Trading <span>Journal</span></h1>
+    <p>Track our Bitcoin trading performance</p>
+  </section>
+  
+  <section class="section">
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value green">100%</div>
+        <div class="kpi-label">Win Rate</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">5</div>
+        <div class="kpi-label">Total Trades</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value green">+$15,399</div>
+        <div class="kpi-label">Total P&L</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">1</div>
+        <div class="kpi-label">Active</div>
+      </div>
+    </div>
+    
+    <!-- Trade History -->
+    <h2 class="section-title">📈 Trade History</h2>
+    <table class="trade-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Status</th>
+          <th>Entry Price</th>
+          <th>Take Profit</th>
+          <th>Stop Loss</th>
+          <th>Ratio</th>
+          <th>Profit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><span class="status win">✅ Win</span></td>
+          <td>--</td>
+          <td>--</td>
+          <td>--</td>
+          <td>2:1</td>
+          <td class="profit">+$2,464.86</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><span class="status win">✅ Win</span></td>
+          <td>--</td>
+          <td>--</td>
+          <td>--</td>
+          <td>2:1</td>
+          <td class="profit">+$4,929.71</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><span class="status win">✅ Win</span></td>
+          <td>--</td>
+          <td>--</td>
+          <td>--</td>
+          <td>2:1</td>
+          <td class="profit">+$4,004.49</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><span class="status win">✅ Win</span></td>
+          <td>$66,439.25</td>
+          <td>$67,740</td>
+          <td>$65,799.32</td>
+          <td>2:1</td>
+          <td class="profit">+$4,000.00</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><span class="status win">✅ Win</span></td>
+          <td>$68,178.70</td>
+          <td>$70,248.80</td>
+          <td>$67,149.60</td>
+          <td>2:1</td>
+          <td class="profit">+$2,070.10</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><span class="status active">🔄 Active</span></td>
+          <td>$68,178.70</td>
+          <td>$70,248.80</td>
+          <td>$67,149.60</td>
+          <td>2:1</td>
+          <td>TBD</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Strategy -->
+    <div class="strategy-box">
+      <h3>🎯 Trading Strategy</h3>
+      <div class="strategy-row">
+        <span class="strategy-label">Timeframes</span>
+        <span class="strategy-value">1H and 5M</span>
+      </div>
+      <div class="strategy-row">
+        <span class="strategy-label">Risk:Reward</span>
+        <span class="strategy-value">Minimum 2:1</span>
+      </div>
+      <div class="strategy-row">
+        <span class="strategy-label">Entry Signal</span>
+        <span class="strategy-value">RSI ≤30 (Long) or ≥70 (Short)</span>
+      </div>
+      <div class="strategy-row">
+        <span class="strategy-label">Max Risk per Trade</span>
+        <span class="strategy-value">2%</span>
+      </div>
+      <div class="strategy-row">
+        <span class="strategy-label">Stop Loss</span>
+        <span class="strategy-value">Always required</span>
+      </div>
+    </div>
+  </section>
+  
+  <footer class="footer">
+    <p>₿ HiftyCo - Empowering Bitcoiners | Cura et Celeritas</p>
+  </footer>
+</body>
+</html>
