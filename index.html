@@ -719,6 +719,81 @@
     </div>
   </section>
   
+  <!-- PRO INVESTOR STRATEGIES -->
+  <section class="section" style="background:var(--bg2)">
+    <div class="section-content">
+      <div class="reveal" style="text-align:center;margin-bottom:60px;">
+        <h2 class="section-title">🎓 Pro <span>Investor</span> Strategies</h2>
+        <p class="section-subtitle">How the 1% think differently</p>
+      </div>
+      
+      <div class="properties-grid" style="grid-template-columns:repeat(2,1fr);">
+        <div class="property-card reveal">
+          <div class="property-icon">🔑</div>
+          <div>
+            <h3>1. Not Your Keys, Not Your Coins</h3>
+            <p>Never keep significant holdings on exchanges. Hardware wallets (Cold Card, Trezor) for everything. Only keep trading funds on exchange.</p>
+          </div>
+        </div>
+        <div class="property-card reveal">
+          <div class="property-icon">📅</div>
+          <div>
+            <h3>2. Dollar Cost Average (DCA)</h3>
+            <p>Don't try to time the market. Buy small amounts consistently weekly or monthly. Removes emotion from decisions.</p>
+          </div>
+        </div>
+        <div class="property-card reveal">
+          <div class="property-icon">🛡️</div>
+          <div>
+            <h3>3. Multi-Sig Security</h3>
+            <p>For large holdings: use 2-of-3 or 3-of-5 multisig. Spread seed phrases across locations. Never keep all in one place.</p>
+          </div>
+        </div>
+        <div class="property-card reveal">
+          <div class="property-icon">🖥️</div>
+          <div>
+            <h3>4. Run Your Own Node</h3>
+            <p>Verify your own transactions. Full privacy. Support the network. Know what's happening on-chain.</p>
+          </div>
+        </div>
+        <div class="property-card reveal">
+          <div class="property-icon">📊</div>
+          <div>
+            <h3>5. The 1% Rule</h3>
+            <p>Only risk 1-2% per trade. Never over-leverage. Preserve capital first, chase gains second.</p>
+          </div>
+        </div>
+        <div class="property-card reveal">
+          <div class="property-icon">💎</div>
+          <div>
+            <h3>6. Stack Sats, Not Alts</h3>
+            <p>99% Bitcoin, 1% altcoins (if any). Altcoins = gambling, Bitcoin = sound money. Focus on the hardest asset.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- DCA Calculator -->
+      <div class="reveal" style="margin-top:60px;">
+        <div class="definition-box" style="text-align:center;">
+          <h3>📈 DCA Calculator</h3>
+          <p style="margin-top:16px;">See the power of consistent investing</p>
+          <div style="display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;">
+            <div style="text-align:center;">
+              <input type="number" id="dca-amount" value="100" style="width:120px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1.2rem;text-align:center;">
+              <p style="font-size:0.8rem;color:var(--text2);margin-top:8px;">USD / week</p>
+            </div>
+            <div style="text-align:center;">
+              <input type="number" id="dca-years" value="5" style="width:120px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1.2rem;text-align:center;">
+              <p style="font-size:0.8rem;color:var(--text2);margin-top:8px;">Years</p>
+            </div>
+            <button class="btn btn-primary" onclick="calcDCA()" style="padding:14px 28px;">Calculate</button>
+          </div>
+          <div id="dca-result" style="margin-top:30px;font-size:1.3rem;color:var(--primary);font-weight:700;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
   <!-- FINAL QUOTE -->
   <section class="quote-section" style="background:var(--bg2)">
     <div class="reveal">
@@ -796,6 +871,27 @@
     }
     function stopMining() { mining = false; document.getElementById('cc-screen-text').innerHTML = 'Idle<br>Press ✓ to start'; }
     function applyPool() { alert('Pool configuration saved!'); switchSim('miner',3); }
+    
+    // DCA Calculator
+    function calcDCA() {
+      const amount = parseFloat(document.getElementById('dca-amount').value);
+      const years = parseFloat(document.getElementById('dca-years').value);
+      // Assume average BTC price of $70k, 7% weekly growth (simplified)
+      const weeks = years * 52;
+      const avgPrice = 70850;
+      // Simplified compound calculation
+      const totalInvested = amount * weeks;
+      const btcBought = totalInvested / avgPrice;
+      // If BTC goes 10x over these years (conservative)
+      const futureValue = btcBought * (avgPrice * 10);
+      const profit = futureValue - totalInvested;
+      
+      document.getElementById('dca-result').innerHTML = 
+        `Total Invested: $${totalInvested.toLocaleString()}<br>` +
+        `BTC Stack: ${btcBought.toFixed(4)} BTC<br>` +
+        `Potential Value (10x): $${futureValue.toLocaleString()}<br>` +
+        `<span style="color:var(--success)">Profit: +$${profit.toLocaleString()}</span>`;
+    }
     
     setInterval(() => {
       if(mining) {
