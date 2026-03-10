@@ -98,9 +98,59 @@
       .timeline-dot { position: absolute; left: 12px; }
       .timeline-content { width: 100%; padding: 0; }
     }
+    
+    /* ===== SCROLL ANIMATIONS ===== */
+    .reveal { opacity: 0; transform: translateY(60px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    
+    .reveal-left { opacity: 0; transform: translateX(-80px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+    .reveal-left.active { opacity: 1; transform: translateX(0); }
+    
+    .reveal-right { opacity: 0; transform: translateX(80px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+    .reveal-right.active { opacity: 1; transform: translateX(0); }
+    
+    .reveal-scale { opacity: 0; transform: scale(0.8); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+    .reveal-scale.active { opacity: 1; transform: scale(1); }
+    
+    /* Sticky story sections */
+    .story-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 20px; position: relative; }
+    .story-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(247,147,26,0.1) 0%, transparent 70%); pointer-events: none; }
+    
+    .story-card { max-width: 700px; text-align: center; position: relative; z-index: 1; }
+    .story-card h2 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 24px; }
+    .story-card h2 span { color: var(--primary); }
+    .story-card p { font-size: 1.2rem; color: var(--text2); line-height: 1.8; }
+    .story-card .big-number { font-size: 6rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .story-card .subtitle { font-size: 1rem; color: var(--text2); margin-top: 8px; }
+    
+    /* Animated counter */
+    .counter { font-size: 4rem; font-weight: 700; color: var(--primary); }
+    
+    /* Parallax backgrounds */
+    .parallax-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.1; }
+    
+    /* Progress indicator */
+    .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--success)); z-index: 1000; width: 0%; transition: width 0.1s; }
+    
+    /* Bitcoin floating animation */
+    @keyframes floatBTC { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); }
+    .floating-btc { position: absolute; font-size: 4rem; animation: floatBTC 4s ease-in-out infinite; opacity: 0.3; }
+    
+    /* Stagger animations */
+    .stagger > * { opacity: 0; transform: translateY(30px); }
+    .stagger.active > *:nth-child(1) { animation: fadeInUp 0.6s 0.1s forwards; }
+    .stagger.active > *:nth-child(2) { animation: fadeInUp 0.6s 0.2s forwards; }
+    .stagger.active > *:nth-child(3) { animation: fadeInUp 0.6s 0.3s forwards; }
+    .stagger.active > *:nth-child(4) { animation: fadeInUp 0.6s 0.4s forwards; }
+    .stagger.active > *:nth-child(5) { animation: fadeInUp 0.6s 0.5s forwards; }
+    .stagger.active > *:nth-child(6) { animation: fadeInUp 0.6s 0.6s forwards; }
+    
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+  </style>
   </style>
 </head>
 <body>
+  <div class="scroll-progress"></div>
   <nav class="nav">
     <div class="logo"><a href="index.html"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></a></div>
     <div class="links">
@@ -115,7 +165,7 @@
   </nav>
   
   <!-- HERO WITH LIVE PRICE -->
-  <section class="hero">
+  <section class="hero reveal">
     <h1>Learn Bitcoin <span>Properly</span></h1>
     <p>Understand the story of money, not just the price. Start your journey to financial sovereignty.</p>
     <div class="btns">
@@ -131,13 +181,13 @@
   </section>
   
   <!-- THE STORY OF MONEY -->
-  <section id="story" class="section">
+  <section id="story" class="section reveal">
     <div class="sh">
       <h2>The <span>Story</span> of Money</h2>
       <p>Why Bitcoin exists and why it matters</p>
     </div>
     
-    <div class="story">
+    <div class="story reveal">
       <h3>💰 The Problem with Fiat Money</h3>
       <p>For thousands of years, humans used <span class="highlight">sound money</span> — gold and silver. These couldn't be created out of thin air.</p>
       <p>In 1971, Nixon took the US off the gold standard. Since then, governments print money freely. This is called <span class="highlight">fiat</span> — from Latin "let it be done".</p>
@@ -147,8 +197,8 @@
       <div class="quote-author">— Saifedean Ammous</div>
     </div>
     
-    <div class="timeline">
-      <div class="timeline-item">
+    <div class="timeline reveal">
+      <div class="timeline-item reveal-left">
         <div class="timeline-date">1971</div>
         <div class="timeline-dot"></div>
         <div class="timeline-content">
@@ -156,7 +206,7 @@
           <p>US dollar becomes fiat. Central banks can print unlimited money.</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item reveal-left">
         <div class="timeline-date">2008</div>
         <div class="timeline-dot"></div>
         <div class="timeline-content">
@@ -164,7 +214,7 @@
           <p>Banks collapse. Governments bail them out by printing more money.</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item reveal-left">
         <div class="timeline-date">2009</div>
         <div class="timeline-dot"></div>
         <div class="timeline-content">
@@ -172,7 +222,7 @@
           <p>Satoshi Nakamoto mines the Genesis Block. A new form of sound money.</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item reveal-left">
         <div class="timeline-date">2020</div>
         <div class="timeline-dot"></div>
         <div class="timeline-content">
@@ -180,7 +230,7 @@
           <p>Central banks print $9 trillion. Bitcoin becomes the fastest asset to reach $1T market cap.</p>
         </div>
       </div>
-      <div class="timeline-item">
+      <div class="timeline-item reveal-left">
         <div class="timeline-date">2024</div>
         <div class="timeline-dot"></div>
         <div class="timeline-content">
@@ -192,13 +242,13 @@
   </section>
   
   <!-- WHY BITCOIN -->
-  <section class="section" style="background: var(--bg2); margin: 40px 0; padding: 60px 20px;">
+  <section class="section reveal" style="background: var(--bg2); margin: 40px 0; padding: 60px 20px;">
     <div class="sh">
       <h2>Why <span>Bitcoin</span>?</h2>
       <p>The five properties of sound money — Bitcoin has all five</p>
     </div>
     
-    <div class="steps">
+    <div class="steps stagger">
       <div class="step">
         <span class="tag">Scarcity</span>
         <span class="step-num">1</span>
@@ -233,7 +283,7 @@
   </section>
   
   <!-- INTERACTIVE HALVING -->
-  <div class="halving-counter" id="halving">
+  <div class="halving-counter reveal" id="halving">
     <h3>⛏️ Next Bitcoin Halving</h3>
     <div class="halving-timer" id="halving-timer">Loading...</div>
     <div class="halving-date">Blocks until next halving</div>
@@ -241,13 +291,13 @@
   </div>
   
   <!-- INTERACTIVE CALCULATOR -->
-  <section class="section" id="learn">
+  <section class="section reveal" id="learn">
     <div class="sh">
       <h2>📊 DCA <span>Calculator</span></h2>
       <p>See the power of dollar-cost averaging</p>
     </div>
     
-    <div class="interactive">
+    <div class="interactive reveal-scale">
       <div class="calc-row">
         <input type="number" id="dca-amount" placeholder="Monthly investment ($)" value="100">
         <input type="number" id="dca-years" placeholder="Years" value="5">
@@ -263,7 +313,7 @@
   </section>
   
   <!-- FREQUENTLY ASKED -->
-  <section class="section" style="background: var(--bg2); margin: 40px 0; padding: 60px 20px;">
+  <section class="section reveal" style="background: var(--bg2); margin: 40px 0; padding: 60px 20px;">
     <div class="sh">
       <h2>❓ Frequently <span>Asked</span></h2>
       <p>Common questions from beginners</p>
@@ -298,13 +348,13 @@
   </section>
   
   <!-- NEXT STEPS -->
-  <section class="section">
+  <section class="section reveal">
     <div class="sh">
       <h2>🚀 Your Next <span>Steps</span></h2>
       <p>Start your Bitcoin journey today</p>
     </div>
     
-    <div class="steps">
+    <div class="steps stagger">
       <div class="step">
         <span class="step-num">1</span>
         <h4>Get a Wallet</h4>
@@ -399,6 +449,42 @@
     function toggleFaq(el) {
       el.parentElement.classList.toggle('open');
     }
+    
+    // ===== SCROLL ANIMATIONS =====
+    // Reveal on scroll
+    const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+    const staggerContainers = document.querySelectorAll('.stagger');
+    
+    // Progress bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.querySelector('.scroll-progress').style.width = scrolled + '%';
+    });
+    
+    // Intersection Observer for reveals
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    
+    revealElements.forEach(el => observer.observe(el));
+    staggerContainers.forEach(el => observer.observe(el));
+    
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
   </script>
 </body>
 </html>
