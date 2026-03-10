@@ -38,17 +38,53 @@
     .sh h2 span { color: var(--primary); }
     .sh p { color: var(--text2); }
     
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
-    .feature { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; transition: all 0.3s; text-decoration: none; display: block; }
-    .feature:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 40px rgba(247,147,26,0.15); }
-    .feature-icon { font-size: 2.5rem; margin-bottom: 16px; }
-    .feature h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
-    .feature p { color: var(--text2); font-size: 0.9rem; }
+    .story { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 900px; margin: 0 auto 60px; text-align: left; }
+    .story h3 { font-size: 1.4rem; margin-bottom: 16px; color: var(--primary); }
+    .story p { color: var(--text2); line-height: 1.8; margin-bottom: 16px; }
+    .story .highlight { background: rgba(247,147,26,0.15); padding: 2px 8px; border-radius: 4px; color: var(--primary); }
     
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
-    .stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
-    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-    .stat-label { font-size: 0.8rem; color: var(--text2); text-transform: uppercase; }
+    .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+    .timeline::before { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: var(--border); }
+    .timeline-item { display: flex; margin-bottom: 40px; align-items: flex-start; }
+    .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
+    .timeline-date { width: 50%; padding: 0 20px; text-align: right; font-weight: 600; color: var(--primary); }
+    .timeline-item:nth-child(odd) .timeline-date { text-align: left; }
+    .timeline-dot { width: 16px; height: 16px; background: var(--primary); border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .timeline-content { width: 50%; padding: 0 20px; }
+    .timeline-content h4 { font-size: 1.1rem; margin-bottom: 6px; }
+    .timeline-content p { color: var(--text2); font-size: 0.9rem; }
+    
+    .interactive { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 40px 0; }
+    .interactive h3 { text-align: center; margin-bottom: 24px; }
+    .calc-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .calc-row input { flex: 1; min-width: 150px; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 1rem; font-family: inherit; }
+    .calc-row input:focus { outline: none; border-color: var(--primary); }
+    .calc-result { background: var(--bg); border-radius: 12px; padding: 20px; text-align: center; margin-top: 20px; }
+    .calc-result .value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .calc-result .label { color: var(--text2); font-size: 0.9rem; }
+    
+    .halving-counter { background: linear-gradient(135deg, var(--bg2), #1a1a28); border: 2px solid var(--primary); border-radius: 20px; padding: 40px; text-align: center; margin: 40px 0; }
+    .halving-counter h3 { margin-bottom: 20px; }
+    .halving-timer { font-size: 3rem; font-weight: 700; color: var(--primary); font-family: monospace; }
+    .halving-date { color: var(--text2); margin-top: 12px; }
+    
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 32px; }
+    .step { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; position: relative; overflow: hidden; }
+    .step::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+    .step-num { position: absolute; top: 16px; right: 16px; font-size: 3rem; font-weight: 700; color: var(--border); }
+    .step h4 { font-size: 1.2rem; margin-bottom: 12px; }
+    .step p { color: var(--text2); font-size: 0.95rem; line-height: 1.6; }
+    .step .tag { display: inline-block; background: rgba(247,147,26,0.15); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; margin-bottom: 12px; }
+    
+    .faq-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+    .faq-q { padding: 20px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .faq-q::after { content: '+'; font-size: 1.5rem; color: var(--primary); }
+    .faq-item.open .faq-q::after { content: '-'; }
+    .faq-a { padding: 0 20px 20px; color: var(--text2); line-height: 1.7; display: none; }
+    .faq-item.open .faq-a { display: block; }
+    
+    .quote { border-left: 4px solid var(--primary); padding-left: 20px; margin: 30px 0; font-style: italic; color: var(--text2); }
+    .quote-author { font-style: normal; color: var(--primary); font-weight: 600; margin-top: 8px; }
     
     .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
     .footer p { color: #606070; }
@@ -56,7 +92,11 @@
     @media (max-width: 700px) { 
       .nav { padding: 0 16px; } 
       .links { display: none; } 
-      .stats { grid-template-columns: repeat(2, 1fr); }
+      .timeline::before { left: 20px; }
+      .timeline-item, .timeline-item:nth-child(odd) { flex-direction: row; padding-left: 50px; }
+      .timeline-date, .timeline-item:nth-child(odd) .timeline-date { width: auto; text-align: left; padding: 0; }
+      .timeline-dot { position: absolute; left: 12px; }
+      .timeline-content { width: 100%; padding: 0; }
     }
   </style>
 </head>
@@ -74,206 +114,227 @@
     </div>
   </nav>
   
+  <!-- HERO WITH LIVE PRICE -->
   <section class="hero">
-    <h1>Master <span>Bitcoin</span></h1>
-    <p>The ultimate education platform for Bitcoiners. Learn, practice, and succeed in the new financial system.</p>
+    <h1>Learn Bitcoin <span>Properly</span></h1>
+    <p>Understand the story of money, not just the price. Start your journey to financial sovereignty.</p>
     <div class="btns">
-      <a href="paths.html" class="btn btn1">Start Learning</a>
-      <a href="blockchain.html" class="btn btn2">View Live Blockchain</a>
+      <a href="#story" class="btn btn1">Start with Why</a>
+      <a href="#learn" class="btn btn2">Start Learning</a>
+    </div>
+    <!-- Live Price -->
+    <div style="margin-top: 40px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px 48px;">
+      <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);" id="btc-price">$--,---</div>
+      <div style="color: var(--text2); margin-top: 4px;">Live Bitcoin Price</div>
+      <div id="btc-change" style="margin-top: 8px; font-weight: 600;">--</div>
     </div>
   </section>
   
-  <section class="section">
+  <!-- THE STORY OF MONEY -->
+  <section id="story" class="section">
     <div class="sh">
-      <h2>Explore <span>Bitcoin</span></h2>
-      <p>Everything you need to become a Bitcoin expert</p>
+      <h2>The <span>Story</span> of Money</h2>
+      <p>Why Bitcoin exists and why it matters</p>
     </div>
     
-    <div class="features">
-      <a href="blockchain.html" class="feature">
-        <div class="feature-icon">⛓️</div>
-        <h3>Live Blockchain</h3>
-        <p>Real-time Bitcoin network data, mempool, and transactions</p>
-      </a>
-      <a href="paths.html" class="feature">
-        <div class="feature-icon">📚</div>
-        <h3>Learning Paths</h3>
-        <p>Structured courses from beginner to advanced</p>
-      </a>
-      <a href="progress.html" class="feature">
-        <div class="feature-icon">📊</div>
-        <h3>Track Progress</h3>
-        <p>Monitor your learning journey and achievements</p>
-      </a>
-      <a href="quiz.html" class="feature">
-        <div class="feature-icon">🏆</div>
-        <h3>Quiz & Leaderboard</h3>
-        <p>Test your knowledge and compete with others</p>
-      </a>
-      <a href="topics.html" class="feature">
-        <div class="feature-icon">💡</div>
-        <h3>Deep Topics</h3>
-        <p>Explore mining, Lightning, privacy, and more</p>
-      </a>
-      <a href="quiz.html" class="feature">
-        <div class="feature-icon">🎯</div>
-        <h3>Test Knowledge</h3>
-        <p>Challenge yourself with Bitcoin questions</p>
-      </a>
-    </div>
-  </section>
-  
-  <section class="section">
-    <div class="sh">
-      <h2>Bitcoin <span>Stats</span></h2>
-      <p>Key metrics of the Bitcoin network</p>
+    <div class="story">
+      <h3>💰 The Problem with Fiat Money</h3>
+      <p>For thousands of years, humans used <span class="highlight">sound money</span> — gold and silver. These couldn't be created out of thin air.</p>
+      <p>In 1971, Nixon took the US off the gold standard. Since then, governments print money freely. This is called <span class="highlight">fiat</span> — from Latin "let it be done".</p>
+      <p>Result? Your savings lose ~2-7% value every year to inflation. The dollar has lost <span class="highlight">97% of its value</span> since 1913.</p>
+      
+      <div class="quote">"In the beginning, there was gold. Then there was paper backed by gold. Then paper backed by nothing. Now... we have Bitcoin."</div>
+      <div class="quote-author">— Saifedean Ammous</div>
     </div>
     
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-value">21M</div>
-        <div class="stat-label">Max Supply</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">1971</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Nixon Ends Gold Standard</h4>
+          <p>US dollar becomes fiat. Central banks can print unlimited money.</p>
+        </div>
       </div>
-      <div class="stat">
-        <div class="stat-value">10min</div>
-        <div class="stat-label">Block Time</div>
+      <div class="timeline-item">
+        <div class="timeline-date">2008</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Financial Crisis</h4>
+          <p>Banks collapse. Governments bail them out by printing more money.</p>
+        </div>
       </div>
-      <div class="stat">
-        <div class="stat-value">700+ EH/s</div>
-        <div class="stat-label">Hash Rate</div>
+      <div class="timeline-item">
+        <div class="timeline-date">2009</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Bitcoin is Born</h4>
+          <p>Satoshi Nakamoto mines the Genesis Block. A new form of sound money.</p>
+        </div>
       </div>
-      <div class="stat">
-        <div class="stat-value">$1.4T+</div>
-        <div class="stat-label">Market Cap</div>
+      <div class="timeline-item">
+        <div class="timeline-date">2020</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>COVID Money Printer</h4>
+          <p>Central banks print $9 trillion. Bitcoin becomes the fastest asset to reach $1T market cap.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2024</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Bitcoin ETF Approved</h4>
+          <p>BlackRock, Fidelity enter. Institutional adoption begins.</p>
+        </div>
       </div>
     </div>
   </section>
   
-  <!-- WHY BITCOIN SECTION -->
-  <section class="section" style="background:var(--bg2);margin:40px 0;padding:60px 20px;">
+  <!-- WHY BITCOIN -->
+  <section class="section" style="background: var(--bg2); margin: 40px 0; padding: 60px 20px;">
     <div class="sh">
       <h2>Why <span>Bitcoin</span>?</h2>
-      <p>The most important financial technology since the internet</p>
+      <p>The five properties of sound money — Bitcoin has all five</p>
     </div>
     
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
-      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:2rem;margin-bottom:12px;">🪙</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Sound Money</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">Hard-capped 21M supply. No central bank can print more. Historically deflationary.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="tag">Scarcity</span>
+        <span class="step-num">1</span>
+        <h4>Hard Cap: 21 Million</h4>
+        <p>Unlike fiat, Bitcoin's supply is mathematically fixed. No central bank can "create" more. Ever. This is its most important feature.</p>
       </div>
-      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:2rem;margin-bottom:12px;">🔓</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Censorship Resistant</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">No one can freeze your funds. Financial sovereignty guaranteed.</p>
+      <div class="step">
+        <span class="tag">Durability</span>
+        <span class="step-num">2</span>
+        <h4>Never Decays</h4>
+        <p>Gold can be destroyed or seized. Bitcoin exists on thousands of computers worldwide. Back up your seed and it survives anything.</p>
       </div>
-      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:2rem;margin-bottom:12px;">🌍</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Borderless</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">Send value anywhere in minutes. No banks, no borders.</p>
+      <div class="step">
+        <span class="tag">Divisibility</span>
+        <span class="step-num">3</span>
+        <h4>Down to Satoshis</h4>
+        <p>One BTC = 100,000,000 satoshis (sats). You can buy $5 worth. No amount is "too small".</p>
       </div>
-      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:2rem;margin-bottom:12px;">⏰</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">24/7 Market</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">Trade anytime. No opening hours, no holidays.</p>
+      <div class="step">
+        <span class="tag">Portability</span>
+        <span class="step-num">4</span>
+        <h4>Borderless</h4>
+        <p>Send $1 or $1 billion anywhere in the world in minutes. No banks. No borders. No limits.</p>
       </div>
-      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:2rem;margin-bottom:12px;">🔐</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Self-Custody</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">Be your own bank. Your keys, your coins.</p>
-      </div>
-      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:2rem;margin-bottom:12px;">📊</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Transparent</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">Entire ledger is public. Anyone can verify.</p>
+      <div class="step">
+        <span class="tag">Verifiability</span>
+        <span class="step-num">5</span>
+        <h4>Transparent</h4>
+        <p>Every transaction ever is public. Anyone can verify the 21M supply. No trusted third party needed.</p>
       </div>
     </div>
   </section>
   
-  <!-- QUICK START -->
+  <!-- INTERACTIVE HALVING -->
+  <div class="halving-counter" id="halving">
+    <h3>⛏️ Next Bitcoin Halving</h3>
+    <div class="halving-timer" id="halving-timer">Loading...</div>
+    <div class="halving-date">Blocks until next halving</div>
+    <p style="color: var(--text2); margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;">Every ~4 years, Bitcoin block rewards cut in half. This is by design. Less supply = higher price (if demand holds).</p>
+  </div>
+  
+  <!-- INTERACTIVE CALCULATOR -->
+  <section class="section" id="learn">
+    <div class="sh">
+      <h2>📊 DCA <span>Calculator</span></h2>
+      <p>See the power of dollar-cost averaging</p>
+    </div>
+    
+    <div class="interactive">
+      <div class="calc-row">
+        <input type="number" id="dca-amount" placeholder="Monthly investment ($)" value="100">
+        <input type="number" id="dca-years" placeholder="Years" value="5">
+        <input type="number" id="dca-return" placeholder="Expected return %" value="30">
+      </div>
+      <button class="btn btn1" style="width: 100%;" onclick="calculateDCA()">Calculate</button>
+      <div class="calc-result" id="dca-result" style="display: none;">
+        <div class="value" id="dca-total">$0</div>
+        <div class="label">Total Value After <span id="dca-years-display">5</span> Years</div>
+        <div style="margin-top: 12px; color: var(--success);" id="dca-profit">+$0 profit</div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- FREQUENTLY ASKED -->
+  <section class="section" style="background: var(--bg2); margin: 40px 0; padding: 60px 20px;">
+    <div class="sh">
+      <h2>❓ Frequently <span>Asked</span></h2>
+      <p>Common questions from beginners</p>
+    </div>
+    
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is Bitcoin legal?</div>
+        <div class="faq-a">Yes! Bitcoin is legal in most countries including the US, EU, Japan, and Canada. It's legal tender in El Salvador and Central African Republic. However, some countries restrict or ban it. Always check your local regulations.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How do I get started?</div>
+        <div class="faq-a">1) Learn first (you're in the right place!). 2) Get a wallet. 3) Buy small amounts (DCA). 4) Never share your seed phrase. 5) Hold for the long term. Start with what you can afford to lose.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What's a seed phrase?</div>
+        <div class="faq-a">Your seed phrase (12 or 24 words) is your master key. Write it down ON PAPER. Store it somewhere safe. Anyone with this phrase can access your funds. NEVER store digitally. NEVER share with anyone.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Why is Bitcoin volatile?</div>
+        <div class="faq-a">Young markets are volatile. Bitcoin is only 16 years old. As adoption grows, volatility decreases. Remember: gold was volatile too in its early years. The trend is up over time.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What about the energy usage?</div>
+        <div class="faq-a">Bitcoin uses energy to secure the network. But it's often waste energy (flared gas, hydro overflows). It actually incentivizes renewable energy development. More importantly, traditional banking uses MORE energy when you count ATMs, branches, servers, etc.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What determines Bitcoin's price?</div>
+        <div class="faq-a">Supply and demand. Only 21M will ever exist. Demand comes from: adoption, scarcity narrative, institutional buying, halving events. Price is simply where supply meets demand at any moment.</div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- NEXT STEPS -->
   <section class="section">
     <div class="sh">
-      <h2>🚀 Quick <span>Start Guide</span></h2>
-      <p>New to Bitcoin? Start here</p>
+      <h2>🚀 Your Next <span>Steps</span></h2>
+      <p>Start your Bitcoin journey today</p>
     </div>
     
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:1.8rem;margin-bottom:12px;">1️⃣</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Understand the Basics</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">Learn what Bitcoin is, how mining works, and why 21M supply matters.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <h4>Get a Wallet</h4>
+        <p>Start with a reputable wallet. For beginners: BlueWallet (mobile) or Ledger/Trezor (hardware for larger amounts).</p>
+        <a href="topics.html" class="btn btn1" style="margin-top: 16px; font-size: 0.85rem;">Learn About Wallets →</a>
       </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:1.8rem;margin-bottom:12px;">2️⃣</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Get a Wallet</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">Start with hardware wallet for large amounts, mobile for daily use.</p>
+      <div class="step">
+        <span class="step-num">2</span>
+        <h4>Learn Technicals</h4>
+        <p>Understand charts, indicators, and market cycles. Don't trade blindly. Learn risk management.</p>
+        <a href="topics.html" class="btn btn1" style="margin-top: 16px; font-size: 0.85rem;">Trading Topics →</a>
       </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:1.8rem;margin-bottom:12px;">3️⃣</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Buy Small</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">Dollar-cost average. Never invest more than you can afford to lose.</p>
+      <div class="step">
+        <span class="step-num">3</span>
+        <h4>Track Your Progress</h4>
+        <p>Keep a trading journal. Learn from every trade. Track your wins and losses. Improve over time.</p>
+        <a href="journal.html" class="btn btn1" style="margin-top: 16px; font-size: 0.85rem;">Start Journal →</a>
       </div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-size:1.8rem;margin-bottom:12px;">4️⃣</div>
-        <h3 style="font-size:1.1rem;margin-bottom:8px;">Hold Long-Term</h3>
-        <p style="color:var(--text2);font-size:0.9rem;">HODL. Don't panic sell. Time in the market > timing.</p>
+      <div class="step">
+        <span class="step-num">4</span>
+        <h4>Join the Community</h4>
+        <p>Connect with other Bitcoiners. Attend meetups. Question everything. The journey is better with friends.</p>
+        <a href="quiz.html" class="btn btn1" style="margin-top: 16px; font-size: 0.85rem;">Take Quiz →</a>
       </div>
-    </div>
-  </section>
-  
-  <!-- MYTHS VS FACTS -->
-  <section class="section" style="background:var(--bg2);margin:40px 0;padding:60px 20px;">
-    <div class="sh">
-      <h2>📚 Myths vs <span>Facts</span></h2>
-      <p>Separating Bitcoin facts from FUD</p>
-    </div>
-    
-    <div style="max-width:800px;margin:0 auto;">
-      <div style="background:var(--bg);border-left:3px solid var(--danger);border-radius:8px;padding:16px;margin-bottom:16px;">
-        <strong style="color:var(--danger)">❌ MYTH:</strong> Bitcoin is used for illegal activities
-      </div>
-      <div style="background:var(--bg);border-left:3px solid var(--success);border-radius:8px;padding:16px;margin-bottom:24px;">
-        <strong style="color:var(--success)">✅ FACT:</strong> Cash is still #1 for illegal use. Bitcoin is MORE traceable than cash.
-      </div>
-      
-      <div style="background:var(--bg);border-left:3px solid var(--danger);border-radius:8px;padding:16px;margin-bottom:16px;">
-        <strong style="color:var(--danger)">❌ MYTH:</strong> Bitcoin wastes energy
-      </div>
-      <div style="background:var(--bg);border-left:3px solid var(--success);border-radius:8px;padding:16px;margin-bottom:24px;">
-        <strong style="color:var(--success)">✅ FACT:</strong> Mining uses excess energy and incentivizes renewables. Most secure network on Earth.
-      </div>
-      
-      <div style="background:var(--bg);border-left:3px solid var(--danger);border-radius:8px;padding:16px;margin-bottom:16px;">
-        <strong style="color:var(--danger)">❌ MYTH:</strong> Bitcoin will be replaced by "better" crypto
-      </div>
-      <div style="background:var(--bg);border-left:3px solid var(--success);border-radius:8px;padding:16px;margin-bottom:24px;">
-        <strong style="color:var(--success)">✅ FACT:</strong> Strongest network effect & decentralization. #1 since 2009.
-      </div>
-      
-      <div style="background:var(--bg);border-left:3px solid var(--danger);border-radius:8px;padding:16px;margin-bottom:16px;">
-        <strong style="color:var(--danger)">❌ MYTH:</strong> Bitcoin has no intrinsic value
-      </div>
-      <div style="background:var(--bg);border-left:3px solid var(--success);border-radius:8px;padding:16px;">
-        <strong style="color:var(--success)">✅ FACT:</strong> Scarcity, durability, divisibility, portability, verifiability. Same as gold, but digital.
-      </div>
-    </div>
-  </section>
-  
-  <!-- LIVE PRICE WIDGET -->
-  <section class="section">
-    <div class="sh">
-      <h2>📈 Live Bitcoin <span>Price</span></h2>
-      <p>Real-time BTC price from multiple exchanges</p>
-    </div>
-    <div id="price-widget" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center;">
-      <div style="font-size:3rem;font-weight:700;color:var(--primary);" id="btc-price">Loading...</div>
-      <div style="color:var(--text2);margin-top:8px;">Bitcoin Price (USD)</div>
-      <div style="margin-top:16px;" id="btc-change">--</div>
     </div>
   </section>
   
   <footer class="footer">
     <p>₿ HiftyCo - Education for the Bitcoin era</p>
+    <p style="margin-top: 8px; font-size: 0.85rem;">⚡ Lightning Tips: hiftyco@coinos.io</p>
   </footer>
   
   <script>
@@ -289,12 +350,55 @@
           '<span style="color:' + (change >= 0 ? 'var(--success)' : 'var(--danger)') + '">' + 
           (change >= 0 ? '↑' : '↓') + ' ' + Math.abs(change).toFixed(2) + '% (24h)</span>';
       } catch(e) {
-        document.getElementById('btc-price').textContent = '$' + (70000).toLocaleString();
+        document.getElementById('btc-price').textContent = '$70,850';
         document.getElementById('btc-change').textContent = 'Price unavailable';
       }
     }
     loadPrice();
     setInterval(loadPrice, 30000);
+    
+    // Halving Counter
+    async function loadHalving() {
+      try {
+        const res = await fetch('https://blockstream.info/api/blocks/tip/height');
+        const currentHeight = await res.json();
+        const halvingHeight = 1050000;
+        const blocksUntil = halvingHeight - currentHeight;
+        document.getElementById('halving-timer').textContent = blocksUntil.toLocaleString() + ' blocks';
+      } catch(e) {
+        document.getElementById('halving-timer').textContent = '~100,000 blocks';
+      }
+    }
+    loadHalving();
+    
+    // DCA Calculator
+    function calculateDCA() {
+      const monthly = parseFloat(document.getElementById('dca-amount').value) || 100;
+      const years = parseFloat(document.getElementById('dca-years').value) || 5;
+      const annualReturn = (parseFloat(document.getElementById('dca-return').value) || 30) / 100;
+      
+      const months = years * 12;
+      const monthlyReturn = Math.pow(1 + annualReturn, 1/12) - 1;
+      
+      let total = 0;
+      for (let i = 0; i < months; i++) {
+        total = total * (1 + monthlyReturn) + monthly;
+      }
+      
+      const invested = monthly * months;
+      const profit = total - invested;
+      
+      document.getElementById('dca-result').style.display = 'block';
+      document.getElementById('dca-total').textContent = '$' + Math.round(total).toLocaleString();
+      document.getElementById('dca-years-display').textContent = years;
+      document.getElementById('dca-profit').textContent = (profit >= 0 ? '+' : '') + '$' + Math.round(profit).toLocaleString() + ' profit';
+      document.getElementById('dca-profit').style.color = profit >= 0 ? 'var(--success)' : 'var(--danger)';
+    }
+    
+    // FAQ Toggle
+    function toggleFaq(el) {
+      el.parentElement.classList.toggle('open');
+    }
   </script>
 </body>
 </html>
