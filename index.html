@@ -12,6 +12,7 @@
       --bg: #000000; 
       --bg2: #0a0a0a; 
       --bg3: #141414;
+      --bg4: #1a1a1a;
       --text: #ffffff; 
       --text2: #86868b;
       --border: #2a2a2a;
@@ -29,13 +30,11 @@
       -webkit-font-smoothing: antialiased;
     }
     
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
     
-    /* Navigation */
     .nav { 
       position: fixed; 
       top: 0; 
@@ -57,19 +56,15 @@
     .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 700; }
     .logo .btc { color: var(--primary); font-size: 1.4rem; }
     .logo .name { color: var(--text); }
-    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; }
+    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; }
     .logo a { text-decoration: none; }
     .links { display: flex; gap: 32px; }
-    .links a { 
-      color: var(--text2); 
-      text-decoration: none; 
-      font-size: 0.85rem; 
-      font-weight: 500;
-      transition: color 0.3s;
-    }
+    .links a { color: var(--text2); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.3s; }
     .links a:hover { color: var(--text); }
     
-    /* ===== HERO SECTION ===== */
+    .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--primary), #ffd700); width: 0%; z-index: 1001; transition: width 0.1s; }
+    
+    /* HERO */
     .hero {
       height: 100vh;
       display: flex;
@@ -79,420 +74,128 @@
       text-align: center;
       position: relative;
       overflow: hidden;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(247,147,26,0.15) 0%, transparent 50%);
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(247,147,26,0.12) 0%, transparent 50%);
     }
-    
-    /* Animated background */
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
+    .hero-bg { position: absolute; inset: 0; overflow: hidden; }
     .hero-bg::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: 
-        radial-gradient(circle at 30% 40%, rgba(247,147,26,0.08) 0%, transparent 40%),
-        radial-gradient(circle at 70% 60%, rgba(247,147,26,0.05) 0%, transparent 40%);
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 40%, rgba(247,147,26,0.08) 0%, transparent 40%),
+                  radial-gradient(circle at 70% 60%, rgba(247,147,26,0.05) 0%, transparent 40%);
       animation: heroFloat 20s ease-in-out infinite;
     }
-    @keyframes heroFloat {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      50% { transform: translate(-2%, 2%) rotate(1deg); }
-    }
+    @keyframes heroFloat { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-2%, 2%); } }
     
-    /* Floating BTC */
-    .floating-btc {
-      position: absolute;
-      font-size: 8rem;
-      opacity: 0.03;
-      animation: float 6s ease-in-out infinite;
-    }
-    .floating-btc:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+    .floating-btc { position: absolute; font-size: 8rem; opacity: 0.03; animation: float 6s ease-in-out infinite; }
+    .floating-btc:nth-child(1) { top: 20%; left: 10%; }
     .floating-btc:nth-child(2) { top: 60%; right: 15%; animation-delay: 1s; font-size: 5rem; }
     .floating-btc:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; font-size: 4rem; }
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(-5deg); }
-      50% { transform: translateY(-30px) rotate(5deg); }
-    }
+    @keyframes float { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-30px) rotate(5deg); } }
     
-    /* Hero Content */
-    .hero-content {
-      position: relative;
-      z-index: 10;
-      max-width: 900px;
-      padding: 0 24px;
-    }
-    .hero-label {
-      display: inline-block;
-      background: rgba(247,147,26,0.15);
-      border: 1px solid rgba(247,147,26,0.3);
-      color: var(--primary);
-      padding: 8px 20px;
-      border-radius: 50px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      margin-bottom: 24px;
-      animation: fadeInUp 1s ease forwards;
-    }
-    .hero h1 {
-      font-size: clamp(3.5rem, 10vw, 8rem);
-      font-weight: 800;
-      line-height: 1.05;
-      margin-bottom: 24px;
-      letter-spacing: -0.02em;
-      animation: fadeInUp 1s 0.1s ease forwards;
-      opacity: 0;
-    }
-    .hero h1 .highlight {
-      background: linear-gradient(135deg, var(--primary) 0%, #ffd700 50%, var(--primary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-      color: var(--text2);
-      font-weight: 400;
-      max-width: 600px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
-      animation: fadeInUp 1s 0.2s ease forwards;
-      opacity: 0;
-    }
-    .hero-btns {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      animation: fadeInUp 1s 0.3s ease forwards;
-      opacity: 0;
-    }
-    .btn {
-      padding: 16px 32px;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      border: none;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-primary {
-      background: var(--primary);
-      color: #000;
-    }
-    .btn-primary:hover {
-      transform: scale(1.05);
-      box-shadow: 0 20px 60px rgba(247,147,26,0.4);
-    }
-    .btn-secondary {
-      background: rgba(255,255,255,0.1);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: rgba(255,255,255,0.3);
-    }
+    .hero-content { position: relative; z-index: 10; max-width: 900px; padding: 0 24px; }
+    .hero-label { display: inline-block; background: rgba(247,147,26,0.15); border: 1px solid rgba(247,147,26,0.3); color: var(--primary); padding: 8px 20px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; margin-bottom: 24px; animation: fadeInUp 1s forwards; }
+    .hero h1 { font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 800; line-height: 1.05; margin-bottom: 24px; letter-spacing: -0.02em; animation: fadeInUp 1s 0.1s forwards; opacity: 0; }
+    .hero h1 .highlight { background: linear-gradient(135deg, var(--primary) 0%, #ffd700 50%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--text2); font-weight: 400; max-width: 600px; margin: 0 auto 40px; line-height: 1.6; animation: fadeInUp 1s 0.2s forwards; opacity: 0; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeInUp 1s 0.3s forwards; opacity: 0; }
     
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .btn { padding: 16px 32px; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--primary); color: #000; }
+    .btn-primary:hover { transform: scale(1.05); box-shadow: 0 20px 60px rgba(247,147,26,0.4); }
+    .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid rgba(255,255,255,0.2); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
     
-    /* Scroll indicator */
-    .scroll-indicator {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: var(--text2);
-      font-size: 0.75rem;
-      animation: fadeInUp 1s 0.5s ease forwards, bounce 2s 1.5s infinite;
-      opacity: 0;
-    }
-    .scroll-indicator .line {
-      width: 1px;
-      height: 60px;
-      background: linear-gradient(to bottom, var(--primary), transparent);
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(10px); }
-    }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
     
-    /* ===== SECTIONS ===== */
-    .section {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 120px 24px;
-      position: relative;
-    }
-    .section-content {
-      max-width: 1200px;
-      width: 100%;
-    }
+    .scroll-indicator { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text2); font-size: 0.75rem; animation: fadeInUp 1s 0.5s forwards, bounce 2s 1.5s infinite; opacity: 0; }
+    .scroll-indicator .line { width: 1px; height: 60px; background: linear-gradient(to bottom, var(--primary), transparent); }
+    @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(10px); } }
     
-    /* Section Reveal Animation */
-    .reveal {
-      opacity: 0;
-      transform: translateY(80px);
-      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    /* Section backgrounds */
+    /* SECTIONS */
+    .section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 24px; position: relative; }
+    .section-content { max-width: 1200px; width: 100%; }
+    .reveal { opacity: 0; transform: translateY(80px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
     .section:nth-child(even) { background: var(--bg2); }
     
-    /* ===== BIG TEXT SECTIONS ===== */
-    .big-text-section {
-      text-align: center;
-      padding: 200px 24px;
-    }
-    .big-text-section h2 {
-      font-size: clamp(2.5rem, 6vw, 5rem);
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 24px;
-      letter-spacing: -0.02em;
-    }
-    .big-text-section h2 span {
-      color: var(--primary);
-    }
-    .big-text-section p {
-      font-size: clamp(1.1rem, 2vw, 1.4rem);
-      color: var(--text2);
-      max-width: 700px;
-      margin: 0 auto;
-      line-height: 1.7;
-    }
+    /* WHAT IS MONEY - Big Question */
+    .question-section { text-align: center; padding: 200px 24px; background: radial-gradient(ellipse at center, rgba(247,147,26,0.08) 0%, transparent 60%); }
+    .question-section h2 { font-size: clamp(3rem, 8vw, 7rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+    .question-section h2 span { color: var(--primary); }
+    .question-section .subtitle { font-size: 1.3rem; color: var(--text2); margin-top: 24px; max-width: 600px; margin-left: auto; margin-right: auto; }
     
-    /* ===== STATS GRID ===== */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border-radius: 24px;
-      overflow: hidden;
-      margin: 60px 0;
-    }
-    .stat-card {
-      background: var(--bg2);
-      padding: 48px 24px;
-      text-align: center;
-      transition: all 0.5s ease;
-    }
-    .stat-card:hover {
-      background: var(--bg3);
-    }
-    .stat-value {
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      font-weight: 800;
-      color: var(--primary);
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .stat-label {
-      font-size: 0.9rem;
-      color: var(--text2);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+    /* COMPARISON */
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 80px; }
+    .comparison-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 24px; padding: 48px; text-align: center; transition: all 0.5s; }
+    .comparison-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+    .comparison-card.bad { border-color: rgba(239,68,68,0.3); }
+    .comparison-card.good { border-color: rgba(0,212,170,0.3); }
+    .comparison-card .icon { font-size: 4rem; margin-bottom: 24px; }
+    .comparison-card h3 { font-size: 1.8rem; margin-bottom: 16px; }
+    .comparison-card p { color: var(--text2); line-height: 1.7; }
+    .comparison-card ul { list-style: none; text-align: left; margin-top: 24px; }
+    .comparison-card ul li { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+    .comparison-card ul li::before { content: '✗'; color: var(--danger); }
+    .comparison-card.good ul li::before { content: '✓'; color: var(--success); }
     
-    /* ===== FEATURE CARDS ===== */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 60px;
-    }
-    .feature-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 40px;
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-      overflow: hidden;
-    }
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(247,147,26,0.1) 0%, transparent 50%);
-      opacity: 0;
-      transition: opacity 0.5s;
-    }
-    .feature-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--primary);
-      box-shadow: 0 30px 60px rgba(247,147,26,0.15);
-    }
-    .feature-card:hover::before {
-      opacity: 1;
-    }
-    .feature-icon {
-      font-size: 3rem;
-      margin-bottom: 24px;
-    }
-    .feature-card h3 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .feature-card p {
-      color: var(--text2);
-      line-height: 1.7;
-    }
+    /* HARDWARE WALLET DEMO */
+    .wallet-demo { background: var(--bg2); border: 1px solid var(--border); border-radius: 32px; padding: 60px; margin-top: 60px; }
+    .wallet-demo h3 { text-align: center; font-size: 2rem; margin-bottom: 16px; }
+    .wallet-demo > p { text-align: center; color: var(--text2); margin-bottom: 40px; }
     
-    /* ===== PARALLAX IMAGE ===== */
-    .parallax-section {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
-    }
-    .parallax-content {
-      text-align: center;
-      z-index: 10;
-      max-width: 800px;
-      padding: 24px;
-    }
-    .parallax-content h2 {
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 800;
-      margin-bottom: 24px;
-      letter-spacing: -0.02em;
-    }
-    .parallax-content h2 span {
-      color: var(--primary);
-    }
-    .parallax-content p {
-      font-size: 1.3rem;
-      color: var(--text2);
-      line-height: 1.7;
-    }
+    .demo-container { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .coldcard-visual { position: relative; display: flex; justify-content: center; }
+    .coldcard-img { width: 280px; height: 170px; background: linear-gradient(145deg, #1a1a1a, #2a2a2a); border-radius: 20px; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(247,147,26,0.2); }
+    .coldcard-img::before { content: 'COLDCARD'; font-size: 0.9rem; font-weight: 700; letter-spacing: 2px; color: var(--primary); }
+    .coldcard-img::after { content: ''; position: absolute; top: 15px; right: 15px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     
-    /* ===== QUOTE SECTION ===== */
-    .quote-section {
-      padding: 200px 24px;
-      text-align: center;
-    }
-    .quote-text {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 500;
-      line-height: 1.5;
-      max-width: 900px;
-      margin: 0 auto 40px;
-      color: var(--text);
-    }
-    .quote-author {
-      color: var(--primary);
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
+    .cable { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); width: 4px; height: 40px; background: linear-gradient(to bottom, #333, #111); border-radius: 2px; }
+    .cable::after { content: ''; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 60px; height: 8px; background: #222; border-radius: 4px; }
     
-    /* ===== CTA SECTION ===== */
-    .cta-section {
-      text-align: center;
-      padding: 200px 24px;
-      background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(247,147,26,0.15) 0%, transparent 60%);
-    }
-    .cta-section h2 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 800;
-      margin-bottom: 24px;
-    }
-    .cta-section p {
-      font-size: 1.2rem;
-      color: var(--text2);
-      margin-bottom: 40px;
-    }
+    .screenshot-mock { background: #0d1117; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+    .screenshot-header { background: #161b22; padding: 12px 16px; display: flex; gap: 8px; }
+    .screenshot-header span { width: 12px; height: 12px; border-radius: 50%; }
+    .screenshot-header span:nth-child(1) { background: #ff5f56; }
+    .screenshot-header span:nth-child(2) { background: #ffbd2e; }
+    .screenshot-header span:nth-child(3) { background: #27c93f; }
+    .screenshot-body { padding: 20px; font-family: monospace; font-size: 0.8rem; }
+    .screenshot-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #21262d; }
+    .screenshot-row:last-child { border: none; }
+    .screenshot-row .label { color: var(--text2); }
+    .screenshot-row .value { color: var(--primary); }
+    .screenshot-row .value.green { color: var(--success); }
     
-    /* ===== FOOTER ===== */
-    .footer {
-      background: var(--bg2);
-      border-top: 1px solid var(--border);
-      padding: 60px 24px;
-      text-align: center;
-    }
+    .demo-steps { margin-top: 40px; display: grid; gap: 16px; }
+    .demo-step { display: flex; align-items: flex-start; gap: 16px; padding: 16px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border); }
+    .demo-step-num { background: var(--primary); color: #000; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+    .demo-step p { color: var(--text2); font-size: 0.95rem; line-height: 1.6; }
+    .demo-step strong { color: var(--text); }
+    
+    /* QUOTE */
+    .quote-section { padding: 200px 24px; text-align: center; }
+    .quote-text { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 500; line-height: 1.5; max-width: 900px; margin: 0 auto 40px; }
+    .quote-author { color: var(--primary); font-size: 1.1rem; font-weight: 600; }
+    
+    /* CTA */
+    .cta-section { text-align: center; padding: 200px 24px; background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(247,147,26,0.15) 0%, transparent 60%); }
+    .cta-section h2 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; margin-bottom: 24px; }
+    .cta-section p { font-size: 1.2rem; color: var(--text2); margin-bottom: 40px; }
+    
+    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 60px 24px; text-align: center; }
     .footer p { color: var(--text2); font-size: 0.9rem; }
     
-    /* ===== MOBILE ===== */
+    .live-price { position: fixed; bottom: 24px; right: 24px; background: rgba(0,0,0,0.9); border: 1px solid var(--border); border-radius: 50px; padding: 12px 24px; display: flex; align-items: center; gap: 12px; z-index: 999; backdrop-filter: blur(10px); }
+    .live-price .dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+    .live-price .price { font-weight: 700; font-size: 1rem; }
+    .live-price .change { color: var(--success); font-size: 0.85rem; }
+    
     @media (max-width: 900px) {
       .nav { padding: 0 20px; }
       .links { display: none; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .features { grid-template-columns: 1fr; }
-    }
-    
-    /* Progress bar */
-    .progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary), #ffd700);
-      width: 0%;
-      z-index: 1001;
-      transition: width 0.1s;
-    }
-    
-    /* Live price badge */
-    .live-price {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: rgba(0,0,0,0.9);
-      border: 1px solid var(--border);
-      border-radius: 50px;
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 999;
-      backdrop-filter: blur(10px);
-    }
-    .live-price .dot {
-      width: 8px;
-      height: 8px;
-      background: var(--success);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    .live-price .price {
-      font-weight: 700;
-      font-size: 1rem;
-    }
-    .live-price .change {
-      color: var(--success);
-      font-size: 0.85rem;
+      .comparison { grid-template-columns: 1fr; }
+      .demo-container { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -502,9 +205,9 @@
   <nav class="nav">
     <div class="logo"><a href="index.html"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></a></div>
     <div class="links">
-      <a href="#story">Story</a>
-      <a href="#why">Why Bitcoin</a>
-      <a href="#properties">Properties</a>
+      <a href="#what-is-money">What is Money?</a>
+      <a href="#fiat-vs-bitcoin">Fiat vs Bitcoin</a>
+      <a href="#self-custody">Self-Custody</a>
       <a href="#start">Get Started</a>
     </div>
   </nav>
@@ -516,108 +219,126 @@
       <div class="floating-btc">₿</div>
       <div class="floating-btc">₿</div>
     </div>
-    
     <div class="hero-content">
-      <div class="hero-label">LEARN BITCOIN PROPERLY</div>
+      <div class="hero-label">FREE BITCOIN EDUCATION</div>
       <h1>Money, <span class="highlight">Reimagined</span></h1>
       <p>The story of sound money. Understand why Bitcoin changes everything — not just the price, but the fundamental nature of money itself.</p>
       <div class="hero-btns">
-        <a href="#story" class="btn btn-primary">Start Learning →</a>
-        <a href="#why" class="btn btn-secondary">Why It Matters</a>
+        <a href="#what-is-money" class="btn btn-primary">Start Learning →</a>
+        <a href="#fiat-vs-bitcoin" class="btn btn-secondary">Compare</a>
       </div>
     </div>
-    
     <div class="scroll-indicator">
       <span>Scroll to explore</span>
       <div class="line"></div>
     </div>
   </section>
   
-  <!-- THE STORY -->
-  <section id="story" class="section">
+  <!-- WHAT IS MONEY -->
+  <section id="what-is-money" class="section">
     <div class="section-content">
-      <div class="reveal">
-        <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; text-align: center; margin-bottom: 60px;">
-          The Story of <span style="color: var(--primary);">Money</span>
-        </h2>
+      <div class="question-section reveal">
+        <h2>What is <span>Money</span>?</h2>
+        <p class="subtitle">This is the most important question of our time. The answer will change how you see the world.</p>
       </div>
       
-      <div class="reveal" style="text-align: center; max-width: 800px; margin: 0 auto;">
-        <p style="font-size: 1.3rem; color: var(--text2); line-height: 1.8; margin-bottom: 40px;">
-          For 5,000 years, humans used gold as money. It was <span style="color: var(--primary);">scarce</span>, <span style="color: var(--primary);">durable</span>, and <span style="color: var(--primary);">divisible</span>.
-        </p>
-        <p style="font-size: 1.3rem; color: var(--text2); line-height: 1.8; margin-bottom: 40px;">
-          In 1971, that changed. Governments could now print unlimited money. Your savings began to <span style="color: var(--danger);">lose value</span> every year.
-        </p>
-        <p style="font-size: 1.3rem; color: var(--text2); line-height: 1.8;">
-          Then in 2009, someone created <span style="color: var(--primary);">Bitcoin</span>. A new form of money that can't be printed. Ever.
-        </p>
-      </div>
-    </div>
-  </section>
-  
-  <!-- STATS -->
-  <section class="section" style="background: var(--bg2);">
-    <div class="section-content">
-      <div class="stats-grid reveal">
-        <div class="stat-card">
-          <div class="stat-value" id="stat-supply">21M</div>
-          <div class="stat-label">Max Supply</div>
+      <div class="comparison reveal">
+        <div class="comparison-card bad">
+          <div class="icon">💸</div>
+          <h3>Fiat Money</h3>
+          <p>Paper currency backed by... nothing. Governments print it endlessly.</p>
+          <ul>
+            <li>Infinite supply</li>
+            <li>Loses ~3-7% value yearly</li>
+            <li>Can be frozen/seized</li>
+            <li>Requires trusted third parties</li>
+            <li>24/7 printing presses</li>
+          </ul>
         </div>
-        <div class="stat-card">
-          <div class="stat-value">10min</div>
-          <div class="stat-label">Block Time</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">700+</div>
-          <div class="stat-label">EH/s Hash Rate</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">$1.4T</div>
-          <div class="stat-label">Market Cap</div>
+        <div class="comparison-card good">
+          <div class="icon">₿</div>
+          <h3>Bitcoin</h3>
+          <p>Digital gold. Money without masters. Scarce, secure, sovereign.</p>
+          <ul>
+            <li>Fixed 21M supply</li>
+            <li>Deflationary by design</li>
+            <li>Censorship resistant</li>
+            <li>No middlemen needed</li>
+            <li>Halves every 4 years</li>
+          </ul>
         </div>
       </div>
     </div>
   </section>
   
-  <!-- WHY BITCOIN -->
-  <section id="why" class="section">
+  <!-- SELF CUSTODY DEMO -->
+  <section id="self-custody" class="section" style="background: var(--bg2);">
     <div class="section-content">
-      <div class="reveal" style="text-align: center; margin-bottom: 60px;">
-        <h2>Why <span style="color: var(--primary);">Bitcoin</span>?</h2>
-        <p style="color: var(--text2); margin-top: 16px; font-size: 1.2rem;">Five properties that make it sound money</p>
+      <div class="reveal" style="text-align: center; margin-bottom: 40px;">
+        <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800;">Your Keys, <span style="color: var(--primary);">Your Coins</span></h2>
+        <p style="color: var(--text2); margin-top: 16px; font-size: 1.2rem;">Self-custody is financial sovereignty. Here's how it works:</p>
       </div>
       
-      <div class="features">
-        <div class="feature-card reveal">
-          <div class="feature-icon">🎯</div>
-          <h3>Scarcity</h3>
-          <p>Only 21 million will ever exist. No central bank can create more. This is mathematically guaranteed.</p>
+      <div class="wallet-demo reveal">
+        <h3>🔐 Cold Card Mk4 + Sparrow Wallet</h3>
+        <p>The gold standard in Bitcoin security</p>
+        
+        <div class="demo-container">
+          <div class="coldcard-visual">
+            <div class="coldcard-img"></div>
+            <div class="cable"></div>
+          </div>
+          
+          <div class="screenshot-mock">
+            <div class="screenshot-header">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="screenshot-body">
+              <div class="screenshot-row">
+                <span class="label">Wallet</span>
+                <span class="value">Sparrow Wallet</span>
+              </div>
+              <div class="screenshot-row">
+                <span class="label">Device</span>
+                <span class="value">Cold Card Mk4</span>
+              </div>
+              <div class="screenshot-row">
+                <span class="label">Network</span>
+                <span class="value">Bitcoin (Mainnet)</span>
+              </div>
+              <div class="screenshot-row">
+                <span class="label">Balance</span>
+                <span class="value green">₿ 1.24567890</span>
+              </div>
+              <div class="screenshot-row">
+                <span class="label">Status</span>
+                <span class="value green">✓ Connected</span>
+              </div>
+              <div class="screenshot-row">
+                <span class="label">Security</span>
+                <span class="value">Multisig + PIN</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">🛡️</div>
-          <h3>Censorship Resistant</h3>
-          <p>No government can freeze your funds. No bank can block your transactions. True financial freedom.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">🌍</div>
-          <h3>Borderless</h3>
-          <p>Send $1 or $1 billion anywhere in the world in minutes. No middlemen. No borders.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">⚡</div>
-          <h3>Instant</h3>
-          <p>Lightning Network enables micro-transactions at near-zero fees. Bitcoin as digital cash.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">🔐</div>
-          <h3>Self-Custody</h3>
-          <p>Be your own bank. Your keys, your coins. Not your keys, not your coins.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">📊</div>
-          <h3>Verifiable</h3>
-          <p>Every transaction is public. Every coin is traceable. Complete transparency.</p>
+        
+        <div class="demo-steps">
+          <div class="demo-step">
+            <div class="demo-step-num">1</div>
+            <div><strong>Get a hardware wallet</strong> — Cold Card, Ledger, or Trezor. This device stores your private keys offline.</div>
+          </div>
+          <div class="demo-step">
+            <div class="demo-step-num">2</div>
+            <div><strong>Write down your seed phrase</strong> — 12 or 24 words. Write on paper. Store securely. NEVER digitally.</div>
+          </div>
+          <div class="demo-step">
+            <div class="demo-step-num">3</div>
+            <div><strong>Connect to Sparrow Wallet</strong> — Your wallet interface. Never expose your keys to a computer.</div>
+          </div>
+          <div class="demo-step">
+            <div class="demo-step-num">4</div>
+            <div><strong>You're sovereign</strong> — No bank. No government. Your coins, your keys, your freedom.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -626,19 +347,52 @@
   <!-- QUOTE -->
   <section class="quote-section">
     <div class="reveal">
-      <p class="quote-text">"Bitcoin is the most exciting thing in finance since the internet. It's not just a better form of money — it's a fundamental shift in how we think about money itself."</p>
-      <p class="quote-author">— Michael Saylor</p>
+      <p class="quote-text">"Not your keys, not your coins. This is the first rule of Bitcoin."</p>
+      <p class="quote-author">— Bitcoin Community Proverb</p>
     </div>
   </section>
   
-  <!-- GET STARTED -->
+  <!-- WHY BITCOIN -->
+  <section id="fiat-vs-bitcoin" class="section">
+    <div class="section-content">
+      <div class="reveal" style="text-align: center; margin-bottom: 60px;">
+        <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800;">5 Properties of <span style="color: var(--primary);">Sound Money</span></h2>
+      <p style="color: var(--text2); margin-top: 16px; font-size: 1.2rem;">What makes money... money?</p>
+      </div>
+      
+      <div style="display: grid; gap: 24px;">
+        <div class="comparison-card reveal good" style="text-align: left;">
+          <h3>🎯 1. Scarcity</h3>
+          <p>Bitcoin's supply is mathematically fixed at 21 million. No central bank can print more. Ever. This is its most important property.</p>
+        </div>
+        <div class="comparison-card reveal good" style="text-align: left;">
+          <h3>🛡️ 2. Censorship Resistance</h3>
+          <p>No government can freeze your funds. No bank can block transactions. True financial sovereignty.</p>
+        </div>
+        <div class="comparison-card reveal good" style="text-align: left;">
+          <h3>🌍 3. Borderless</h3>
+          <p>Send $1 or $1 billion anywhere in the world in minutes. No middlemen. No borders. No permission needed.</p>
+        </div>
+        <div class="comparison-card reveal good" style="text-align: left;">
+          <h3>⚡ 4. Divisibility</h3>
+          <p>One BTC = 100,000,000 satoshis (sats). Buy $5 worth. No amount is too small.</p>
+        </div>
+        <div class="comparison-card reveal good" style="text-align: left;">
+          <h3>🔐 5. Self-Custody</h3>
+          <p>Be your own bank. Your keys, your coins. Not your keys, not your coins. Hold your wealth yourself.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA -->
   <section id="start" class="cta-section">
     <div class="reveal">
-      <h2>Ready to <span style="color: var(--primary);">Learn</span>?</h2>
+      <h2>Ready to <span style="color: var(--primary);">Own Your Money</span>?</h2>
       <p>Start your journey to financial sovereignty today</p>
       <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
         <a href="paths.html" class="btn btn-primary">Start Learning →</a>
-        <a href="blockchain.html" class="btn btn-secondary">View Live Data</a>
+        <a href="topics.html" class="btn btn-secondary">Explore Topics</a>
       </div>
     </div>
   </section>
@@ -655,50 +409,34 @@
   </div>
   
   <script>
-    // Progress bar
     window.addEventListener('scroll', () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
       document.querySelector('.progress-bar').style.width = scrolled + '%';
-      
-      // Nav background
-      const nav = document.querySelector('.nav');
-      if (winScroll > 50) nav.classList.add('scrolled');
-      else nav.classList.remove('scrolled');
+      document.querySelector('.nav').classList.toggle('scrolled', winScroll > 50);
     });
     
-    // Reveal on scroll
-    const revealElements = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('active');
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     
-    revealElements.forEach(el => observer.observe(el));
-    
-    // Live Price
     async function loadPrice() {
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
         const data = await res.json();
-        const price = data.bitcoin.usd;
-        const change = data.bitcoin.usd_24h_change;
+        const price = data.bitcoin.usd, change = data.bitcoin.usd_24h_change;
         document.getElementById('btc-price').textContent = '$' + price.toLocaleString();
         const changeEl = document.getElementById('btc-change');
         changeEl.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
         changeEl.style.color = change >= 0 ? 'var(--success)' : 'var(--danger)';
-      } catch(e) {
-        document.getElementById('btc-price').textContent = '$70,850';
-      }
+      } catch(e) { document.getElementById('btc-price').textContent = '$70,850'; }
     }
-    loadPrice();
-    setInterval(loadPrice, 30000);
+    loadPrice(); setInterval(loadPrice, 30000);
     
-    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
