@@ -107,29 +107,29 @@
       align-items: center;
       padding: 15px;
     }
-    /* Main device body - REAL Cold Card Mk4 size ~96mm x 62mm x 12mm */
+    /* Main device body - REAL Cold Card Mk4 PROPORTIONAL */
     .coldcard-device { 
-      width: 360px; height: 260px;
+      width: 500px; height: 360px;
       background: linear-gradient(165deg, #181818 0%, #0c0c0c 30%, #121212 60%, #1a1a1a 100%);
-      border-radius: 16px; 
+      border-radius: 20px; 
       border: 2px solid #252525;
       box-shadow: 
-        0 60px 120px rgba(0,0,0,0.95),
+        0 80px 160px rgba(0,0,0,0.95),
         0 0 0 1px rgba(0,0,0,0.9) inset,
         0 1px 1px rgba(255,255,255,0.04) inset,
-        -12px -16px 35px rgba(0,0,0,0.75),
-        12px 16px 35px rgba(0,0,0,0.45),
-        0 0 50px rgba(247,165,38,0.06);
+        -15px -20px 45px rgba(0,0,0,0.75),
+        15px 20px 45px rgba(0,0,0,0.45),
+        0 0 60px rgba(247,165,38,0.06);
       position: relative; 
       display: flex; flex-direction: column; 
-      padding: 12px 16px;
+      padding: 16px 20px;
       transform-style: preserve-3d;
       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
     }
-    .coldcard-device.powered-off { filter: brightness(0.2); }
-    .coldcard-device.powered-off .coldcard-screen { background: #030303 !important; border-color: #0a0a0a !important; }
+    .coldcard-device.powered-off { filter: brightness(0.15); }
+    .coldcard-device.powered-off .coldcard-screen { background: #020202 !important; border-color: #0a0a0a !important; box-shadow: none !important; }
     .coldcard-device.powered-off .coldcard-led { background: #1a1a1a !important; box-shadow: none !important; animation: none !important; }
-    .coldcard-device:hover { transform: translateY(-3px); }
+    .coldcard-device:hover { transform: translateY(-5px); box-shadow: 0 100px 200px rgba(0,0,0,0.9), 0 0 80px rgba(247,165,38,0.1); }
     /* Matte black textured surface */
     .coldcard-device::before {
       content: ''; position: absolute; inset: 0; border-radius: 14px;
@@ -184,20 +184,23 @@
     
     /* === MAIN DISPLAY - Small centered OLED like real Cold Card === */
     .coldcard-screen { 
-      width: 220px;
-      height: 52px;
+      width: 300px;
+      height: 72px;
       align-self: center;
-      margin-bottom: 6px; 
-      background: linear-gradient(180deg, #070d18 0%, #0a1428 50%, #0c1a38 100%); 
+      margin-bottom: 8px; 
+      margin-top: 45px;
+      background: linear-gradient(180deg, #000a14 0%, #0a1428 50%, #0c1a38 100%) !important; 
       border-radius: 8px; 
-      border: 2px solid #1a2a4a;
+      border: 2px solid #1a3a5a;
       box-shadow: 
         inset 0 3px 15px rgba(0,0,0,0.9),
-        0 0 30px rgba(0,255,136,0.06),
+        0 0 40px rgba(0,255,136,0.1),
         0 1px 0 rgba(255,255,255,0.05) inset;
-      display: flex; align-items: center; justify-content: center;
+      display: flex !important;
+      align-items: center; justify-content: center;
       position: relative;
       overflow: hidden;
+      z-index: 10;
     }
     /* Screen scanline effect */
     .coldcard-screen::before { 
@@ -237,31 +240,45 @@
     /* Numeric keypad - Calculator style 4x4 grid */
     /* Compact keypad like real Cold Card */
     .coldcard-keys { 
-      display: grid; 
-      grid-template-columns: repeat(5, 1fr); 
-      gap: 3px; 
+      display: flex;
+      justify-content: center;
+      gap: 4px; 
       width: 100%;
       margin-top: auto;
+      padding: 0 20px;
     }
+    .coldcard-keys .cc-key { flex: 0 0 auto; }
     .cc-key { 
-      width: 100%; aspect-ratio: 1; 
+      width: 42px; height: 38px; 
       /* Small matte black buttons like real device */
-      background: linear-gradient(145deg, #1e1e1e, #141414); 
-      border: 1px solid #252525; border-radius: 4px;
-      transition: all 0.05s;
-      box-shadow: 0 2px 3px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.03);
+      background: linear-gradient(145deg, #1a1a1a, #101010); 
+      border: 1px solid #222; border-radius: 3px;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.02);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: #888;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #777;
     }
-    .cc-key:hover { background: linear-gradient(145deg, #282828, #1e1e1e); border-color: #f7a526; color: #f7a526; }
-    .cc-key:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.8); background: #181818; }
-    .cc-key.active { background: linear-gradient(145deg, #f7a526, #e69420); border-color: #ffcc66; box-shadow: 0 0 12px rgba(247,165,38,0.5); transform: scale(0.95); color: #000; }
+    .cc-key:hover { 
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a); 
+      border-color: #f7a526; 
+      color: #f7a526;
+      box-shadow: 0 0 15px rgba(247,165,38,0.6), 0 2px 4px rgba(0,0,0,0.9);
+      transform: translateY(-1px);
+    }
+    .cc-key:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.9); background: #151515; }
+    .cc-key.active { 
+      background: linear-gradient(145deg, #f7a526, #e69420); 
+      border-color: #ffcc66; 
+      box-shadow: 0 0 20px rgba(247,165,38,0.8), 0 2px 4px rgba(0,0,0,0.5); 
+      transform: scale(0.95); 
+      color: #000; 
+    }
     .cc-key-empty { background: transparent !important; border: none !important; box-shadow: none !important; }
     /* Function keys */
     .cc-key.fn { font-size: 0.5rem; color: #555; }
