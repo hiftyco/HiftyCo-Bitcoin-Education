@@ -913,39 +913,108 @@
             </div>
             <div class="interface-screen" id="wallet-3">
               <div class="cc-screen">
-                <h4>🔐 Create PIN</h4>
-                <p style="color:var(--text2);font-size:0.85rem;margin-bottom:16px;">6+ digits. Don't forget it!</p>
-                <div class="cc-pin-display">
-                  <div class="cc-pin-dot" id="pin1"></div>
-                  <div class="cc-pin-dot" id="pin2"></div>
-                  <div class="cc-pin-dot" id="pin3"></div>
-                  <div class="cc-pin-dot" id="pin4"></div>
+                <!-- Step A: Passphrase Option -->
+                <div id="passphrase-step">
+                  <h4>🔐 Extra Security</h4>
+                  <p style="color:var(--text2);font-size:0.85rem;margin-bottom:20px;">
+                    Add a <strong>BIP39 passphrase</strong>? This adds a 25th word — even if someone finds your 24 words, they can't access your funds without this passphrase.
+                  </p>
+                  
+                  <div style="background:#0a0a0f;border-radius:12px;padding:16px;margin-bottom:20px;">
+                    <p style="color:#aaa;font-size:0.8rem;margin-bottom:12px;">Do you want to add a passphrase?</p>
+                    <button class="cc-btn" onclick="setPassphrase(true)" style="width:100%;margin-bottom:12px;background:linear-gradient(135deg,#f7a526,#e6951a);">
+                      ✅ Yes — I'll add a passphrase
+                    </button>
+                    <button class="cc-btn cc-btn-outline" onclick="setPassphrase(false)" style="width:100%;">
+                      No — just 24 words is enough
+                    </button>
+                  </div>
+                  
+                  <div class="cc-tip" style="font-size:0.75rem;">💡 Professional tip: A passphrase makes your wallet 25 words. Don't lose it — funds are UNRECOVERABLE without it!</div>
                 </div>
-                <div class="cc-keypad">
-                  <button class="cc-key" onclick="enterPin(1)">1</button>
-                  <button class="cc-key" onclick="enterPin(2)">2</button>
-                  <button class="cc-key" onclick="enterPin(3)">3</button>
-                  <button class="cc-key" onclick="enterPin(4)">4</button>
-                  <button class="cc-key" onclick="enterPin(5)">5</button>
-                  <button class="cc-key" onclick="enterPin(6)">6</button>
-                  <button class="cc-key" onclick="enterPin(7)">7</button>
-                  <button class="cc-key" onclick="enterPin(8)">8</button>
-                  <button class="cc-key" onclick="enterPin(9)">9</button>
-                  <button class="cc-key" onclick="clearPin()">⌫</button>
-                  <button class="cc-key" onclick="enterPin(0)">0</button>
-                  <button class="cc-key" onclick="submitPin()">✓</button>
+                
+                <!-- Step B: Enter Passphrase (if Yes) -->
+                <div id="passphrase-input-step" style="display:none;">
+                  <h4>🔑 Set Passphrase</h4>
+                  <p style="color:var(--text2);font-size:0.85rem;margin-bottom:20px;">
+                    Enter a passphrase (case-sensitive). Write this down separately from your seed!
+                  </p>
+                  <input type="text" id="passphrase-input" placeholder="Enter passphrase..." style="width:100%;padding:16px;border-radius:12px;background:#0a0a0f;border:2px solid var(--primary);color:#fff;font-size:1rem;text-align:center;margin-bottom:12px;box-sizing:border-box;">
+                  <button class="cc-btn" onclick="confirmPassphrase()" style="width:100%;">✓ Confirm Passphrase</button>
+                  <button class="cc-btn cc-btn-outline" onclick="skipPassphrase()" style="width:100%;margin-top:8px;">← Back</button>
                 </div>
-                <div class="cc-tip">💡 If you lose your PIN and seed, your bitcoin is GONE FOREVER.</div>
+                
+                <!-- Step C: Create PIN (after passphrase decision) -->
+                <div id="pin-step" style="display:none;">
+                  <h4>🔐 Create PIN</h4>
+                  <p style="color:var(--text2);font-size:0.85rem;margin-bottom:16px;">6+ digits. Don't forget it!</p>
+                  
+                  <div id="passphrase-display" style="display:none;background:rgba(247,165,38,0.15);border:1px solid rgba(247,165,38,0.3);border-radius:8px;padding:10px;margin-bottom:16px;text-align:center;">
+                    <span style="color:var(--primary);font-size:0.8rem;">🔐 Passphrase: </span>
+                    <span id="passphrase-preview" style="color:#00ff88;font-weight:bold;font-size:0.9rem;"></span>
+                  </div>
+                  
+                  <div class="cc-pin-display">
+                    <div class="cc-pin-dot" id="pin1"></div>
+                    <div class="cc-pin-dot" id="pin2"></div>
+                    <div class="cc-pin-dot" id="pin3"></div>
+                    <div class="cc-pin-dot" id="pin4"></div>
+                  </div>
+                  <div class="cc-keypad">
+                    <button class="cc-key" onclick="enterPin(1)">1</button>
+                    <button class="cc-key" onclick="enterPin(2)">2</button>
+                    <button class="cc-key" onclick="enterPin(3)">3</button>
+                    <button class="cc-key" onclick="enterPin(4)">4</button>
+                    <button class="cc-key" onclick="enterPin(5)">5</button>
+                    <button class="cc-key" onclick="enterPin(6)">6</button>
+                    <button class="cc-key" onclick="enterPin(7)">7</button>
+                    <button class="cc-key" onclick="enterPin(8)">8</button>
+                    <button class="cc-key" onclick="enterPin(9)">9</button>
+                    <button class="cc-key" onclick="clearPin()">⌫</button>
+                    <button class="cc-key" onclick="enterPin(0)">0</button>
+                    <button class="cc-key" onclick="submitPin()">✓</button>
+                  </div>
+                  <div class="cc-tip">💡 If you lose your PIN and seed, your bitcoin is GONE FOREVER.</div>
+                </div>
               </div>
             </div>
             <div class="interface-screen" id="wallet-4">
               <div class="cc-screen">
                 <h4>📥 Receive Bitcoin</h4>
                 <p style="color:var(--text2);font-size:0.85rem;margin-bottom:16px;">Share this address to receive bitcoin:</p>
-                <div class="cc-address">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
-                <button class="cc-btn" onclick="nextWalletSim(1)">Copy Address</button>
-                <button class="cc-btn cc-btn-outline" onclick="nextWalletSim(1)">Show QR</button>
-                <div class="cc-tip">💡 This address starts with bc1 — it's a native SegWit address (lowest fees).</div>
+                
+                <!-- Real Address Display -->
+                <div class="cc-address" id="receive-address" style="font-size:0.7rem;word-break:break-all;padding:12px;background:#0a0a0f;border-radius:8px;border:1px solid var(--primary);margin-bottom:12px;">
+                  Loading...
+                </div>
+                
+                <!-- Real QR Code -->
+                <div id="receive-qr" style="background:#fff;padding:12px;border-radius:12px;margin:16px 0;display:flex;justify-content:center;">
+                  <img id="qr-image" src="" alt="Address QR Code" style="width:180px;height:180px;">
+                </div>
+                
+                <!-- Action Buttons -->
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                  <button class="cc-btn" onclick="copyReceiveAddress()" style="flex:1;min-width:120px;">📋 Copy Address</button>
+                  <button class="cc-btn cc-btn-outline" onclick="downloadQR()" style="flex:1;min-width:120px;">⬇️ Save QR</button>
+                </div>
+                
+                <div class="cc-tip" style="margin-top:16px;">💡 This address starts with bc1 — it's a native SegWit address (lowest fees).</div>
+                
+                <!-- Wallet Export (after create) -->
+                <button class="cc-btn" onclick="toggleExportPanel()" style="margin-top:20px;background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:1px solid var(--primary);">
+                  🔐 Export Wallet
+                </button>
+                
+                <div id="wallet-export-panel" style="display:none;background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:1px solid var(--success);border-radius:12px;padding:16px;margin-top:16px;">
+                  <h5 style="color:var(--success);margin:0 0 12px;">💾 Export Wallet</h5>
+                  <p style="color:#aaa;font-size:0.75rem;margin-bottom:12px;">Backup your seed phrase. Keep these files SECURE!</p>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="cc-btn" onclick="exportWallet('json')" style="font-size:0.8rem;padding:10px 14px;">💾 Sparrow JSON</button>
+                    <button class="cc-btn" onclick="exportWallet('text')" style="font-size:0.8rem;padding:10px 14px;">📄 Seed Words</button>
+                    <button class="cc-btn" onclick="exportWallet('sparrow')" style="font-size:0.8rem;padding:10px 14px;background:#0071c5;">📱 Sparrow Import</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1611,9 +1680,9 @@
     }
     
     // Generate derived address from seed (simplified - real implementation would use BIP32)
-    function deriveAddress(seedWords) {
-      // Create a simple hash from seed words for demo address
-      const seedString = seedWords.join(' ');
+    function deriveAddress(seedWords, passphrase = '') {
+      // Create a simple hash from seed words + passphrase for demo address
+      const seedString = seedWords.join(' ') + passphrase;
       const hash = simpleHash(new TextEncoder().encode(seedString));
       const address = 'bc1q' + hash.toString(16).padStart(39, '0').slice(0, 39);
       return address;
@@ -1623,6 +1692,7 @@
     let REAL_WALLET = {
       mnemonic: null,
       address: null,
+      passphrase: '',
       created: false
     };
     
@@ -1951,9 +2021,108 @@
       const modal = document.getElementById('verify-modal');
       if (modal) modal.remove();
       
-      // Move to PIN step
-      nextWalletSim(3);
+      // Move to passphrase step (step 3 in UI = wallet-3)
+      switchSim('wallet', 3);
       seedVerified = true;
+    }
+    
+    // BIP39 Passphrase handling
+    let walletPassphrase = '';
+    let hasPassphrase = false;
+    
+    function setPassphrase(yes) {
+      if (yes) {
+        document.getElementById('passphrase-step').style.display = 'none';
+        document.getElementById('passphrase-input-step').style.display = 'block';
+      } else {
+        walletPassphrase = '';
+        hasPassphrase = false;
+        document.getElementById('passphrase-step').style.display = 'none';
+        document.getElementById('pin-step').style.display = 'block';
+      }
+    }
+    
+    function confirmPassphrase() {
+      const input = document.getElementById('passphrase-input');
+      walletPassphrase = input.value.trim();
+      
+      if (walletPassphrase.length === 0) {
+        alert('Please enter a passphrase or choose No');
+        return;
+      }
+      
+      hasPassphrase = true;
+      document.getElementById('passphrase-input-step').style.display = 'none';
+      document.getElementById('pin-step').style.display = 'block';
+      
+      // Show passphrase preview (masked)
+      const preview = document.getElementById('passphrase-preview');
+      const display = document.getElementById('passphrase-display');
+      if (preview) preview.textContent = walletPassphrase.slice(0, 2) + '••••••••';
+      if (display) display.style.display = 'block';
+      
+      // Regenerate wallet with passphrase
+      if (REAL_WALLET.mnemonic) {
+        const newAddr = deriveAddress(REAL_WALLET.mnemonic, walletPassphrase);
+        REAL_WALLET.address = newAddr;
+        REAL_WALLET.passphrase = walletPassphrase;
+      }
+    }
+    
+    function skipPassphrase() {
+      document.getElementById('passphrase-input-step').style.display = 'none';
+      document.getElementById('passphrase-step').style.display = 'block';
+    }
+    
+    function selectSeedLength(len) {
+      selectedSeedLength = len;
+      
+      // Update button styles
+      document.querySelectorAll('.seed-length-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.textContent.includes(len)) btn.classList.add('selected');
+      });
+    }
+    
+    // ============ RECEIVE SECTION FUNCTIONS ============
+    
+    function updateReceiveScreen() {
+      if (!REAL_WALLET.created) return;
+      
+      const address = REAL_WALLET.address;
+      const addrEl = document.getElementById('receive-address');
+      const qrImg = document.getElementById('qr-image');
+      
+      if (addrEl) addrEl.textContent = address;
+      
+      // Generate real QR code
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(address)}`;
+      }
+    }
+    
+    function copyReceiveAddress() {
+      if (!REAL_WALLET.address) return;
+      navigator.clipboard.writeText(REAL_WALLET.address).then(() => {
+        alert('✅ Address copied to clipboard!');
+      });
+    }
+    
+    function downloadQR() {
+      if (!REAL_WALLET.address) return;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(REAL_WALLET.address)}`;
+      
+      const a = document.createElement('a');
+      a.href = qrUrl;
+      a.download = `bitcoin-receive-${REAL_WALLET.address.slice(0,8)}.png`;
+      a.click();
+    }
+    
+    function toggleExportPanel() {
+      const panel = document.getElementById('wallet-export-panel');
+      if (panel) {
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      }
     }
     
     // Update the wallet words UI in the instruction panel - IMPROVED for all words
@@ -2044,13 +2213,17 @@
     function exportWallet(format) {
       if (!REAL_WALLET.created) return;
       
+      const passphrase = walletPassphrase || '';
+      
       let content, filename, type;
       
       if (format === 'json') {
         // Sparrow-compatible JSON format
         content = JSON.stringify({
           mnemonic: REAL_WALLET.mnemonic,
+          passphrase: passphrase,
           address: REAL_WALLET.address,
+          hasPassphrase: passphrase.length > 0,
           created: new Date().toISOString(),
           derivationPath: "m/84'/0'/0'", // BIP84 for native SegWit
           scriptType: 'P2WPKH',
@@ -2060,7 +2233,11 @@
         type = 'application/json';
       } else if (format === 'text') {
         // Plain text seed for import
-        content = REAL_WALLET.mnemonic.join('\n');
+        let text = REAL_WALLET.mnemonic.join('\n');
+        if (passphrase) {
+          text += '\n\n# BIP39 Passphrase: ' + passphrase;
+        }
+        content = text;
         filename = 'seed-phrase.txt';
         type = 'text/plain';
       } else if (format === 'sparrow') {
@@ -2068,7 +2245,7 @@
         const sparrowData = JSON.stringify({
           type: 'BIP39',
           mnemonic: REAL_WALLET.mnemonic.join(' '),
-          passphrase: '',
+          passphrase: passphrase,
           derivationPath: "m/84'/0'/0'",
           scriptType: 'P2WPKH'
         });
@@ -2361,11 +2538,19 @@ Backup: ✓`, status: 'Done'}
         case 6: // Ready - show address
           const screen = document.getElementById('cc-screen-text');
           if (screen && REAL_WALLET.created) {
+            // Set passphrase in wallet
+            REAL_WALLET.passphrase = walletPassphrase;
+            
             const addr = REAL_WALLET.address;
             const shortAddr = addr.slice(0, 12) + '...' + addr.slice(-6);
-            screen.innerHTML = `<div class="screen-content"><div style="font-size:0.55rem;color:#00ff88;margin-bottom:3px;">✅ WALLET READY!</div><div style="font-size:0.35rem;color:#00aa66;word-break:break-all;">${addr.slice(0,20)}</div><div style="font-size:0.35rem;color:#00aa66;">...${addr.slice(-15)}</div><div style="font-size:0.35rem;color:#f7a526;margin-top:5px;">✓ BACKED UP</div></div>`;
-            // Show export panel
-            showWalletExportPanel();
+            const hasPass = walletPassphrase ? '🔐' : '';
+            screen.innerHTML = `<div class="screen-content"><div style="font-size:0.55rem;color:#00ff88;margin-bottom:3px;">✅ WALLET READY! ${hasPass}</div><div style="font-size:0.35rem;color:#00aa66;word-break:break-all;">${addr.slice(0,20)}</div><div style="font-size:0.35rem;color:#00aa66;">...${addr.slice(-15)}</div><div style="font-size:0.35rem;color:#f7a526;margin-top:5px;">✓ BACKED UP</div></div>`;
+            
+            // Update receive screen with real address
+            setTimeout(() => {
+              switchSim('wallet', 4); // Go to Receive tab
+              updateReceiveScreen();
+            }, 1000);
           }
           break;
       }
