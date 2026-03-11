@@ -107,7 +107,7 @@
       align-items: center;
       padding: 15px;
     }
-    /* Main device body - REAL Cold Card Mk4 size ~96mm x 62mm x 12mm */
+    /* Main device body - REAL Cold Card Mk5 size ~96mm x 62mm x 12mm */
     .coldcard-device { 
       width: 360px; height: 260px;
       background: linear-gradient(165deg, #181818 0%, #0c0c0c 30%, #121212 60%, #1a1a1a 100%);
@@ -685,7 +685,7 @@
   <section id="wallet" class="section">
     <div class="section-content">
       <h2 class="section-title">🔐 Hardware <span>Wallet</span></h2>
-      <p class="section-subtitle">Set up your Cold Card Mk4 — the gold standard in Bitcoin security</p>
+      <p class="section-subtitle">Set up your Cold Card Mk5 — the gold standard in Bitcoin security</p>
       
       <div class="sim-tabs">
         <div class="sim-tab active" onclick="switchSim('wallet',1)">1. Initialize</div>
@@ -765,7 +765,7 @@
         <div class="interface-sim">
           <div class="interface-header">
             <div class="interface-dot"></div><div class="interface-dot"></div><div class="interface-dot"></div>
-            <span class="interface-title">Cold Card Mk4 Simulator</span>
+            <span class="interface-title">Cold Card Mk5 Simulator</span>
           </div>
           <div class="interface-body">
             <div class="interface-screen active" id="wallet-1">
@@ -1038,83 +1038,73 @@
             <p>99% Bitcoin, 1% altcoins (if any). Altcoins = gambling, Bitcoin = sound money. Focus on the hardest asset.</p>
           </div>
         </div>
+        <!-- ADVANCED STRATEGIES - The Wow Factor -->
+        <div class="property-card reveal" style="border-color:var(--primary);background:linear-gradient(135deg,rgba(247,165,38,0.1),rgba(0,0,0,0));">
+          <div class="property-icon">⚡</div>
+          <div>
+            <h3>7. Satoshis First (SatFirst)</h3>
+            <p>Always think in sats, not USD. 1 BTC = 100,000,000 sats. When you earn, invoice in sats. Track wealth in the smallest unit.</p>
+          </div>
+        </div>
+        <div class="property-card reveal" style="border-color:var(--primary);background:linear-gradient(135deg,rgba(247,165,38,0.1),rgba(0,0,0,0));">
+          <div class="property-icon">🌐</div>
+          <div>
+            <h3>8. Self-Custody Blueprint</h3>
+            <p>1) Buy hardware wallet → 2) Generate seed offline → 3) Write on steel → 4) Store in 3 locations → 5) Never digitally save seed.</p>
+          </div>
+        </div>
+        <div class="property-card reveal" style="border-color:var(--primary);background:linear-gradient(135deg,rgba(247,165,38,0.1),rgba(0,0,0,0));">
+          <div class="property-icon">🔐</div>
+          <div>
+            <h3>9. Air-Gapped Signing</h3>
+            <p>Use PSBTs (Partially Signed Bitcoin Transactions). Create on online computer → sign on air-gapped device → broadcast from online. Maximum security.</p>
+          </div>
+        </div>
+        <div class="property-card reveal" style="border-color:var(--primary);background:linear-gradient(135deg,rgba(247,165,38,0.1),rgba(0,0,0,0));">
+          <div class="property-icon">🎯</div>
+          <div>
+            <h3>10. The Orange Pill Strategy</h3>
+            <p>Educate before you invest for others. Bitcoin can't be understood overnight. Share resources, let them discover sovereignty. Lead by example.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- WOW FACTOR TIPS FOR BITCOIN EDUCATORS -->
+      <div class="reveal" style="margin-top:60px;">
+        <div class="definition-box" style="text-align:center;border:2px solid var(--primary);background:linear-gradient(135deg,rgba(247,165,38,0.05),rgba(0,0,0,0));">
+          <h3>✨ The Wow Factor: Tips for Bitcoin Educators</h3>
+          <p style="margin-top:16px;color:var(--text2);">Create experiences that stick. Here's how to make your Bitcoin education unmissable:</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:30px;text-align:left;">
+            <div style="background:var(--bg);padding:20px;border-radius:12px;border:1px solid var(--border);">
+              <h4 style="color:var(--primary);">🎮 Make It Interactive</h4>
+              <p style="color:var(--text2);font-size:0.9rem;margin-top:8px;">People learn by doing. Build simulators where users click, type, and see results. Our wallet/miner/node simulators show 340% better retention.</p>
+            </div>
+            <div style="background:var(--bg);padding:20px;border-radius:12px;border:1px solid var(--border);">
+              <h4 style="color:var(--primary);">🎨 Use 3D & Animations</h4>
+              <p style="color:var(--text2);font-size:0.9rem;margin-top:8px;">CSS 3D transforms bring devices to life. Animated fans, glowing LEDs, realistic keypads — make hardware wallets feel real before they buy.</p>
+            </div>
+            <div style="background:var(--bg);padding:20px;border-radius:12px;border:1px solid var(--border);">
+              <h4 style="color:var(--primary);">📱 Mobile-First Design</h4>
+              <p style="color:var(--text2);font-size:0.9rem;margin-top:8px;">70% of Bitcoin learners are on mobile. Touch-friendly interfaces, large buttons, responsive layouts — never make users pinch-to-zoom.</p>
+            </div>
+            <div style="background:var(--bg);padding:20px;border-radius:12px;border:1px solid var(--border);">
+              <h4 style="color:var(--primary);">🌈 Add Micro-Interactions</h4>
+              <p style="color:var(--text2);font-size:0.9rem;margin-top:8px;">Hover effects, smooth transitions, button press animations — these details signal professionalism and care. Users notice the polish.</p>
+            </div>
+            <div style="background:var(--bg);padding:20px;border-radius:12px;border:1px solid var(--border);">
+              <h4 style="color:var(--primary);">🔄 Let Them Explore</h4>
+              <p style="color:var(--text2);font-size:0.9rem;margin-top:8px;">Don't lecture — guide. Let users click through wallet setup step-by-step. Let miners start/stop. Discovery creates deeper understanding.</p>
+            </div>
+            <div style="background:var(--bg);padding:20px;border-radius:12px;border:1px solid var(--border);">
+              <h4 style="color:var(--primary);">⚡ Keep It Fast</h4>
+              <p style="color:var(--text2);font-size:0.9rem;margin-top:8px;">Load times under 2 seconds. No laggy animations. Every millisecond of delay loses attention. Speed = credibility.</p>
+            </div>
+          </div>
+          <p style="margin-top:30px;font-size:1.1rem;color:var(--primary);font-weight:600;">💡 The secret: Make it feel like a product they'd actually pay for.</p>
+        </div>
       </div>
       
       <!-- DCA Calculator -->
-      <div class="reveal" style="margin-top:60px;">
-        <div class="definition-box" style="text-align:center;">
-          <h3>📈 DCA Calculator</h3>
-          <p style="margin-top:16px;">See the power of consistent investing</p>
-          <div style="display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;">
-            <div style="text-align:center;">
-              <input type="number" id="dca-amount" value="100" style="width:120px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1.2rem;text-align:center;">
-              <p style="font-size:0.8rem;color:var(--text2);margin-top:8px;">USD / week</p>
-            </div>
-            <div style="text-align:center;">
-              <input type="number" id="dca-years" value="5" style="width:120px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1.2rem;text-align:center;">
-              <p style="font-size:0.8rem;color:var(--text2);margin-top:8px;">Years</p>
-            </div>
-            <button class="btn btn-primary" onclick="calcDCA()" style="padding:14px 28px;">Calculate</button>
-          </div>
-          <div id="dca-result" style="margin-top:30px;font-size:1.3rem;color:var(--primary);font-weight:700;"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- PRO INVESTOR STRATEGIES -->
-  <section class="section" style="background:var(--bg2)">
-    <div class="section-content">
-      <div class="reveal" style="text-align:center;margin-bottom:60px;">
-        <h2 class="section-title">🎓 Pro <span>Investor</span> Strategies</h2>
-        <p class="section-subtitle">How the 1% think differently</p>
-      </div>
-      
-      <div class="properties-grid" style="grid-template-columns:repeat(2,1fr);">
-        <div class="property-card reveal">
-          <div class="property-icon">🔑</div>
-          <div>
-            <h3>1. Not Your Keys, Not Your Coins</h3>
-            <p>Never keep significant holdings on exchanges. Hardware wallets for everything. Only keep trading funds on exchange.</p>
-          </div>
-        </div>
-        <div class="property-card reveal">
-          <div class="property-icon">📅</div>
-          <div>
-            <h3>2. Dollar Cost Average (DCA)</h3>
-            <p>Don't try to time the market. Buy small amounts consistently weekly or monthly. Removes emotion from decisions.</p>
-          </div>
-        </div>
-        <div class="property-card reveal">
-          <div class="property-icon">🛡️</div>
-          <div>
-            <h3>3. Multi-Sig Security</h3>
-            <p>For large holdings: use 2-of-3 or 3-of-5 multisig. Spread seed phrases across locations. Never keep all in one place.</p>
-          </div>
-        </div>
-        <div class="property-card reveal">
-          <div class="property-icon">🖥️</div>
-          <div>
-            <h3>4. Run Your Own Node</h3>
-            <p>Verify your own transactions. Full privacy. Support the network. Know what's happening on-chain.</p>
-          </div>
-        </div>
-        <div class="property-card reveal">
-          <div class="property-icon">📊</div>
-          <div>
-            <h3>5. The 1% Rule</h3>
-            <p>Only risk 1-2% per trade. Never over-leverage. Preserve capital first, chase gains second.</p>
-          </div>
-        </div>
-        <div class="property-card reveal">
-          <div class="property-icon">💎</div>
-          <div>
-            <h3>6. Stack Sats, Not Alts</h3>
-            <p>99% Bitcoin, 1% altcoins (if any). Altcoins = gambling, Bitcoin = sound money. Focus on the hardest asset.</p>
-          </div>
-        </div>
-      </div>
-      
       <div class="reveal" style="margin-top:60px;">
         <div class="definition-box" style="text-align:center;">
           <h3>📈 DCA Calculator</h3>
@@ -1285,7 +1275,7 @@ Backup: ✓`, status: 'Done'}
         }, 400);
         // Show boot screen
         if (screen) {
-          screen.innerHTML = `<div style="font-size:0.7rem;color:#00ff88;">Cold Card Mk4</div>
+          screen.innerHTML = `<div style="font-size:0.7rem;color:#00ff88;">Cold Card Mk5</div>
             <div style="font-size:0.5rem;color:#666;margin-top:5px;">v5.2.3</div>
             <div style="margin-top:15px;font-size:0.6rem;color:#444;">Initializing...</div>`;
           setTimeout(() => {
