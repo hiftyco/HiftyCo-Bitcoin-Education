@@ -2903,7 +2903,6 @@
     let totalShares = 0;
     let totalEarned = 0;
     let btcPrice = 70000;
-    let totalShares = 0;
     let validShares = 0;
     let rejectedShares = 0;
     let powerCostPerKwh = 0.12;
@@ -2913,9 +2912,7 @@
     let hashrateHistory = [];
     let uptimeSeconds = 0;
     let currentWatts = 0;
-    let powerCostPerKwh = 0.10;
     let blocksFound = 0;
-    let uptimeSeconds = 0;
     let uptimeInterval;
     
     let currentAsic = asicModels[selectedAsic];
@@ -3087,7 +3084,7 @@
         destination.classList.add('active');
         status.textContent = 'Mining ⚡';
         status.style.color = '#f7931a';
-      } else if (proPowered) {
+      } else if (isPowered) {
         destination.classList.remove('mining');
         destination.classList.add('active');
         status.textContent = 'Powered On';
