@@ -1002,8 +1002,14 @@
                 <div class="cc-tip" style="margin-top:16px;">💡 This address starts with bc1 — it's a native SegWit address (lowest fees).</div>
                 
                 <!-- Wallet Export (after create) -->
-                <button class="cc-btn" onclick="toggleExportPanel()" style="margin-top:20px;background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:1px solid var(--primary);">
+                <button class="cc-btn" onclick="toggleExportPanel()" style="margin-top:12px;background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:1px solid var(--primary);">
                   🔐 Export Wallet
+                </button>
+                <button class="cc-btn" onclick="createNewWallet()" style="margin-top:12px;background:linear-gradient(135deg,#2a1a1a,#1a0f0f);border:1px solid #ff5f56;">
+                  🆕 New Wallet
+                </button>
+                <button class="cc-btn" onclick="connectColdCard()" id="connect-cc-btn" style="margin-top:12px;background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:1px solid #f7a526;">
+                  🔗 Connect Cold Card
                 </button>
                 
                 <div id="wallet-export-panel" style="display:none;background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:1px solid var(--success);border-radius:12px;padding:16px;margin-top:16px;">
@@ -1737,6 +1743,149 @@
       setTimeout(() => updateReceiveScreen(), 100);
       
       return words;
+    }
+    
+    // Create new wallet - reset and start fresh
+    function createNewWallet() {
+      // Reset wallet state
+      REAL_WALLET = {
+        created: false,
+        address: null,
+        mnemonic: null,
+        wordCount: 0,
+        passphrase: null
+      };
+      
+      // Reset UI state
+      walletStep = 0;
+      seedVerified = false;
+      pinBuffer = '';
+      enteredPin = '';
+      walletPassphrase = null;
+      
+      // Update Cold Card screen to show menu
+      updateDeviceScreen(0);
+      
+      // Auto-select 24 words and enable create button
+      setTimeout(() => selectSeedLength(24), 100);
+      
+      // Show notification
+      const notif = document.createElement('div');
+      notif.style.cssText = 'position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#1a2a1a,#0f1a0f);border:1px solid #00ff88;border-radius:8px;padding:12px 20px;color:#00ff88;z-index:9999;';
+      notif.textContent = '🔄 New wallet created - ready to generate!';
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 3000);
+    }
+    
+    // WebUSB - Connect to real Cold Card
+    let coldCardDevice = null;
+    
+    async function connectColdCard() {
+      const btn = document.getElementById('connect-cc-btn');
+      
+      if (!navigator.usb) {
+        alert('WebUSB not supported. Use Chrome or Edge browser.');
+        return;
+      }
+      
+      try {
+        btn.innerHTML = '⏳ Searching for Cold Card...';
+        btn.disabled = true;
+        
+        // Request device - Cold Card Vendor ID is typically 0x2B7C or use filter
+        const device = await navigator.usb.requestDevice({
+          filters: [
+            { vendorId: 0x2B7C },  // Cold Card Co
+            { vendorId: 0x0483 }, // STMicroelectronics (some models)
+            { vendorId: 0x1209 }, // General
+            { vendorId: 0x10D4 }  // Coinkite (Coldcard)
+          ]
+        });
+        
+        if (!device) {
+          btn.innerHTML = '🔗 Connect Cold Card';
+          btn.disabled = false;
+          return;
+        }
+        
+        coldCardDevice = device;
+        
+        // Connect to device
+        await device.open();
+        if (device.configuration === null) {
+          await device.selectConfiguration(1);
+        }
+        await device.claimInterface(0);
+        
+        // Update button
+        btn.innerHTML = '✅ Cold Card Connected!';
+        btn.style.borderColor = '#00ff88';
+        
+        // Show connected state
+        const notif = document.createElement('div');
+        notif.style.cssText = 'position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#1a2a1a,#0f1a0f);border:1px solid #00ff88;border-radius:8px;padding:12px 20px;color:#00ff88;z-index:9999;';
+        notif.textContent = `🔗 Connected to Cold Card: ${device.productName || 'Device'}`;
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 3000);
+        
+        // Try to get seed from device
+        await readSeedFromColdCard();
+        
+      } catch (err) {
+        console.error('WebUSB Error:', err);
+        btn.innerHTML = '❌ Connection Failed';
+        btn.disabled = false;
+        
+        if (err.name === 'NotFoundError') {
+          alert('No Cold Card found. Make sure your Cold Card is connected via USB.');
+        } else if (err.name === 'SecurityError') {
+          alert('Connection blocked. Try again and accept the USB device.');
+        } else {
+          alert('Could not connect: ' + err.message);
+        }
+      }
+    }
+    
+    // Read seed from Cold Card via USB
+    async function readSeedFromColdCard() {
+      if (!coldCardDevice) return;
+      
+      try {
+        // Cold Card uses bulk transfer - send command to get seed
+        const encoder = new TextEncoder();
+        const command = encoder.encode('dump-seed\n');
+        
+        // Transfer OUT (send command)
+        await coldCardDevice.transferOut(1, command);
+        
+        // Transfer IN (read response)
+        const result = await coldCardDevice.transferIn(1, 1024);
+        
+        if (result.data && result.data.byteLength > 0) {
+          const decoder = new TextDecoder();
+          const response = decoder.decode(result.data);
+          
+          // Parse seed words from response
+          const words = response.trim().split(/\s+/);
+          
+          if (words.length === 12 || words.length === 24) {
+            // Valid seed - import it!
+            REAL_WALLET.mnemonic = words;
+            REAL_WALLET.address = deriveAddress(words);
+            REAL_WALLET.created = true;
+            REAL_WALLET.wordCount = words.length;
+            
+            // Update UI
+            setTimeout(() => updateReceiveScreen(), 100);
+            
+            alert(`✅ Imported ${words.length}-word seed from Cold Card!\n\nAddress: ${REAL_WALLET.address.slice(0, 20)}...`);
+          }
+        }
+      } catch (err) {
+        console.error('Read seed error:', err);
+        // Try alternative method - just indicate connection
+        alert('🔗 Cold Card connected! For seed import, use the Cold Card menu: Advanced > Export Seed > USB');
+      }
     }
     
     // Start wallet creation flow
