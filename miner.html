@@ -2268,6 +2268,338 @@
     .miner-device.powered-off .fan-container .fan-blade {
       animation: none !important;
     }
+    
+    /* ===== MINER VISUAL ===== */
+    .miner-visual-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    .miner-cable {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .miner-cable:hover {
+      transform: scale(1.05);
+    }
+    
+    .cable-socket {
+      width: 28px;
+      height: 36px;
+      background: #0a0a0a;
+      border: 2px solid #333;
+      border-radius: 4px;
+      position: relative;
+      margin-bottom: 4px;
+    }
+    
+    .cable-label {
+      font-size: 0.6rem;
+      color: var(--text3);
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .cable-status {
+      font-size: 0.5rem;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 2px;
+    }
+    
+    .cable-status.connected {
+      color: #00ff88;
+    }
+    
+    .cable-status.disconnected {
+      color: #ff4757;
+    }
+    
+    .cable-plug {
+      position: absolute;
+      background: linear-gradient(180deg, #333, #1a1a1a);
+      border-radius: 3px;
+      transition: all 0.3s;
+      opacity: 0.3;
+    }
+    
+    .cable-plug.connected {
+      opacity: 1;
+      background: linear-gradient(180deg, #ffc107, #e6a700);
+      box-shadow: 0 0 10px rgba(255,193,7,0.5);
+    }
+    
+    .cable-plug.connected.network {
+      background: linear-gradient(180deg, #00d4ff, #0099cc);
+      box-shadow: 0 0 10px rgba(0,212,255,0.5);
+    }
+    
+    /* Miner Device Visual */
+    .miner-device {
+      width: 280px;
+      background: linear-gradient(180deg, #1e1e24 0%, #12121a 50%, #1a1a22 100%);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+      border: 1px solid #2a2a35;
+      position: relative;
+      transition: all 0.4s;
+      cursor: pointer;
+    }
+    
+    .miner-device:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 50px 100px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    
+    .miner-device.powered-on {
+      border-color: #00ff88;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 30px rgba(0,255,136,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    
+    .miner-device.mining {
+      border-color: #f7931a;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 40px rgba(247,147,26,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+      animation: miningGlow 2s ease-in-out infinite;
+    }
+    
+    @keyframes miningGlow {
+      0%, 100% { box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 30px rgba(247,147,26,0.2); }
+      50% { box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 50px rgba(247,147,26,0.4); }
+    }
+    
+    .miner-brand {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .miner-brand-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f7931a, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .miner-leds {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .miner-led {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      box-shadow: none;
+      transition: all 0.3s;
+    }
+    
+    .miner-led.pwr {
+      background: #1a1a1a;
+    }
+    
+    .miner-led.pwr.on {
+      background: #00ff88;
+      box-shadow: 0 0 10px rgba(0,255,136,0.8);
+    }
+    
+    .miner-led.net {
+      background: #1a1a1a;
+    }
+    
+    .miner-led.net.on {
+      background: #00d4ff;
+      box-shadow: 0 0 10px rgba(0,212,255,0.8);
+    }
+    
+    .miner-led.fan {
+      background: #1a1a1a;
+    }
+    
+    .miner-led.fan.on {
+      background: #fff;
+      box-shadow: 0 0 12px rgba(255,255,255,0.8);
+      animation: ledPulse 1s ease-in-out infinite;
+    }
+    
+    @keyframes ledPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .miner-display {
+      background: #0a0a0f;
+      border: 1px solid #252530;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    
+    .miner-display-val {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #00ff88;
+      text-shadow: 0 0 20px rgba(0,255,136,0.5);
+    }
+    
+    .miner-display-unit {
+      font-size: 0.65rem;
+      color: #666;
+      margin-top: 2px;
+    }
+    
+    .miner-fans {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+    
+    .miner-fan {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #1a1a1f 0deg, #2a2a30 30deg, #1a1a1f 60deg, #2a2a30 90deg, #1a1a1f 120deg, #2a2a30 150deg, #1a1a1f 180deg, #2a2a30 210deg, #1a1a1f 240deg, #2a2a30 270deg, #1a1a1f 300deg, #2a2a30 330deg, #1a1a1f 360deg);
+      position: relative;
+      border: 2px solid #333;
+    }
+    
+    .miner-fan::after {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: #0a0a0f;
+    }
+    
+    .miner-fan.on {
+      animation: fanSpin 0.1s linear infinite;
+      border-color: #00ff88;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
+    }
+    
+    @keyframes fanSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .miner-led-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .miner-fan.on .miner-led-ring {
+      opacity: 1;
+      border-color: rgba(255,255,255,0.5);
+      animation: ringGlow 1s ease-in-out infinite;
+    }
+    
+    @keyframes ringGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(255,255,255,0.3), inset 0 0 10px rgba(255,255,255,0.1); }
+      50% { box-shadow: 0 0 25px rgba(255,255,255,0.6), inset 0 0 20px rgba(255,255,255,0.3); }
+    }
+    
+    .miner-ports {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .miner-port {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .port-icon {
+      font-size: 0.8rem;
+    }
+    
+    .port-label {
+      font-size: 0.45rem;
+      color: #555;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Solar Panel on Miner */
+    .miner-solar-panel {
+      position: absolute;
+      top: -30px;
+      right: -20px;
+      width: 60px;
+      height: 40px;
+      background: linear-gradient(135deg, #1e3a5f 0%, #0d1f33 100%);
+      border: 2px solid #2a4a6f;
+      border-radius: 4px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 2px;
+      padding: 3px;
+      opacity: 0.6;
+      transition: all 0.3s;
+    }
+    
+    .miner-solar-panel.active {
+      opacity: 1;
+      border-color: #ffc107;
+      box-shadow: 0 0 20px rgba(255,193,7,0.4);
+    }
+    
+    .solar-cell-mini {
+      background: linear-gradient(135deg, #0a1628, #1e3a5f);
+      border-radius: 1px;
+    }
+    
+    .miner-solar-panel.active .solar-cell-mini {
+      background: linear-gradient(135deg, #1a3a5f, #2a5a8f);
+      box-shadow: inset 0 0 5px rgba(255,193,7,0.3);
+    }
+    
+    /* Power Button */
+    .miner-power-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #1a1a1f, #0a0a0d);
+      border: 2px solid #333;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1rem;
+      margin: 0 auto;
+      transition: all 0.2s;
+    }
+    
+    .miner-power-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .miner-power-btn.on {
+      border-color: #00ff88;
+      box-shadow: 0 0 15px rgba(0,255,136,0.5);
+    }
   </style>
 </head>
 <body>
@@ -2477,6 +2809,82 @@
                 </div>
               </div>
               <button class="boost-btn" id="boostBtn" onclick="toggleBoost()" disabled>⚡ Activate Boost</button>
+            </div>
+            
+            <!-- Miner Visual -->
+            <div class="miner-visual-container">
+              <!-- Power Cable -->
+              <div class="miner-cable" onclick="toggleMinerCable('power')">
+                <div class="cable-socket">
+                  <div class="cable-plug" id="minerPowerPlug" style="top:6px;left:4px;width:20px;height:24px;"></div>
+                </div>
+                <div class="cable-label">POWER</div>
+                <div class="cable-status disconnected" id="minerPowerStatus">OFFLINE</div>
+              </div>
+              
+              <!-- Miner Device -->
+              <div class="miner-device" id="minerDevice" onclick="toggleMinerPower()">
+                <!-- Solar Panel -->
+                <div class="miner-solar-panel" id="minerSolarPanel">
+                  <div class="solar-cell-mini"></div>
+                  <div class="solar-cell-mini"></div>
+                  <div class="solar-cell-mini"></div>
+                  <div class="solar-cell-mini"></div>
+                  <div class="solar-cell-mini"></div>
+                  <div class="solar-cell-mini"></div>
+                </div>
+                
+                <div class="miner-brand">
+                  <div class="miner-brand-name" id="minerBrand">BITAXE</div>
+                  <div class="miner-leds">
+                    <div class="miner-led pwr" id="minerLedPWR"></div>
+                    <div class="miner-led net" id="minerLedNET"></div>
+                    <div class="miner-led fan" id="minerLedFAN"></div>
+                  </div>
+                </div>
+                
+                <div class="miner-display">
+                  <div class="miner-display-val" id="minerDisplayHash">0.00</div>
+                  <div class="miner-display-unit" id="minerDisplayUnit">GH/S</div>
+                </div>
+                
+                <div class="miner-fans">
+                  <div class="miner-fan" id="minerFan1"><div class="miner-led-ring"></div></div>
+                  <div class="miner-fan" id="minerFan2"><div class="miner-led-ring"></div></div>
+                </div>
+                
+                <div class="miner-ports">
+                  <div class="miner-port">
+                    <div class="port-icon">🔌</div>
+                    <div class="port-label">PWR</div>
+                  </div>
+                  <div class="miner-port">
+                    <div class="port-icon">🌐</div>
+                    <div class="port-label">NET</div>
+                  </div>
+                  <div class="miner-port">
+                    <div class="port-icon">💾</div>
+                    <div class="port-label">SD</div>
+                  </div>
+                  <div class="miner-port">
+                    <div class="port-icon">🔧</div>
+                    <div class="port-label">USB</div>
+                  </div>
+                </div>
+                
+                <div style="margin-top:12px;">
+                  <div class="miner-power-btn" id="minerPowerBtn">⏻</div>
+                </div>
+              </div>
+              
+              <!-- Network Cable -->
+              <div class="miner-cable" onclick="toggleMinerCable('network')">
+                <div class="cable-socket" style="width:24px;height:28px;">
+                  <div class="cable-plug network" id="minerNetworkPlug" style="top:4px;left:3px;width:18px;height:20px;"></div>
+                </div>
+                <div class="cable-label">NETWORK</div>
+                <div class="cable-status disconnected" id="minerNetworkStatus">OFFLINE</div>
+              </div>
             </div>
             
             <div class="control-panel">
@@ -3173,6 +3581,7 @@
       
       document.getElementById('brandName').textContent = currentAsic.name;
       document.getElementById('brandModel').textContent = currentAsic.model;
+      document.getElementById('minerBrand').textContent = currentAsic.name.toUpperCase();
       
       targetHashrate = currentAsic.hashrate;
       
@@ -3187,6 +3596,124 @@
     }
     
     // ===== MODE =====
+    // ===== MINER VISUAL CONTROLS =====
+    let minerPowerConnected = false;
+    let minerNetworkConnected = false;
+    let minerPowered = false;
+    
+    function toggleMinerCable(type) {
+      initAudio();
+      if (type === 'power') {
+        minerPowerConnected = !minerPowerConnected;
+        const plug = document.getElementById('minerPowerPlug');
+        const status = document.getElementById('minerPowerStatus');
+        
+        if (minerPowerConnected) {
+          plug.classList.add('connected');
+          status.textContent = 'CONNECTED';
+          status.className = 'cable-status connected';
+          playSound('click');
+          addLog('🔌 Power cable connected', 'info');
+        } else {
+          plug.classList.remove('connected');
+          status.textContent = 'OFFLINE';
+          status.className = 'cable-status disconnected';
+          playSound('click');
+          addLog('🔌 Power cable disconnected', 'info');
+          if (minerPowered) toggleMinerPower();
+        }
+        updateMinerVisual();
+      } else if (type === 'network') {
+        minerNetworkConnected = !minerNetworkConnected;
+        const plug = document.getElementById('minerNetworkPlug');
+        const status = document.getElementById('minerNetworkStatus');
+        
+        if (minerNetworkConnected) {
+          plug.classList.add('connected');
+          status.textContent = 'CONNECTED';
+          status.className = 'cable-status connected';
+          playSound('click');
+          addLog('🌐 Network cable connected', 'info');
+          setLED('ledNET', '#00d4ff');
+        } else {
+          plug.classList.remove('connected');
+          status.textContent = 'OFFLINE';
+          status.className = 'cable-status disconnected';
+          playSound('click');
+          addLog('🌐 Network cable disconnected', 'info');
+          setLED('ledNET', '#1a1a1a');
+        }
+        updateMinerVisual();
+      }
+    }
+    
+    function toggleMinerPower() {
+      if (!minerPowerConnected) {
+        addLog('⚠️ Connect power cable first!', 'error');
+        return;
+      }
+      
+      initAudio();
+      minerPowered = !minerPowered;
+      const device = document.getElementById('minerDevice');
+      const btn = document.getElementById('minerPowerBtn');
+      const ledPWR = document.getElementById('minerLedPWR');
+      const ledNET = document.getElementById('minerLedNET');
+      
+      if (minerPowered) {
+        playSound('boot');
+        device.classList.add('powered-on');
+        btn.classList.add('on');
+        ledPWR.classList.add('on');
+        if (minerNetworkConnected) ledNET.classList.add('on');
+        addLog('⚡ Miner powered on!', 'info');
+        document.getElementById('startBtn').disabled = false;
+      } else {
+        stopMining();
+        device.classList.remove('powered-on', 'mining');
+        btn.classList.remove('on');
+        ledPWR.classList.remove('on');
+        ledNET.classList.remove('on');
+        document.getElementById('minerFan1').classList.remove('on');
+        document.getElementById('minerFan2').classList.remove('on');
+        document.getElementById('minerLedFAN').classList.remove('on');
+        addLog('🔴 Miner powered off', 'info');
+        document.getElementById('startBtn').disabled = true;
+      }
+      updateMinerVisual();
+    }
+    
+    function updateMinerVisual() {
+      const device = document.getElementById('minerDevice');
+      const display = document.getElementById('minerDisplayHash');
+      const unit = document.getElementById('minerDisplayUnit');
+      
+      // Update display based on state
+      if (minerPowered && isMining) {
+        device.classList.add('mining');
+        document.getElementById('minerFan1').classList.add('on');
+        document.getElementById('minerFan2').classList.add('on');
+        document.getElementById('minerLedFAN').classList.add('on');
+        display.textContent = formatHashrate(hashrate);
+        unit.textContent = currentAsic.hashrate >= 1000 ? 'TH/S' : 'GH/S';
+      } else if (minerPowered) {
+        device.classList.remove('mining');
+        document.getElementById('minerFan1').classList.remove('on');
+        document.getElementById('minerFan2').classList.remove('on');
+        document.getElementById('minerLedFAN').classList.remove('on');
+        display.textContent = '0.00';
+        unit.textContent = 'GH/S';
+      }
+      
+      // Update solar panel
+      const solarPanel = document.getElementById('minerSolarPanel');
+      if (solarEnabled) {
+        solarPanel.classList.add('active');
+      } else {
+        solarPanel.classList.remove('active');
+      }
+    }
+    
     function setMode(mode) {
       miningMode = mode;
       
@@ -3569,6 +4096,9 @@
       
       // Update energy flow visualization
       updateEnergyFlow();
+      
+      // Update miner visual
+      updateMinerVisual();
     }
     
     // ===== POOL CONFIG =====
