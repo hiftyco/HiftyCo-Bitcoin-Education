@@ -1709,6 +1709,19 @@
     let seedVerified = false;
     let selectedSeedLength = 24; // Default to 24 words
     
+    // ============ INITIALIZATION ============
+    // Auto-power on and enable wallet creation on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Auto-power the Cold Card
+      setTimeout(() => {
+        if (!isPoweredOn) {
+          togglePower();
+        }
+        // Auto-select 24 words and enable create button
+        setTimeout(() => selectSeedLength(24), 100);
+      }, 300);
+    });
+    
     // Select seed phrase length - updated handler below
     
     // Generate real wallet
