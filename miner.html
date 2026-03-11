@@ -1446,6 +1446,282 @@
       margin-top: 4px;
     }
     
+    /* Solar Power Panel */
+    .solar-panel {
+      background: linear-gradient(135deg, #1a2332 0%, #0d1520 100%);
+      border: 1px solid rgba(255,193,7,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .solar-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    
+    .solar-icon {
+      font-size: 1.4rem;
+    }
+    
+    .solar-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      color: #ffc107;
+      letter-spacing: 1px;
+    }
+    
+    .solar-toggle {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .solar-toggle label {
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+    
+    .solar-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    
+    .solar-stat {
+      background: rgba(255,193,7,0.08);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .solar-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: #ffc107;
+    }
+    
+    .solar-stat-label {
+      font-size: 0.6rem;
+      color: var(--text3);
+      margin-top: 2px;
+    }
+    
+    .solar-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,193,7,0.15);
+    }
+    
+    .solar-input label {
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+    
+    .solar-input input {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      width: 100px;
+    }
+    
+    .solar-input input:focus {
+      outline: none;
+      border-color: #ffc107;
+    }
+    
+    /* Profit Display */
+    .profit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    
+    .profit-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+    
+    .profit-card.positive {
+      border-color: rgba(0,255,136,0.3);
+      background: rgba(0,255,136,0.05);
+    }
+    
+    .profit-card.negative {
+      border-color: rgba(255,71,87,0.3);
+      background: rgba(255,71,87,0.05);
+    }
+    
+    .profit-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    
+    .profit-value.usd { color: #00ff88; }
+    .profit-value.btc { color: #f7931a; }
+    .profit-value.cost { color: #ff4757; }
+    
+    .profit-label {
+      font-size: 0.6rem;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+    
+    /* Efficiency Display */
+    .efficiency-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+    
+    .efficiency-label {
+      font-size: 0.7rem;
+      color: var(--text3);
+      min-width: 80px;
+    }
+    
+    .efficiency-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--success);
+    }
+    
+    .efficiency-bar-inner {
+      flex: 1;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .efficiency-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+      border-radius: 4px;
+      transition: width 0.5s;
+    }
+    
+    /* Hashrate Chart */
+    .hashrate-chart {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .chart-title {
+      font-size: 0.75rem;
+      color: var(--text3);
+    }
+    
+    .chart-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      color: var(--success);
+    }
+    
+    .chart-container {
+      height: 80px;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+    }
+    
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(180deg, var(--success), rgba(0,255,136,0.3));
+      border-radius: 2px 2px 0 0;
+      min-height: 2px;
+      transition: height 0.3s;
+    }
+    
+    /* Enhanced Pool Stats */
+    .pool-details {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(247,147,26,0.15);
+    }
+    
+    .pool-detail {
+      text-align: center;
+    }
+    
+    .pool-detail-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text);
+    }
+    
+    .pool-detail-label {
+      font-size: 0.55rem;
+      color: var(--text3);
+    }
+    
+    /* Rejection Rate */
+    .rejection-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    
+    .rejection-label {
+      font-size: 0.65rem;
+      color: var(--text3);
+      min-width: 60px;
+    }
+    
+    .rejection-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--success);
+    }
+    
+    .rejection-bar-inner {
+      flex: 1;
+      height: 4px;
+      background: var(--bg);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .rejection-fill {
+      height: 100%;
+      background: var(--danger);
+      border-radius: 2px;
+    }
+    
     /* Pool Stats */
     .pool-stats {
       display: grid;
@@ -1911,7 +2187,7 @@
         <div class="pool-config" id="poolConfigSection">
           <div class="pool-config-title">⚙️ POOL CONFIGURATION</div>
           <select id="poolSelect" onchange="updatePoolInfo()">
-            <option value="HiftyCo.Brave">HiftyCo.Brave (0% Fee)</option>
+            <option value="HiftyCo.Brave" selected>HiftyCo.Brave (0% Fee)</option>
             <option value="bitcoin.com">stratum.pool.bitcoin.com</option>
             <option value="antpool">antpool.com</option>
             <option value="f2pool">f2pool.com</option>
@@ -1963,7 +2239,36 @@
             </div>
             <div style="margin-left: auto;">
               <div class="worker-label">PPS RATE</div>
-              <div class="worker-value" id="ppsRate">--</div>
+              <div class="worker-value" id="ppsRate">450 GH/s</div>
+            </div>
+          </div>
+          
+          <!-- Enhanced Pool Stats -->
+          <div class="pool-details">
+            <div class="pool-detail">
+              <div class="pool-detail-value" id="roundTime">2:45</div>
+              <div class="pool-detail-label">ROUND TIME</div>
+            </div>
+            <div class="pool-detail">
+              <div class="pool-detail-value" id="sharesValid">0</div>
+              <div class="pool-detail-label">VALID</div>
+            </div>
+            <div class="pool-detail">
+              <div class="pool-detail-value" id="sharesReject">0</div>
+              <div class="pool-detail-label">REJECTED</div>
+            </div>
+            <div class="pool-detail">
+              <div class="pool-detail-value" id="lastShare">--</div>
+              <div class="pool-detail-label">LAST SHARE</div>
+            </div>
+          </div>
+          
+          <!-- Rejection Rate -->
+          <div class="rejection-bar">
+            <div class="rejection-label">REJECTIONS</div>
+            <div class="rejection-value" id="rejectionRate">0.00%</div>
+            <div class="rejection-bar-inner">
+              <div class="rejection-fill" id="rejectionFill" style="width: 0%;"></div>
             </div>
           </div>
         </div>
@@ -2040,7 +2345,75 @@
     <!-- Income Section -->
     <div class="income-section">
       <div class="income-header">
-        <div class="income-title">⚡ MINING REWARDS</div>
+        <!-- Efficiency Bar -->
+      <div class="efficiency-bar">
+        <div class="efficiency-label">EFFICIENCY</div>
+        <div class="efficiency-value" id="efficiencyValue">-- J/TH</div>
+        <div class="efficiency-bar-inner">
+          <div class="efficiency-fill" id="efficiencyFill" style="width: 0%;"></div>
+        </div>
+      </div>
+      
+      <!-- Profit Dashboard -->
+      <div class="profit-grid">
+        <div class="profit-card positive">
+          <div class="profit-value usd" id="profitUSD">$0.00</div>
+          <div class="profit-label">PROFIT (USD)</div>
+        </div>
+        <div class="profit-card" style="border-color: rgba(247,147,26,0.3); background: rgba(247,147,26,0.05);">
+          <div class="profit-value btc" id="profitBTC">₿0.00</div>
+          <div class="profit-label">PROFIT (BTC)</div>
+        </div>
+        <div class="profit-card negative">
+          <div class="profit-value cost" id="powerCost">$0.00</div>
+          <div class="profit-label">POWER COST</div>
+        </div>
+      </div>
+      
+      <!-- Solar Power Panel -->
+      <div class="solar-panel">
+        <div class="solar-header">
+          <div class="solar-icon">☀️</div>
+          <div class="solar-title">SOLAR POWER</div>
+          <div class="solar-toggle">
+            <label>Enable Solar</label>
+            <input type="checkbox" id="solarEnabled" onchange="toggleSolar()">
+          </div>
+        </div>
+        <div class="solar-stats">
+          <div class="solar-stat">
+            <div class="solar-stat-value" id="solarPower">0W</div>
+            <div class="solar-stat-label">GENERATING</div>
+          </div>
+          <div class="solar-stat">
+            <div class="solar-stat-value" id="solarSaved">$0.00</div>
+            <div class="solar-stat-label">SAVED TODAY</div>
+          </div>
+          <div class="solar-stat">
+            <div class="solar-stat-value" id="solarOffset">0%</div>
+            <div class="solar-stat-label">OFFSET</div>
+          </div>
+        </div>
+        <div class="solar-input">
+          <label>Solar Watts:</label>
+          <input type="number" id="solarWatts" value="400" placeholder="400" onchange="updateSolarStats()">
+          <label>Cost/kWh:</label>
+          <input type="number" id="powerRate" value="0.12" step="0.01" placeholder="0.12" onchange="updatePowerCost()">
+        </div>
+      </div>
+      
+      <!-- Hashrate Chart -->
+      <div class="hashrate-chart">
+        <div class="chart-header">
+          <div class="chart-title">HASHRATE HISTORY</div>
+          <div class="chart-value"><span id="chartHashrate">0</span> GH/s</div>
+        </div>
+        <div class="chart-container" id="chartContainer">
+          <!-- Chart bars will be generated by JS -->
+        </div>
+      </div>
+      
+      <div class="income-title">⚡ MINING REWARDS</div>
         <div class="income-value" id="totalEarned">₿ 0.00000000</div>
         <div class="income-fiat" id="fiatEarned">$0.00 USD</div>
       </div>
@@ -2165,6 +2538,16 @@
     let totalShares = 0;
     let totalEarned = 0;
     let btcPrice = 70000;
+    let totalShares = 0;
+    let validShares = 0;
+    let rejectedShares = 0;
+    let powerCostPerKwh = 0.12;
+    let solarEnabled = false;
+    let solarWatts = 400;
+    let solarSaved = 0;
+    let hashrateHistory = [];
+    let uptimeSeconds = 0;
+    let currentWatts = 0;
     let powerCostPerKwh = 0.10;
     let blocksFound = 0;
     let uptimeSeconds = 0;
@@ -2245,6 +2628,95 @@
         statusMessage.textContent = '🔌 Click the cables to plug them in';
         statusMessage.className = 'status-message';
       }
+    }
+    
+    // ===== SOLAR POWER =====
+    function toggleSolar() {
+      solarEnabled = document.getElementById('solarEnabled').checked;
+      updateSolarStats();
+      addLog(solarEnabled ? '☀️ Solar power enabled' : '☀️ Solar power disabled', 'info');
+    }
+    
+    function updateSolarStats() {
+      solarWatts = parseFloat(document.getElementById('solarWatts').value) || 0;
+      const offsetPercent = currentWatts > 0 ? Math.min(100, (solarWatts / currentWatts) * 100) : 0;
+      document.getElementById('solarOffset').textContent = offsetPercent.toFixed(0) + '%';
+      document.getElementById('solarPower').textContent = solarEnabled ? solarWatts + 'W' : '0W';
+      
+      // Calculate daily savings
+      const hoursPerDay = solarEnabled ? 8 : 0; // Assume 8 hours of peak sun
+      const dailyKwh = (solarWatts / 1000) * hoursPerDay;
+      const dailySavings = dailyKwh * powerCostPerKwh;
+      solarSaved = dailySavings;
+      document.getElementById('solarSaved').textContent = '$' + dailySavings.toFixed(2);
+    }
+    
+    function updateRoundTime() {
+      const roundTime = Math.floor(Math.random() * 300 + 120); // 2-7 minutes
+      const mins = Math.floor(roundTime / 60);
+      const secs = roundTime % 60;
+      document.getElementById('roundTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    function initializeChart() {
+      // Initialize with empty data
+      for (let i = 0; i < 30; i++) {
+        hashrateHistory.push(0);
+      }
+      updateHashrateChart();
+    }
+    
+    function updatePowerCost() {
+      powerCostPerKwh = parseFloat(document.getElementById('powerRate').value) || 0.12;
+    }
+    
+    // ===== PROFIT CALCULATOR =====
+    function updateProfitDisplay() {
+      const dailyRevenue = totalEarned * btcPrice;
+      const asicPower = asicModels[selectedAsic].watts;
+      currentWatts = asicPower;
+      const dailyPowerCost = (asicPower / 1000) * 24 * powerCostPerKwh;
+      
+      // Solar offset
+      const solarDailySaved = solarEnabled ? (solarWatts / 1000) * 8 * powerCostPerKwh : 0;
+      const netPowerCost = Math.max(0, dailyPowerCost - solarDailySaved);
+      
+      const profit = dailyRevenue - netPowerCost;
+      
+      document.getElementById('profitUSD').textContent = (profit >= 0 ? '$' : '-$') + Math.abs(profit).toFixed(2);
+      document.getElementById('profitUSD').parentElement.className = profit >= 0 ? 'profit-card positive' : 'profit-card negative';
+      
+      document.getElementById('powerCost').textContent = '$' + netPowerCost.toFixed(2);
+      document.getElementById('profitBTC').textContent = '₿' + totalEarned.toFixed(8);
+      
+      // Update efficiency
+      const efficiency = asicModels[selectedAsic].efficiency;
+      const effValue = document.getElementById('efficiencyValue');
+      effValue.textContent = efficiency + ' J/TH';
+      effValue.style.color = efficiency < 30 ? 'var(--success)' : efficiency < 45 ? 'var(--warning)' : 'var(--danger)';
+      
+      const effPercent = Math.min(100, ((50 - efficiency) / 50) * 100);
+      document.getElementById('efficiencyFill').style.width = effPercent + '%';
+    }
+    
+    // ===== HASHRATE CHART =====
+    function updateHashrateChart() {
+      const chartContainer = document.getElementById('chartContainer');
+      const maxHash = Math.max(...hashrateHistory, 1);
+      
+      let html = '';
+      hashrateHistory.forEach(h => {
+        const height = (h / maxHash) * 100;
+        html += `<div class="chart-bar" style="height: ${Math.max(2, height)}%;"></div>`;
+      });
+      chartContainer.innerHTML = html;
+      document.getElementById('chartHashrate').textContent = hashrate.toFixed(0);
+    }
+    
+    function addHashrateDataPoint() {
+      hashrateHistory.push(hashrate);
+      if (hashrateHistory.length > 30) hasrateHistory.shift();
+      updateHashrateChart();
     }
     
     // ===== LOGGING =====
@@ -2502,16 +2974,28 @@
         // Share finding
         const shareChance = 0.12 + (intensity - 1) * 0.04;
         if (Math.random() < shareChance) {
-          shares++;
-          totalShares++;
-          
-          addLog(`Share accepted! (diff: ${Math.floor(Math.random() * 1000 + 100)})`, 'hash');
+          // Check for rejection (rare)
+          if (Math.random() < 0.02) {
+            rejectedShares++;
+            addLog('Share rejected', 'error');
+          } else {
+            validShares++;
+            shares++;
+            totalShares++;
+            addLog(`Share accepted! (diff: ${Math.floor(Math.random() * 1000 + 100)})`, 'hash');
+          }
           
           if (miningMode === 'pool') {
             const shareValue = 0.000001 * (hashrate / currentAsic.hashrate);
             totalEarned += shareValue;
           }
         }
+        
+        // Update pool stats
+        updatePoolStats();
+        
+        // Update profit display
+        updateProfitDisplay();
         
         // Solo - block finding
         if (miningMode === 'solo' && Math.random() < 0.00001 * intensity) {
@@ -2535,6 +3019,33 @@
         updateDisplay();
         updateEarnings();
       }, 1000);
+    }
+    
+    function updatePoolStats() {
+      // Update pool statistics
+      if (document.getElementById('poolInfo') && document.getElementById('poolInfo').style.display !== 'none') {
+        document.getElementById('sharesValid').textContent = validShares;
+        document.getElementById('sharesReject').textContent = rejectedShares;
+        
+        // Calculate rejection rate
+        const total = validShares + rejectedShares;
+        const rejectRate = total > 0 ? (rejectedShares / total) * 100 : 0;
+        document.getElementById('rejectionRate').textContent = rejectRate.toFixed(2) + '%';
+        document.getElementById('rejectionFill').style.width = Math.min(rejectRate * 10, 100) + '%';
+        
+        // Update last share time
+        document.getElementById('lastShare').textContent = 'now';
+      }
+      
+      // Update uptime
+      uptimeSeconds++;
+      const hours = Math.floor(uptimeSeconds / 3600);
+      const mins = Math.floor((uptimeSeconds % 3600) / 60);
+      const secs = uptimeSeconds % 60;
+      document.getElementById('uptimeStat').textContent = `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      
+      // Update solar stats
+      updateSolarStats();
     }
     
     function foundBlock() {
@@ -2670,6 +3181,13 @@
     // ===== INIT =====
     selectAsic('bitaxe');
     updatePoolInfo();
+    initializeChart();
+    setInterval(() => {
+      if (isMining) {
+        addHashrateDataPoint();
+        updateRoundTime();
+      }
+    }, 2000);
     calculateProfit();
   </script>
 </body>
