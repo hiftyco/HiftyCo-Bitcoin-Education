@@ -99,133 +99,202 @@
     .device-wrapper { transform-style: preserve-3d; animation: float3d 6s ease-in-out infinite; }
     @keyframes float3d { 0%, 100% { transform: rotateX(8deg) rotateY(-5deg) translateY(0); } 50% { transform: rotateX(2deg) rotateY(5deg) translateY(-15px); } }
     
-    /* COLDCARD MK4 - ULTRA REALISTIC 3D */
+    /* COLDCARD MK4 - REDESIGNED ULTRA REALISTIC */
+    .coldcard-wrapper {
+      perspective: 1200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
     .coldcard-device { 
-      width: 380px; height: 260px; 
-      background: linear-gradient(145deg, #1c1c1c 0%, #0a0a0a 100%); 
-      border-radius: 32px; 
-      border: 3px solid var(--primary); 
+      width: 400px; height: 280px; 
+      background: linear-gradient(155deg, #232323 0%, #0f0f0f 50%, #1a1a1a 100%); 
+      border-radius: 36px; 
+      border: 3px solid #333;
       box-shadow: 
-        0 50px 100px rgba(0,0,0,0.8), 
-        0 0 100px rgba(247,147,26,0.2),
-        inset 0 1px 0 rgba(255,255,255,0.08),
-        inset 0 -2px 0 rgba(0,0,0,0.4);
+        0 60px 120px rgba(0,0,0,0.9),
+        0 0 0 1px rgba(255,255,255,0.05) inset,
+        0 2px 0 rgba(255,255,255,0.1) inset,
+        -20px -20px 40px rgba(0,0,0,0.5),
+        20px 20px 40px rgba(0,0,0,0.3);
       position: relative; 
       display: flex; flex-direction: column; 
-      padding: 20px;
+      padding: 22px;
       transform-style: preserve-3d;
-      transition: all 0.4s ease;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
     }
     .coldcard-device:hover {
-      transform: rotateX(0deg) rotateY(0deg) scale(1.02);
+      transform: rotateX(2deg) rotateY(-2deg) translateZ(20px);
       box-shadow: 
-        0 60px 120px rgba(0,0,0,0.9), 
-        0 0 150px rgba(247,147,26,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.1);
+        0 80px 160px rgba(0,0,0,0.95),
+        0 0 60px rgba(247,147,26,0.15),
+        0 0 0 1px rgba(255,255,255,0.08) inset,
+        0 2px 0 rgba(255,255,255,0.12) inset;
     }
-    .coldcard-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    /* Metal texture gradient overlay */
+    .coldcard-device::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 36px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%, rgba(0,0,0,0.2) 100%);
+      pointer-events: none;
+    }
+    /* Top bar with logo and lights */
+    .coldcard-top { 
+      display: flex; justify-content: space-between; align-items: center; 
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
     .coldcard-logo { 
-      font-size: 0.75rem; letter-spacing: 5px; 
-      color: var(--primary); font-weight: 700; 
-      text-shadow: 0 0 10px rgba(247,147,26,0.5);
+      font-size: 0.72rem; letter-spacing: 6px; 
+      color: #f7a526; font-weight: 800; 
+      text-shadow: 0 0 15px rgba(247,165,38,0.6);
+      font-family: 'JetBrains Mono', monospace;
     }
+    .coldcard-brand { font-size: 0.5rem; color: #666; letter-spacing: 2px; margin-top: 2px; }
+    .coldcard-lights { display: flex; gap: 10px; align-items: center; }
     .coldcard-led { 
-      width: 14px; height: 14px; 
-      background: var(--success); 
+      width: 10px; height: 10px; 
+      background: #00ff88; 
       border-radius: 50%; 
-      box-shadow: 0 0 20px var(--success), 0 0 40px var(--success); 
-      animation: pulseLed 1.5s infinite; 
+      box-shadow: 0 0 15px #00ff88, 0 0 30px rgba(0,255,136,0.4); 
+      animation: pulseLed 2s ease-in-out infinite; 
+      transition: all 0.3s;
     }
-    .coldcard-led.warning { background: #ffbd2e; box-shadow: 0 0 20px #ffbd2e, 0 0 40px #ffbd2e; }
-    .coldcard-led.error { background: var(--danger); box-shadow: 0 0 20px var(--danger), 0 0 40px var(--danger); }
+    .coldcard-led.warning { 
+      background: #ffbd2e; 
+      box-shadow: 0 0 15px #ffbd2e, 0 0 30px rgba(255,189,46,0.4); 
+    }
+    .coldcard-led.error { 
+      background: #ff5f56; 
+      box-shadow: 0 0 15px #ff5f56, 0 0 30px rgba(255,95,86,0.4); 
+    }
     @keyframes pulseLed { 
       0%, 100% { opacity: 1; transform: scale(1); } 
-      50% { opacity: 0.5; transform: scale(0.9); } 
+      50% { opacity: 0.6; transform: scale(0.85); } 
     }
+    /* Screen area */
     .coldcard-screen { 
-      width: 100%; height: 110px; 
-      background: linear-gradient(180deg, #0a1628 0%, #0d1f3c 100%); 
-      border-radius: 14px; 
-      border: 2px solid #1e3a5f;
+      width: 100%; height: 115px; 
+      background: linear-gradient(180deg, #080c14 0%, #0a1428 50%, #0d1a38 100%); 
+      border-radius: 16px; 
+      border: 2px solid #1a2d4a;
       box-shadow: 
-        inset 0 2px 15px rgba(0,0,0,0.6),
-        0 0 30px rgba(0,255,136,0.1);
+        inset 0 4px 20px rgba(0,0,0,0.8),
+        0 0 40px rgba(0,255,136,0.08),
+        0 1px 0 rgba(255,255,255,0.05) inset;
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 20px;
       position: relative;
       overflow: hidden;
     }
+    /* Screen scanline effect */
     .coldcard-screen::before { 
       content: ''; position: absolute; inset: 0; 
-      background: linear-gradient(180deg, rgba(30,58,95,0.2) 0%, transparent 50%); 
+      background: linear-gradient(180deg, rgba(30,58,95,0.15) 0%, transparent 50%); 
     }
     .coldcard-screen::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,255,136,0.3), transparent);
-      animation: scanline 3s linear infinite;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,136,0.4), transparent);
+      animation: scanline 4s linear infinite;
+      opacity: 0.6;
     }
-    @keyframes scanline { from { top: 0; } to { top: 100%; } }
+    @keyframes scanline { from { top: -2px; } to { top: 100%; } }
     .screen-content { 
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; 
-      color: #00ff88; text-align: center; text-shadow: 0 0 25px #00ff88, 0 0 50px #00ff88; 
-      z-index: 1; line-height: 1.8;
-      animation: textGlow 2s ease-in-out infinite;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; 
+      color: #00ff88; text-align: center; 
+      text-shadow: 0 0 20px #00ff88, 0 0 40px rgba(0,255,136,0.5); 
+      z-index: 1; line-height: 1.9;
+      animation: textGlow 3s ease-in-out infinite;
     }
-    @keyframes textGlow { 0%, 100% { text-shadow: 0 0 25px #00ff88, 0 0 50px #00ff88; } 50% { text-shadow: 0 0 35px #00ff88, 0 0 70px #00ff88; } }
-    .screen-menu { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+    @keyframes textGlow { 
+      0%, 100% { text-shadow: 0 0 20px #00ff88, 0 0 40px rgba(0,255,136,0.5); } 
+      50% { text-shadow: 0 0 30px #00ff88, 0 0 60px rgba(0,255,136,0.7); } 
+    }
+    /* Menu system */
+    .screen-menu { display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; }
     .menu-item { 
-      padding: 6px 16px; border-radius: 4px; font-size: 0.7rem; 
-      color: #00ff88; transition: all 0.2s; 
+      padding: 8px 20px; border-radius: 6px; font-size: 0.68rem; 
+      color: #00aa66; transition: all 0.2s; width: 80%;
+      text-align: center;
     }
-    .menu-item.selected { background: rgba(0,255,136,0.2); }
+    .menu-item.selected { 
+      background: rgba(0,255,136,0.15); 
+      color: #00ff88;
+      box-shadow: 0 0 20px rgba(0,255,136,0.2);
+    }
+    /* Numeric keypad */
     .coldcard-keys { 
       display: grid; grid-template-columns: repeat(8, 1fr); 
-      gap: 8px; margin-top: auto; 
+      gap: 6px; margin-top: auto; 
+      padding-top: 8px;
     }
     .cc-key { 
       width: 100%; aspect-ratio: 1; 
-      background: linear-gradient(145deg, #2a2a2a, #1a1a1a); 
-      border: 1px solid #333; border-radius: 8px;
-      transition: all 0.15s;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      background: linear-gradient(145deg, #2d2d2d, #1a1a1a); 
+      border: 1px solid #3a3a3a; border-radius: 8px;
+      transition: all 0.12s;
+      box-shadow: 
+        0 2px 4px rgba(0,0,0,0.4),
+        0 1px 0 rgba(255,255,255,0.05) inset;
+      cursor: pointer;
     }
     .cc-key:hover { 
-      background: linear-gradient(145deg, #3a3a3a, #2a2a2a); 
-      border-color: var(--primary); 
+      background: linear-gradient(145deg, #3a3a3a, #252525); 
+      border-color: #f7a526; 
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(247,147,26,0.3);
+      box-shadow: 0 4px 12px rgba(247,165,38,0.25);
     }
     .cc-key:active { 
       transform: translateY(1px); 
-      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.4);
     }
     .cc-key.active { 
-      background: var(--primary); border-color: var(--primary); 
-      box-shadow: 0 0 15px var(--primary), 0 0 30px rgba(247,147,26,0.5); 
-    }
-    .coldcard-ok { 
-      position: absolute; bottom: 26px; right: 20px; 
-      width: 48px; height: 48px; 
       background: linear-gradient(145deg, #f7a526, #e69420); 
+      border-color: #f7a526; 
+      box-shadow: 0 0 20px rgba(247,165,38,0.6), 0 0 40px rgba(247,165,38,0.3);
+      transform: scale(0.95);
+    }
+    /* OK button - large and prominent */
+    .coldcard-ok { 
+      position: absolute; bottom: 28px; right: 22px; 
+      width: 52px; height: 52px; 
+      background: linear-gradient(145deg, #f7a526, #d4921a); 
       border-radius: 50%; 
       display: flex; align-items: center; justify-content: center; 
-      font-size: 1.4rem; color: #000; font-weight: 700; 
+      font-size: 1.5rem; color: #000; font-weight: 700; 
       box-shadow: 
-        0 4px 20px rgba(247,147,26,0.5),
-        inset 0 2px 0 rgba(255,255,255,0.3);
+        0 4px 15px rgba(247,165,38,0.5),
+        0 2px 0 rgba(255,255,255,0.2) inset,
+        0 -2px 0 rgba(0,0,0,0.2) inset;
       cursor: pointer; transition: all 0.2s;
     }
     .coldcard-ok:hover { 
-      transform: scale(1.15); 
-      box-shadow: 0 8px 40px rgba(247,147,26,0.8);
+      transform: scale(1.12); 
+      box-shadow: 0 8px 30px rgba(247,165,38,0.7);
     }
-    .coldcard-ok:active { transform: scale(1.05); }
-    
-    /* Power button & details */
-    .coldcard-power {
-      position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
-      width: 8px; height: 8px; background: #333; border-radius: 50%;
+    .coldcard-ok:active { transform: scale(1.02); }
+    /* X button */
+    .coldcard-x {
+      position: absolute; bottom: 28px; left: 22px;
+      width: 44px; height: 44px;
+      background: linear-gradient(145deg, #3a3a3a, #252525);
+      border: 1px solid #444;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: #888; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
     }
+    .coldcard-x:hover { 
+      background: linear-gradient(145deg, #4a4a4a, #333); 
+      color: #ff5f56;
+      border-color: #ff5f56;
+    }
+    /* Screen icons */
+    .screen-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .screen-status { font-size: 0.6rem; color: #666; margin-top: 4px; }
     
     .bitaxe-device { 
       width: 320px; height: 210px; 
@@ -537,28 +606,40 @@
       </div>
       
       <div class="device-showcase">
-        <div class="device-3d">
+        <div class="coldcard-wrapper">
           <div class="device-wrapper">
             <div class="coldcard-device">
-              <div class="coldcard-power"></div>
               <div class="coldcard-top">
-                <span class="coldcard-logo">COLDCARD</span>
-                <div class="coldcard-led"></div>
+                <div>
+                  <div class="coldcard-logo">COLDCARD</div>
+                  <div class="coldcard-brand">Mk4</div>
+                </div>
+                <div class="coldcard-lights">
+                  <div class="coldcard-led"></div>
+                </div>
               </div>
               <div class="coldcard-screen">
                 <div class="screen-content" id="cc-screen-text">
-                  <div class="screen-menu">
-                    <div class="menu-item selected">▶ New Wallet</div>
-                    <div class="menu-item">Restore</div>
-                    <div class="menu-item">Settings</div>
-                  </div>
+                  <div class="screen-icon">🔐</div>
+                  <div class="menu-item selected">▶ New Wallet</div>
+                  <div class="menu-item">Restore</div>
+                  <div class="menu-item">Settings</div>
+                  <div class="screen-status">Ready</div>
                 </div>
               </div>
               <div class="coldcard-keys">
-                <div class="cc-key" onclick="pressKey('1')"></div><div class="cc-key" onclick="pressKey('2')"></div><div class="cc-key" onclick="pressKey('3')"></div><div class="cc-key" onclick="pressKey('4')"></div>
-                <div class="cc-key" onclick="pressKey('5')"></div><div class="cc-key" onclick="pressKey('6')"></div><div class="cc-key" onclick="pressKey('7')"></div><div class="cc-key" onclick="pressKey('8')"></div>
-                <div class="cc-key" onclick="pressKey('9')"></div><div class="cc-key" onclick="pressKey('0')"></div>
+                <div class="cc-key" onclick="pressKey(1)">1</div>
+                <div class="cc-key" onclick="pressKey(2)">2</div>
+                <div class="cc-key" onclick="pressKey(3)">3</div>
+                <div class="cc-key" onclick="pressKey(4)">4</div>
+                <div class="cc-key" onclick="pressKey(5)">5</div>
+                <div class="cc-key" onclick="pressKey(6)">6</div>
+                <div class="cc-key" onclick="pressKey(7)">7</div>
+                <div class="cc-key" onclick="pressKey(8)">8</div>
+                <div class="cc-key" onclick="pressKey(9)">9</div>
+                <div class="cc-key" onclick="pressKey(0)">0</div>
               </div>
+              <div class="coldcard-x" onclick="prevWalletSim()">✕</div>
               <div class="coldcard-ok" onclick="nextWalletSim(2)">✓</div>
             </div>
           </div>
@@ -994,7 +1075,30 @@
       const keyIndex = parseInt(num);
       if (keys[keyIndex]) {
         keys[keyIndex].classList.add('active');
+        // Play sound effect simulation
+        const led = document.querySelector('.coldcard-led');
+        if (led) {
+          led.style.transform = 'scale(1.3)';
+          setTimeout(() => led.style.transform = '', 100);
+        }
         setTimeout(() => keys[keyIndex].classList.remove('active'), 150);
+      }
+      // Show key number on screen briefly
+      const screen = document.getElementById('cc-screen-text');
+      if (screen) {
+        const original = screen.innerHTML;
+        screen.innerHTML = `<div class="screen-icon">⌨️</div><div style="font-size:1.5rem;color:#00ff88;margin:10px 0;">${num}</div>`;
+        setTimeout(() => screen.innerHTML = original, 300);
+      }
+    }
+    
+    // Navigate back
+    function prevWalletSim() {
+      const current = document.querySelector('.sim-tab.active');
+      if (current) {
+        const tabs = document.querySelectorAll('.sim-tab');
+        const idx = Array.from(tabs).indexOf(current);
+        if (idx > 0) switchSim('wallet', idx);
       }
     }
     
