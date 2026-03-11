@@ -480,6 +480,10 @@
       animation: spin 0.5s linear infinite; 
     }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes ledRingPulseHome {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.5); }
+      50% { box-shadow: 0 0 30px rgba(255,255,255,1), 0 0 60px rgba(255,255,255,0.7); }
+    }
     .bitaxe-lights { position: absolute; top: 18px; right: 18px; display: flex; gap: 8px; }
     .bitaxe-light { width: 10px; height: 10px; border-radius: 50%; }
     .bitaxe-light.green { background: var(--success); box-shadow: 0 0 12px var(--success); }
@@ -1201,6 +1205,17 @@
             <!-- Fans -->
             <div style="display:flex;justify-content:center;gap:40px;margin-bottom:16px;">
               <div style="position:relative;">
+                <!-- White LED Ring -->
+                <div id="fanLedRing1" style="position:absolute;inset:-12px;border-radius:50%;border:2px solid #222;opacity:0.4;transition:all 0.3s;pointer-events:none;"></div>
+                <!-- Individual LED dots -->
+                <div style="position:absolute;inset:0;pointer-events:none;">
+                  <div class="fan-led-dot" style="position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;top:10px;right:8px;width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;bottom:10px;right:8px;width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;bottom:10px;left:8px;width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;top:10px;left:8px;width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                </div>
                 <div style="width:80px;height:80px;background:linear-gradient(145deg,#121215,#080810);border-radius:50%;border:4px solid #1a1a1f;box-shadow:inset 0 4px 15px rgba(0,0,0,0.8),0 2px 10px rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">
                   <div id="realFan1" style="width:68px;height:68px;background:conic-gradient(from 0deg,#151518 0deg,#252528 30deg,#151518 60deg,#252528 90deg,#151518 120deg,#252528 150deg,#151518 180deg,#252528 210deg,#151518 240deg,#252528 270deg,#151518 300deg,#252528 330deg,#151518 360deg);border-radius:50%;"></div>
                 </div>
@@ -1216,6 +1231,17 @@
                 </svg>
               </div>
               <div style="position:relative;">
+                <!-- White LED Ring -->
+                <div id="fanLedRing2" style="position:absolute;inset:-12px;border-radius:50%;border:2px solid #222;opacity:0.4;transition:all 0.3s;pointer-events:none;"></div>
+                <!-- Individual LED dots -->
+                <div style="position:absolute;inset:0;pointer-events:none;">
+                  <div class="fan-led-dot" style="position:absolute;top:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;top:10px;right:8px;width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;bottom:10px;right:8px;width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;bottom:10px;left:8px;width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                  <div class="fan-led-dot" style="position:absolute;top:10px;left:8px;width:4px;height:4px;background:#222;border-radius:50%;transition:all 0.3s;"></div>
+                </div>
                 <div style="width:80px;height:80px;background:linear-gradient(145deg,#121215,#080810);border-radius:50%;border:4px solid #1a1a1f;box-shadow:inset 0 4px 15px rgba(0,0,0,0.8),0 2px 10px rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">
                   <div id="realFan2" style="width:68px;height:68px;background:conic-gradient(from 0deg,#151518 0deg,#252528 30deg,#151518 60deg,#252528 90deg,#151518 120deg,#252528 150deg,#151518 180deg,#252528 210deg,#151518 240deg,#252528 270deg,#151518 300deg,#252528 330deg,#151518 360deg);border-radius:50%;"></div>
                 </div>
@@ -3228,7 +3254,12 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     
     function setLED(id,color) {
       const el = document.getElementById(id);
-      const elReal = document.getElementById('real'+id.charAt(0).toUpperCase()+id.slice(1));
+      // Map ledFAN to realLedFAN (correct ID)
+      let realId = 'real' + id.charAt(0).toUpperCase() + id.slice(1);
+      if (id === 'ledFAN') realId = 'realLedFAN';
+      if (id === 'ledNET') realId = 'realLedNET';
+      if (id === 'ledPWR') realId = 'realLedPWR';
+      const elReal = document.getElementById(realId);
       if(el){el.style.background = color; el.style.boxShadow = color==='#1a1a1a'?'none':'0 0 12px '+color;}
       if(elReal){elReal.style.background = color; elReal.style.boxShadow = color==='#111'?'none':'0 0 15px '+color;}
       if(id==='ledPWR' && elReal){
@@ -3245,7 +3276,7 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
       if(!proPowered) return;
       initAudio();
       proMining = true;
-      setLED('ledFAN','var(--warning)');
+      setLED('ledFAN','#ffffff');
       startFanSound();
       document.getElementById('proStartBtn').disabled = true;
       document.getElementById('proStopBtn').disabled = false;
@@ -3254,6 +3285,8 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
       const rf1 = document.getElementById('realFan1'), rf2 = document.getElementById('realFan2');
       if(rf1) rf1.style.animation = 'spin 0.15s linear infinite';
       if(rf2) rf2.style.animation = 'spin 0.15s linear infinite';
+      // Turn on white LED fans
+      activateWhiteLedFans(true);
       
       proAddLog(`⛏️ ${miningMode.toUpperCase()} mining started`);
       proAddLog(`🎯 Target: ${currentAsic.hashrate} ${currentAsic.hashrate>=1000?'GH/s':'TH/s'}`);
@@ -3302,6 +3335,8 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
       const rf1 = document.getElementById('realFan1'), rf2 = document.getElementById('realFan2');
       if(rf1) rf1.style.animation = 'none';
       if(rf2) rf2.style.animation = 'none';
+      // Turn off white LED fans
+      activateWhiteLedFans(false);
       proAddLog('⏹ Mining stopped');
     }
     
@@ -3367,6 +3402,52 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     function toggleRealPower() { togglePowerPro(); }
     function startRealMining() { startMiningPro(); }
     function stopRealMining() { stopMiningPro(); }
+    
+    // White LED Fan Control
+    function activateWhiteLedFans(active) {
+      const ring1 = document.getElementById('fanLedRing1');
+      const ring2 = document.getElementById('fanLedRing2');
+      const ledDots = document.querySelectorAll('.fan-led-dot');
+      
+      if (active) {
+        // LED rings glow white
+        if (ring1) {
+          ring1.style.borderColor = '#fff';
+          ring1.style.opacity = '1';
+          ring1.style.boxShadow = '0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.5), inset 0 0 15px rgba(255,255,255,0.2)';
+          ring1.style.animation = 'ledRingPulseHome 1s ease-in-out infinite';
+        }
+        if (ring2) {
+          ring2.style.borderColor = '#fff';
+          ring2.style.opacity = '1';
+          ring2.style.boxShadow = '0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.5), inset 0 0 15px rgba(255,255,255,0.2)';
+          ring2.style.animation = 'ledRingPulseHome 1s ease-in-out infinite';
+        }
+        // LED dots glow white
+        ledDots.forEach(dot => {
+          dot.style.background = '#fff';
+          dot.style.boxShadow = '0 0 8px rgba(255,255,255,0.9)';
+        });
+      } else {
+        // Turn off LEDs
+        if (ring1) {
+          ring1.style.borderColor = '#222';
+          ring1.style.opacity = '0.4';
+          ring1.style.boxShadow = 'none';
+          ring1.style.animation = 'none';
+        }
+        if (ring2) {
+          ring2.style.borderColor = '#222';
+          ring2.style.opacity = '0.4';
+          ring2.style.boxShadow = 'none';
+          ring2.style.animation = 'none';
+        }
+        ledDots.forEach(dot => {
+          dot.style.background = '#222';
+          dot.style.boxShadow = 'none';
+        });
+      }
+    }
     
     function proAddLog(msg) {
       const lc = document.getElementById('proLogs');
