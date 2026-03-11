@@ -3231,7 +3231,7 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
         setTimeout(()=>{setLED('ledNET','#00d4ff');proAddLog('📶 WiFi connected');},1400);
         setTimeout(()=>{
           document.getElementById('displayUnit').textContent = currentAsic.hashrate>=100000?'TH/S - READY':'GH/S - READY';
-          document.getElementById('poolNameDisplay').textContent = miningMode==='solo'?'Direct ⛏️':'stratum.pool.bitcoin.com';
+          document.getElementById('poolNameDisplay').textContent = miningMode==='solo'?'Direct ⛏️':'HiftyCo.Brave';
           document.getElementById('proStartBtn').disabled = false;
           proAddLog('✅ Ready to mine!');
         },2200);
