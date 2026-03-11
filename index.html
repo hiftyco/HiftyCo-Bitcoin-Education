@@ -903,7 +903,7 @@
                 <button id="continue-btn" class="cc-btn" onclick="startVerificationTest()" style="display:none;">✓ Continue to PIN</button>
                 <p id="verify-hint" style="display:none;color:var(--text2);font-size:0.8rem;margin-top:12px;text-align:center;">⏱️ Verification test will begin in a few seconds...<br>Or click continue above when ready</p>
                 <div style="background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.05) 100%); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 14px; margin: 12px 0;">
-                <span style="color: var(--danger); font-weight: 700; font-size: 0.9rem;">⚠️ CRITICAL: Write ALL ${selectedSeedLength} words in EXACT order</span>
+                <span id="seed-length-display" style="color: var(--danger); font-weight: 700; font-size: 0.9rem;">⚠️ CRITICAL: Write ALL 24 words in EXACT order</span>
                 <p style="color: var(--text2); font-size: 0.8rem; margin: 6px 0 0;">Never type these into a computer. Paper only!</p>
               </div>
               </div>
@@ -1415,6 +1415,25 @@
       tabs.forEach((t,i) => t.classList.toggle('active',i===num-1));
       const screens = document.querySelectorAll(`#${type} .interface-screen`);
       screens.forEach((s,i) => s.classList.toggle('active',i===num-1));
+      
+      // Reset wallet state when clicking Initialize tab
+      if (type === 'wallet' && num === 1) {
+        // Close verification modal if open
+        const verifyModal = document.getElementById('verify-modal');
+        if (verifyModal) verifyModal.remove();
+        
+        // Reset wallet state
+        REAL_WALLET = { mnemonic: null, address: null, passphrase: '', created: false };
+        currentWords = [];
+        seedVerified = false;
+        verifyCurrent = 0;
+        
+        // Re-enable power and select 24 words
+        setTimeout(() => {
+          if (!isPoweredOn) togglePower();
+          selectSeedLength(24);
+        }, 100);
+      }
     }
     
     // =====================================================
@@ -2230,6 +2249,12 @@
         createBtn.style.opacity = '1';
         createBtn.style.pointerEvents = 'auto';
         createBtn.innerHTML = len === 12 ? '✓ Create 12-Word Wallet' : '✓ Create 24-Word Wallet';
+      }
+      
+      // Update the seed length warning text
+      const seedLengthDisplay = document.getElementById('seed-length-display');
+      if (seedLengthDisplay) {
+        seedLengthDisplay.textContent = `⚠️ CRITICAL: Write ALL ${len} words in EXACT order`;
       }
     }
     
