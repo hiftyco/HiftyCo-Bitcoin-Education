@@ -95,6 +95,7 @@
     .sim-panel.active { display: block; animation: fadeInSim 0.5s ease; }
     @keyframes fadeInSim { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .device-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    @media (max-width: 900px) { .device-showcase { grid-template-columns: 1fr; gap: 30px; } }
     .device-3d { perspective: 1000px; display: flex; justify-content: center; align-items: center; min-height: 350px; }
     .device-wrapper { transform-style: preserve-3d; animation: float3d 6s ease-in-out infinite; }
     @keyframes float3d { 0%, 100% { transform: rotateX(8deg) rotateY(-5deg) translateY(0); } 50% { transform: rotateX(2deg) rotateY(5deg) translateY(-15px); } }
@@ -110,6 +111,8 @@
     /* Main device body - REAL Cold Card Mk5 size ~96mm x 62mm x 12mm */
     .coldcard-device { 
       width: 320px; height: 380px;
+      max-width: 95vw;
+      max-height: 80vh;
       background: linear-gradient(165deg, #181818 0%, #0c0c0c 30%, #121212 60%, #1a1a1a 100%);
       border-radius: 16px; 
       border: 2px solid #252525;
@@ -135,6 +138,13 @@
     .coldcard-device::before {
       content: ''; position: absolute; inset: 0; border-radius: 14px;
       background: linear-gradient(145deg, rgba(255,255,255,0.025) 0%, transparent 40%, rgba(0,0,0,0.12) 100%);
+      pointer-events: none;
+    }
+    /* Device glass reflection effect */
+    .coldcard-device::after {
+      content: ''; position: absolute; top: 5%; left: 10%; right: 60%; height: 30%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+      border-radius: 50% 0 0 0;
       pointer-events: none;
     }
     /* Sliding cover (real Cold Card feature) */
@@ -289,26 +299,34 @@
     .coldcard-keys { 
       display: grid; 
       grid-template-columns: repeat(5, 1fr); 
-      gap: 1px; 
-      width: 85%;
-      margin: 4px auto 6px;
+      gap: 3px; 
+      width: 90%;
+      margin: 4px auto 8px;
     }
     .cc-key { 
       width: 100%; aspect-ratio: 1; 
       /* Small matte black buttons like real device */
       background: linear-gradient(145deg, #1e1e1e, #141414); 
-      border: 1px solid #252525; border-radius: 2px;
-      transition: all 0.05s;
-      box-shadow: 0 1px 1px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.03);
+      border: 1px solid #252525; border-radius: 4px;
+      transition: all 0.15s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.03);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.4rem;
+      font-size: 0.55rem;
       font-weight: 600;
       color: #888;
-      padding: 1px;
+      padding: 2px;
+      min-height: 36px;
+      /* Accessibility */
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    @media (max-width: 480px) {
+      .cc-key { min-height: 44px; font-size: 0.65rem; }
+      .coldcard-keys { width: 95%; gap: 4px; }
     }
     .cc-key:hover { background: linear-gradient(145deg, #282828, #1e1e1e); border-color: #f7a526; color: #f7a526; }
     .cc-key:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.8); background: #181818; }
@@ -525,6 +543,9 @@
     .cc-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
     .cc-warning { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 16px; margin-top: 16px; font-size: 0.85rem; color: var(--danger); }
     .cc-tip { background: rgba(247,147,26,0.1); border-left: 3px solid var(--primary); padding: 14px 18px; margin-top: 16px; border-radius: 0 12px 12px 0; font-size: 0.85rem; color: var(--text2); }
+    .cc-edu-box { background: linear-gradient(135deg, rgba(0,255,136,0.08), rgba(0,255,136,0.02)); border: 1px solid rgba(0,255,136,0.2); border-radius: 12px; padding: 16px; margin-top: 16px; font-size: 0.85rem; }
+    .cc-edu-box h5 { color: var(--success); margin-bottom: 8px; font-size: 0.9rem; }
+    .cc-edu-box p { color: var(--text2); line-height: 1.5; }
     .cc-pin-display { display: flex; justify-content: center; gap: 14px; margin: 24px 0; }
     .cc-pin-dot { width: 18px; height: 18px; background: var(--border); border-radius: 50%; transition: all 0.3s; border: 2px solid transparent; }
     .cc-pin-dot.filled { background: var(--primary); box-shadow: 0 0 15px var(--primary); transform: scale(1.1); }
@@ -833,6 +854,10 @@
                 <p style="color:var(--text2);margin-bottom:20px;">This simulator mimics the real Cold Card setup process.</p>
                 <button class="cc-btn" onclick="nextWalletSim(2)">✓ Create New Wallet</button>
                 <div class="cc-tip">💡 The real device is air-gapped — it never connects to the internet.</div>
+                <div class="cc-edu-box">
+                  <h5>🎓 Why This Matters</h5>
+                  <p>Air-gapping means the device has no network capability. Your private keys never touch an internet-connected device. This is the gold standard for Bitcoin security.</p>
+                </div>
               </div>
             </div>
             <div class="interface-screen" id="wallet-2">
@@ -1205,6 +1230,22 @@
   </div>
   
   <script>
+    // Accessibility: Keyboard navigation for Cold Card
+    document.addEventListener('keydown', (e) => {
+      if (e.target.classList.contains('cc-key')) {
+        const keyMap = { 'Enter': 'ok', 'Escape': 'x', 'ArrowUp': 'up', 'ArrowDown': 'down' };
+        if (keyMap[e.key]) {
+          e.preventDefault();
+          pressKey(keyMap[e.key], e.target);
+        }
+      }
+    });
+    
+    // Touch feedback with haptic API
+    function triggerHaptic() {
+      if (navigator.vibrate) navigator.vibrate(10);
+    }
+    
     window.addEventListener('scroll', () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
