@@ -1116,6 +1116,7 @@
       <div style="display:flex;justify-content:center;gap:8px;margin-bottom:24px;">
         <button class="cc-btn" id="modePool" onclick="setMiningMode('pool')" style="padding:12px 24px;background:var(--primary);color:#000;">🏊 Pool</button>
         <button class="cc-btn cc-btn-outline" id="modeSolo" onclick="setMiningMode('solo')" style="padding:12px 24px;">⛏️ Solo</button>
+        <button class="cc-btn cc-btn-outline" id="soundToggleBtn" onclick="toggleSound()" style="padding:12px 16px;">🔊</button>
       </div>
       
       <div class="device-showcase">
@@ -3049,6 +3050,63 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     })();
     
     // ========== PRO MINER SIMULATOR ==========
+    // Audio
+    let audioCtx = null, fanOsc = null, fanGain = null, soundEnabled = true;
+    
+    function initAudio() {
+      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    
+    function playSound(type) {
+      if(!soundEnabled || !audioCtx) return;
+      const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      if(type==='share'){
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime+0.1);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.15);
+        osc.start(); osc.stop(audioCtx.currentTime+0.15);
+      }else if(type==='block'){
+        [523,659,784,1047].forEach((f,i)=>setTimeout(()=>{
+          const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+          o.connect(g); g.connect(audioCtx.destination);
+          o.frequency.value=f; g.gain.setValueAtTime(0.15, audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.3);
+          o.start(); o.stop(audioCtx.currentTime+0.3);
+        },i*120));
+      }else if(type==='boot'){
+        osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime+0.2);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.3);
+        osc.start(); osc.stop(audioCtx.currentTime+0.3);
+      }
+    }
+    
+    function startFanSound() {
+      if(!soundEnabled || !audioCtx || fanOsc) return;
+      fanOsc = audioCtx.createOscillator();
+      fanGain = audioCtx.createGain();
+      fanOsc.connect(fanGain); fanGain.connect(audioCtx.destination);
+      fanOsc.type = 'sawtooth'; fanOsc.frequency.value = 60;
+      fanGain.gain.value = 0.015;
+      fanOsc.start();
+    }
+    
+    function stopFanSound() {
+      if(fanOsc){fanOsc.stop(); fanOsc=null; fanGain=null;}
+    }
+    
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('soundToggleBtn');
+      if(btn) btn.textContent = soundEnabled?'🔊':'🔇';
+      if(soundEnabled && proMining) startFanSound();
+      else stopFanSound();
+    }
+    
+    // ASIC Models
     const asicModels = {
       bitaxe: { name: 'BITAXE', model: 'ULTRA', hashrate: 450, watts: 320, efficiency: 1.4 },
       antminer: { name: 'ANTMINER', model: 'S19', hashrate: 95000, watts: 3250, efficiency: 34 },
@@ -3083,9 +3141,11 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     }
     
     function togglePowerPro() {
+      initAudio();
       proPowered = !proPowered;
       const btn = document.getElementById('powerBtnPro'), device = document.getElementById('proMinerDevice');
       if(proPowered) {
+        playSound('boot');
         btn.style.borderColor = 'var(--success)';
         btn.style.boxShadow = '0 0 20px rgba(0,255,136,0.4)';
         setLED('ledPWR','var(--success)');
@@ -3120,8 +3180,10 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     
     function startMiningPro() {
       if(!proPowered) return;
+      initAudio();
       proMining = true;
       setLED('ledFAN','var(--warning)');
+      startFanSound();
       document.getElementById('proStartBtn').disabled = true;
       document.getElementById('proStopBtn').disabled = false;
       ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id).style.animation='spin 0.15s linear infinite');
@@ -3153,7 +3215,7 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
           else if(proTemp>28+i*5) v.classList.add('hot');
         });
         
-        if(Math.random()<0.18){proAddLog('✓ Share accepted');}
+        if(Math.random()<0.18){proAddLog('✓ Share accepted'); playSound('share');}
         if(miningMode==='solo' && Math.random()<0.00008){foundBlockPro();}
         if(miningMode==='pool'){proTotalEarned += 0.0000012 * (proHashrate/currentAsic.hashrate);}
         
@@ -3164,6 +3226,7 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     
     function stopMiningPro() {
       proMining = false;
+      stopFanSound();
       setLED('ledFAN','#1a1a1a');
       document.getElementById('proStartBtn').disabled = false;
       document.getElementById('proStopBtn').disabled = true;
@@ -3174,6 +3237,7 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     function foundBlockPro() {
       proTotalEarned += 3.125;
       setLED('ledBLK','var(--primary)');
+      playSound('block');
       proAddLog('🎉🎉 BLOCK FOUND! +₿3.125 BTC! 🎉🎉');
       document.getElementById('totalEarned').style.textShadow = '0 0 30px var(--primary)';
       setTimeout(()=>setLED('ledBLK','#1a1a1a'),3500);
