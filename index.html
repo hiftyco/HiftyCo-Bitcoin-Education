@@ -1709,23 +1709,7 @@
     let seedVerified = false;
     let selectedSeedLength = 24; // Default to 24 words
     
-    // Select seed phrase length
-    function selectSeedLength(length) {
-      selectedSeedLength = length;
-      
-      // Update button styles
-      document.getElementById('btn-12word').style.background = length === 12 ? '#f7a526' : '#333';
-      document.getElementById('btn-12word').style.color = length === 12 ? '#000' : '#fff';
-      document.getElementById('btn-24word').style.background = length === 24 ? '#f7a526' : '#333';
-      document.getElementById('btn-24word').style.color = length === 24 ? '#000' : '#fff';
-      
-      // Enable create button
-      const createBtn = document.getElementById('create-wallet-btn');
-      createBtn.disabled = false;
-      createBtn.style.opacity = '1';
-      createBtn.style.pointerEvents = 'auto';
-      createBtn.innerHTML = length === 12 ? '✓ Create 12-Word Wallet' : '✓ Create 24-Word Wallet';
-    }
+    // Select seed phrase length - updated handler below
     
     // Generate real wallet
     function createRealWallet() {
@@ -1735,6 +1719,10 @@
       REAL_WALLET.address = deriveAddress(words);
       REAL_WALLET.created = true;
       REAL_WALLET.wordCount = selectedSeedLength;
+      
+      // Update receive screen with real address and QR code immediately
+      setTimeout(() => updateReceiveScreen(), 100);
+      
       return words;
     }
     
@@ -2082,22 +2070,57 @@
         btn.classList.remove('selected');
         if (btn.textContent.includes(len)) btn.classList.add('selected');
       });
+      
+      // Also update the main seed length buttons (line ~1713)
+      const btn12 = document.getElementById('btn-12word');
+      const btn24 = document.getElementById('btn-24word');
+      const createBtn = document.getElementById('create-wallet-btn');
+      
+      if (btn12) {
+        btn12.style.background = len === 12 ? '#f7a526' : '#333';
+        btn12.style.color = len === 12 ? '#000' : '#fff';
+      }
+      if (btn24) {
+        btn24.style.background = len === 24 ? '#f7a526' : '#333';
+        btn24.style.color = len === 24 ? '#000' : '#fff';
+      }
+      // Enable create button
+      if (createBtn) {
+        createBtn.disabled = false;
+        createBtn.style.opacity = '1';
+        createBtn.style.pointerEvents = 'auto';
+        createBtn.innerHTML = len === 12 ? '✓ Create 12-Word Wallet' : '✓ Create 24-Word Wallet';
+      }
     }
     
     // ============ RECEIVE SECTION FUNCTIONS ============
     
     function updateReceiveScreen() {
-      if (!REAL_WALLET.created) return;
+      if (!REAL_WALLET.created || !REAL_WALLET.address) return;
       
       const address = REAL_WALLET.address;
       const addrEl = document.getElementById('receive-address');
       const qrImg = document.getElementById('qr-image');
       
-      if (addrEl) addrEl.textContent = address;
+      // If elements not ready yet, retry after short delay
+      if ((!addrEl || !qrImg) && !addrEl?.textContent) {
+        setTimeout(updateReceiveScreen, 200);
+        return;
+      }
       
-      // Generate real QR code
+      if (addrEl) {
+        addrEl.textContent = address;
+        addrEl.style.display = 'block';
+      }
+      
+      // Generate real QR code - use backup QR API if primary fails
       if (qrImg) {
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(address)}`;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(address)}`;
+        qrImg.src = qrUrl;
+        qrImg.onerror = function() {
+          // Fallback to quickchart if primary fails
+          this.src = `https://quickchart.io/qr?size=180&text=${encodeURIComponent(address)}`;
+        };
       }
     }
     
@@ -2685,6 +2708,34 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
         document.getElementById('miner-heat-bar').style.width = (temp/80*100) + '%';
       }
     }, 2000);
+    
+    // Initialize UI - ensure cold card is powered on and create button is enabled for default 24-word selection
+    (function initWalletUI() {
+      // Set default button styling
+      const btn24 = document.getElementById('btn-24word');
+      const btn12 = document.getElementById('btn-12word');
+      const createBtn = document.getElementById('create-wallet-btn');
+      
+      if (btn24) {
+        btn24.style.background = '#f7a526';
+        btn24.style.color = '#000';
+      }
+      if (btn12) {
+        btn12.style.background = '#333';
+        btn12.style.color = '#fff';
+      }
+      if (createBtn) {
+        createBtn.disabled = false;
+        createBtn.style.opacity = '1';
+        createBtn.style.pointerEvents = 'auto';
+        createBtn.innerHTML = '✓ Create 24-Word Wallet';
+      }
+      
+      // Auto-power on the Cold Card (with a small delay for visual effect)
+      setTimeout(() => {
+        if (!isPoweredOn) togglePower();
+      }, 500);
+    })();
   </script>
 </body>
 </html>
