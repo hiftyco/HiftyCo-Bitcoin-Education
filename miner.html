@@ -1,0 +1,2350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitcoin Miner Simulator - HiftyCo Education</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛏️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #f7931a;
+      --primary-glow: rgba(247,147,26,0.5);
+      --bg: #050508;
+      --bg2: #0a0a0f;
+      --bg3: #12121a;
+      --text: #e8e8e8;
+      --text2: #888;
+      --text3: #555;
+      --border: #222;
+      --success: #00ff88;
+      --warning: #ffd700;
+      --danger: #ff4757;
+      --led-green: #00ff88;
+      --led-red: #ff4757;
+      --led-blue: #00d4ff;
+      --led-orange: #f7931a;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background: 
+        linear-gradient(90deg, rgba(247,147,26,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(247,147,26,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -1;
+    }
+    
+    .bg-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(150px);
+      opacity: 0.15;
+      z-index: -1;
+    }
+    
+    .bg-glow-1 { top: -200px; right: -200px; background: var(--primary); }
+    .bg-glow-2 { bottom: -200px; left: -200px; background: var(--success); }
+    
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(5,5,8,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 1000;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    
+    .logo .btc { color: var(--primary); font-size: 1.4rem; }
+    .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; }
+    
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+    
+    .back-btn:hover { color: var(--text); }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 100px 24px 60px;
+    }
+    
+    .hero-section {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--primary) 0%, #ffd700 50%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+    
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+    
+    .hero-subtitle {
+      color: var(--text2);
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Mode Selector */
+    .mode-selector {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    
+    .mode-btn {
+      padding: 14px 28px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text2);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .mode-btn:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
+    
+    .mode-btn.active {
+      background: linear-gradient(135deg, var(--primary), #e69420);
+      color: #000;
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px rgba(247,147,26,0.3);
+    }
+    
+    /* ASIC Selector */
+    .asic-selector {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    
+    .asic-card {
+      background: var(--bg2);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 28px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      min-width: 160px;
+    }
+    
+    .asic-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+    
+    .asic-card.selected {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(247,147,26,0.15), rgba(247,147,26,0.05));
+    }
+    
+    .asic-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    
+    .asic-hash {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text2);
+    }
+    
+    .asic-power {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+    
+    /* Miner Display Section */
+    .miner-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+    
+    @media (max-width: 1100px) {
+      .miner-showcase { grid-template-columns: 1fr; }
+    }
+    
+    .miner-device-container {
+      perspective: 1500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 500px;
+    }
+    
+    .miner-wrapper {
+      transform-style: preserve-3d;
+      animation: float3d 6s ease-in-out infinite;
+    }
+    
+    @keyframes float3d {
+      0%, 100% { transform: rotateX(5deg) rotateY(-8deg) translateY(0); }
+      50% { transform: rotateX(-2deg) rotateY(4deg) translateY(-15px); }
+    }
+    
+    .miner-device {
+      width: 380px;
+      height: 300px;
+      background: linear-gradient(145deg, #1a1a1f 0%, #0d0d10 50%, #151518 100%);
+      border-radius: 24px;
+      border: 1px solid #2a2a30;
+      box-shadow: 
+        0 60px 120px rgba(0,0,0,0.8),
+        0 0 0 1px rgba(0,0,0,0.5) inset,
+        -15px -20px 40px rgba(0,0,0,0.6),
+        15px 20px 40px rgba(0,0,0,0.3),
+        0 0 80px rgba(247,147,26,0.08);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: all 0.5s ease;
+    }
+    
+    .miner-device::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, transparent 40%, rgba(0,0,0,0.1) 100%);
+      pointer-events: none;
+    }
+    
+    .miner-device::after {
+      content: '';
+      position: absolute;
+      top: 5%;
+      left: 8%;
+      width: 40%;
+      height: 25%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
+      border-radius: 50% 0 0 0;
+      pointer-events: none;
+    }
+    
+    .miner-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    
+    .miner-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .brand-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 3px;
+    }
+    
+    .brand-model {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text3);
+      letter-spacing: 1px;
+    }
+    
+    .led-indicators {
+      display: flex;
+      gap: 16px;
+    }
+    
+    .led-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .led {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+    
+    .led-power { background: #1a1a1a; box-shadow: none; }
+    .led-power.on {
+      background: var(--success);
+      box-shadow: 0 0 12px var(--success), 0 0 24px rgba(0,255,136,0.3);
+      animation: ledPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes ledPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .led-network { background: #1a1a1a; box-shadow: none; }
+    .led-network.on {
+      background: var(--led-blue);
+      box-shadow: 0 0 12px var(--led-blue), 0 0 24px rgba(0,212,255,0.3);
+      animation: ledPulse 1.5s ease-in-out infinite;
+    }
+    
+    .led-fan { background: #1a1a1a; box-shadow: none; }
+    .led-fan.on {
+      background: var(--warning);
+      box-shadow: 0 0 12px var(--warning), 0 0 24px rgba(255,215,0,0.3);
+    }
+    
+    .led-error { background: #1a1a1a; box-shadow: none; }
+    .led-error.on {
+      background: var(--danger);
+      box-shadow: 0 0 12px var(--danger);
+      animation: ledBlink 0.5s infinite;
+    }
+    
+    @keyframes ledBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    
+    .led-block { background: #1a1a1a; box-shadow: none; }
+    .led-block.on {
+      background: var(--primary);
+      box-shadow: 0 0 20px var(--primary), 0 0 40px rgba(247,147,26,0.5);
+      animation: blockFound 1s ease-out;
+    }
+    
+    @keyframes blockFound {
+      0% { transform: scale(1.5); opacity: 1; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .led-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      color: var(--text3);
+      letter-spacing: 1px;
+    }
+    
+    .miner-display-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    
+    .miner-display {
+      width: 100%;
+      max-width: 320px;
+      height: 100px;
+      background: #080810;
+      border-radius: 8px;
+      border: 1px solid #15151a;
+      box-shadow: 
+        inset 0 3px 10px rgba(0,0,0,0.8),
+        0 0 20px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .miner-display::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(20,40,60,0.08) 0%, transparent 50%);
+    }
+    
+    .miner-display::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,136,0.2), transparent);
+      animation: scanline 3s linear infinite;
+    }
+    
+    @keyframes scanline {
+      from { top: -1px; }
+      to { top: 100%; }
+    }
+    
+    .display-content {
+      text-align: center;
+      z-index: 1;
+    }
+    
+    .display-hashrate {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--success);
+      text-shadow: 0 0 20px rgba(0,255,136,0.5);
+      transition: all 0.3s;
+    }
+    
+    .display-hashrate.boosting {
+      color: var(--warning);
+      text-shadow: 0 0 30px rgba(255,215,0,0.8);
+    }
+    
+    .display-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text3);
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+    
+    .fan-section {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 16px 0;
+    }
+    
+    .fan-container {
+      width: 80px;
+      height: 80px;
+      position: relative;
+    }
+    
+    .fan-housing {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(145deg, #151518, #0a0a0d);
+      border-radius: 50%;
+      border: 3px solid #1f1f24;
+      box-shadow: 
+        inset 0 2px 8px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0,0,0,0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .fan-blade {
+      width: 70px;
+      height: 70px;
+      background: conic-gradient(
+        from 0deg,
+        #1a1a1f 0deg, #25252a 30deg, #1a1a1f 60deg, #25252a 90deg,
+        #1a1a1f 120deg, #25252a 150deg, #1a1a1f 180deg, #25252a 210deg,
+        #1a1a1f 240deg, #25252a 270deg, #1a1a1f 300deg, #25252a 330deg,
+        #1a1a1f 360deg
+      );
+      border-radius: 50%;
+      transition: transform 0.1s linear;
+    }
+    
+    .fan-container.active .fan-blade {
+      animation: spin var(--fan-speed, 0.3s) linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .fan-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle, #2a2a30, #151518);
+      border-radius: 50%;
+      border: 2px solid #1a1a1f;
+    }
+    
+    .heat-sink {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 24px;
+    }
+    
+    .heat-vane {
+      width: 8px;
+      height: 40px;
+      background: linear-gradient(180deg, #25252a, #18181c);
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+    
+    .heat-vane.hot {
+      background: linear-gradient(180deg, #ff6b35, #c0392b);
+    }
+    
+    .heat-vane.critical {
+      background: linear-gradient(180deg, #ff0000, #8b0000);
+      animation: heatPulse 0.5s infinite;
+    }
+    
+    @keyframes heatPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .control-panel {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.3));
+    }
+    
+    .power-button-container {
+      position: relative;
+    }
+    
+    .power-button {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(145deg, #1a1a1f, #0d0d10);
+      border: 2px solid #2a2a30;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s;
+      box-shadow: 
+        0 4px 12px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    
+    .power-button:hover {
+      transform: scale(1.08);
+      border-color: var(--primary);
+      box-shadow: 0 6px 20px rgba(247,147,26,0.3);
+    }
+    
+    .power-button:active {
+      transform: scale(0.95);
+    }
+    
+    .power-button.on {
+      border-color: var(--success);
+      box-shadow: 0 0 20px rgba(0,255,136,0.4);
+    }
+    
+    .power-icon {
+      font-size: 1.5rem;
+      color: var(--text3);
+      transition: color 0.3s;
+    }
+    
+    .power-button.on .power-icon {
+      color: var(--success);
+      text-shadow: 0 0 15px var(--success);
+    }
+    
+    /* Block Found Notification */
+    .block-notification {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, var(--primary), #ffd700);
+      color: #000;
+      padding: 20px 40px;
+      border-radius: 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 20px 60px rgba(247,147,26,0.5);
+    }
+    
+    .block-notification.show {
+      transform: translateX(-50%) translateY(20px);
+      opacity: 1;
+    }
+    
+    .stats-dashboard {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+    }
+    
+    .dashboard-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      color: var(--text2);
+    }
+    
+    /* Pool Config */
+    .pool-config {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .pool-config-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .pool-config-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+    
+    .pool-config select {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    
+    .pool-config select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .btn-apply {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-apply:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(247,147,26,0.4);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    
+    .stat-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-shadow: 0 0 20px rgba(247,147,26,0.3);
+    }
+    
+    .stat-value.success { color: var(--success); text-shadow: 0 0 20px rgba(0,255,136,0.3); }
+    .stat-value.warning { color: var(--warning); text-shadow: 0 0 20px rgba(255,215,0,0.3); }
+    .stat-value.danger { color: var(--danger); text-shadow: 0 0 20px rgba(255,71,87,0.3); }
+    
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text3);
+      margin-top: 6px;
+      letter-spacing: 1px;
+    }
+    
+    .progress-section {
+      margin-bottom: 24px;
+    }
+    
+    .progress-item {
+      margin-bottom: 16px;
+    }
+    
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+    
+    .progress-label { color: var(--text2); }
+    .progress-value { color: var(--text); font-family: 'JetBrains Mono', monospace; }
+    
+    .progress-bar {
+      height: 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    
+    .progress-fill.hashrate {
+      background: linear-gradient(90deg, var(--success), #00ffaa);
+    }
+    
+    .progress-fill.temp {
+      background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
+    }
+    
+    .progress-fill.fan {
+      background: linear-gradient(90deg, var(--primary), var(--warning));
+    }
+    
+    .control-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn-control {
+      flex: 1;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-start {
+      background: linear-gradient(135deg, var(--success), #00cc6a);
+      color: #000;
+    }
+    
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,255,136,0.4);
+    }
+    
+    .btn-stop {
+      background: var(--bg3);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    
+    .btn-stop:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    
+    .btn-control:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    .logs-container {
+      background: #080810;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .log-line {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+    
+    .log-time { color: var(--text3); }
+    .log-info { color: var(--success); }
+    .log-warn { color: var(--warning); }
+    .log-error { color: var(--danger); }
+    .log-hash { color: var(--primary); }
+    .log-block { color: var(--primary); font-weight: bold; }
+    
+    .pool-info {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .pool-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .pool-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .pool-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+    
+    .pool-status.connected { color: var(--success); }
+    .pool-status.disconnected { color: var(--danger); }
+    .pool-status.solo { color: var(--warning); }
+    
+    .pool-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    
+    .pool-status.connected .pool-status-dot { background: var(--success); }
+    .pool-status.disconnected .pool-status-dot { background: var(--danger); }
+    .pool-status.solo .pool-status-dot { background: var(--warning); }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .pool-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    
+    .pool-stat {
+      text-align: center;
+    }
+    
+    .pool-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    
+    .pool-stat-label {
+      font-size: 0.7rem;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+    
+    /* Power Stats */
+    .power-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .power-stat {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+    
+    .power-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    
+    .power-stat-value.efficient { color: var(--success); }
+    .power-stat-value.inefficient { color: var(--warning); }
+    
+    .power-stat-label {
+      font-size: 0.65rem;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+    
+    .income-section {
+      background: linear-gradient(135deg, rgba(247,147,26,0.1), rgba(0,255,136,0.05));
+      border: 1px solid rgba(247,147,26,0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+    
+    .income-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .income-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text2);
+      letter-spacing: 2px;
+    }
+    
+    .income-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-shadow: 0 0 30px rgba(247,147,26,0.5);
+      margin-top: 8px;
+    }
+    
+    .income-fiat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+    
+    .income-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    
+    .income-stat {
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .income-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--success);
+    }
+    
+    .income-stat-label {
+      font-size: 0.7rem;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+    
+    /* Block History */
+    .block-history {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+    
+    .block-history-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+    
+    .blocks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+    }
+    
+    .block-chip {
+      background: linear-gradient(135deg, rgba(247,147,26,0.2), rgba(247,147,26,0.1));
+      border: 1px solid rgba(247,147,26,0.3);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      animation: blockChipIn 0.5s ease-out;
+    }
+    
+    @keyframes blockChipIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .block-chip-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--primary);
+    }
+    
+    .block-chip-reward {
+      font-size: 0.7rem;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+    
+    .edu-section {
+      margin-top: 60px;
+    }
+    
+    .edu-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      letter-spacing: 2px;
+    }
+    
+    .edu-title span { color: var(--primary); }
+    
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    
+    .edu-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+    
+    .edu-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .edu-icon {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+    
+    .edu-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    
+    .edu-card p {
+      color: var(--text2);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+    
+    .calc-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-top: 40px;
+      text-align: center;
+    }
+    
+    .calc-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    
+    .calc-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    
+    .calc-input-group {
+      text-align: center;
+    }
+    
+    .calc-input-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text2);
+      margin-bottom: 8px;
+    }
+    
+    .calc-input {
+      width: 120px;
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    
+    .calc-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .btn-calc {
+      padding: 14px 32px;
+      background: var(--primary);
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      align-self: flex-end;
+    }
+    
+    .btn-calc:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(247,147,26,0.4);
+    }
+    
+    .calc-result {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      color: var(--success);
+      margin-top: 20px;
+    }
+    
+    .calc-result span {
+      color: var(--text2);
+      font-size: 1rem;
+      display: block;
+      margin-top: 8px;
+    }
+    
+    .calc-result.negative { color: var(--danger); }
+    
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--text3);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+    
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    
+    .miner-device.powered-off .miner-display {
+      background: #030305;
+      border-color: #0a0a0f;
+    }
+    
+    .miner-device.powered-off .display-hashrate,
+    .miner-device.powered-off .display-label {
+      color: #111;
+      text-shadow: none;
+    }
+    
+    .miner-device.powered-off .fan-container .fan-blade {
+      animation: none;
+    }
+    
+    .miner-device.powered-off .led-power.on,
+    .miner-device.powered-off .led-network.on,
+    .miner-device.powered-off .led-fan.on {
+      background: #1a1a1a;
+      box-shadow: none;
+      animation: none;
+    }
+    
+    .Miner_off {
+      filter: brightness(0.15);
+      transition: filter 0.5s;
+    }
+    
+    .share-found {
+      animation: shareFlash 0.5s ease-out;
+    }
+    
+    @keyframes shareFlash {
+      0% { background: rgba(0,255,136,0.3); }
+      100% { background: transparent; }
+    }
+    
+    /* Sound control */
+    .sound-toggle {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text2);
+      transition: all 0.3s;
+      z-index: 100;
+    }
+    
+    .sound-toggle:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
+    
+    .sound-toggle.active {
+      border-color: var(--success);
+      color: var(--success);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  
+  <div class="block-notification" id="blockNotification">
+    🎉 BLOCK FOUND! +₿ 3.125
+  </div>
+  
+  <div class="sound-toggle" id="soundToggle" onclick="toggleSound()">
+    🔊 Sound On
+  </div>
+  
+  <nav class="nav">
+    <a href="index.html" class="back-btn">
+      ← Back to Education
+    </a>
+    <div class="logo">
+      <span class="btc">₿</span>
+      <span>HiftyCo</span>
+      <span class="tag">EDUCATION</span>
+    </div>
+    <div style="width: 100px;"></div>
+  </nav>
+  
+  <div class="container">
+    <div class="hero-section">
+      <h1 class="hero-title">⛏️ BITCOIN MINER</h1>
+      <p class="hero-subtitle">Experience running a real Bitcoin ASIC miner. Power it on, configure your pool, and watch the hashrate roll in.</p>
+    </div>
+    
+    <!-- Mining Mode -->
+    <div style="text-align: center; margin-bottom: 20px;">
+      <div class="dashboard-title" style="margin-bottom: 16px;">SELECT MINING MODE</div>
+    </div>
+    
+    <div class="mode-selector">
+      <button class="mode-btn active" id="modePool" onclick="setMode('pool')">
+        🏊 Pool Mining
+      </button>
+      <button class="mode-btn" id="modeSolo" onclick="setMode('solo')">
+        ⛏️ Solo Mining
+      </button>
+    </div>
+    
+    <!-- ASIC Selector -->
+    <div style="text-align: center; margin-bottom: 20px;">
+      <div class="dashboard-title" style="margin-bottom: 16px;">SELECT YOUR ASIC</div>
+    </div>
+    
+    <div class="asic-selector">
+      <div class="asic-card" onclick="selectAsic('bitaxe')" id="asic-bitaxe">
+        <div class="asic-name">Bitaxe Ultra</div>
+        <div class="asic-hash">450 GH/s</div>
+        <div class="asic-power">320W • 1.4 J/TH</div>
+      </div>
+      <div class="asic-card" onclick="selectAsic('antminer')" id="asic-antminer">
+        <div class="asic-name">Antminer S19</div>
+        <div class="asic-hash">95 TH/s</div>
+        <div class="asic-power">3250W • 34 J/TH</div>
+      </div>
+      <div class="asic-card" onclick="selectAsic('whatsminer')" id="asic-whatsminer">
+        <div class="asic-name">Whatsminer M30S</div>
+        <div class="asic-hash">86 TH/s</div>
+        <div class="asic-power">3200W • 37 J/TH</div>
+      </div>
+      <div class="asic-card" onclick="selectAsic('braiins')" id="asic-braiins">
+        <div class="asic-name">Braiins OS+</div>
+        <div class="asic-hash">120 TH/s</div>
+        <div class="asic-power">2800W • 23 J/TH</div>
+      </div>
+    </div>
+    
+    <div class="miner-showcase">
+      <div class="miner-device-container">
+        <div class="miner-wrapper" id="minerWrapper">
+          <div class="miner-device Miner_off" id="minerDevice">
+            <div class="miner-top-bar">
+              <div class="miner-brand">
+                <div>
+                  <div class="brand-logo" id="brandName">BITAXE</div>
+                  <div class="brand-model" id="brandModel">ULTRA</div>
+                </div>
+              </div>
+              <div class="led-indicators">
+                <div class="led-group">
+                  <div class="led led-power" id="ledPower"></div>
+                  <div class="led-label">PWR</div>
+                </div>
+                <div class="led-group">
+                  <div class="led led-network" id="ledNetwork"></div>
+                  <div class="led-label">NET</div>
+                </div>
+                <div class="led-group">
+                  <div class="led led-fan" id="ledFan"></div>
+                  <div class="led-label">FAN</div>
+                </div>
+                <div class="led-group">
+                  <div class="led led-error" id="ledError"></div>
+                  <div class="led-label">ERR</div>
+                </div>
+                <div class="led-group">
+                  <div class="led led-block" id="ledBlock"></div>
+                  <div class="led-label">BLK</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="miner-display-container">
+              <div class="miner-display" id="minerDisplay">
+                <div class="display-content">
+                  <div class="display-hashrate" id="displayHashrate">0.00</div>
+                  <div class="display-label" id="displayLabel">GH/S - OFFLINE</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="heat-sink" id="heatSink">
+              <div class="heat-vane"></div><div class="heat-vane"></div><div class="heat-vane"></div>
+              <div class="heat-vane"></div><div class="heat-vane"></div><div class="heat-vane"></div>
+              <div class="heat-vane"></div><div class="heat-vane"></div><div class="heat-vane"></div>
+              <div class="heat-vane"></div><div class="heat-vane"></div><div class="heat-vane"></div>
+              <div class="heat-vane"></div><div class="heat-vane"></div><div class="heat-vane"></div>
+              <div class="heat-vane"></div>
+            </div>
+            
+            <div class="fan-section">
+              <div class="fan-container" id="fan1">
+                <div class="fan-housing">
+                  <div class="fan-blade"></div>
+                  <div class="fan-center"></div>
+                </div>
+              </div>
+              <div class="fan-container" id="fan2">
+                <div class="fan-housing">
+                  <div class="fan-blade"></div>
+                  <div class="fan-center"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="control-panel">
+              <div class="power-button-container">
+                <button class="power-button" id="powerBtn" onclick="togglePower()">
+                  <span class="power-icon">⏻</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stats-dashboard">
+        <div class="dashboard-title">MINING DASHBOARD</div>
+        
+        <!-- Pool Config -->
+        <div class="pool-config" id="poolConfigSection">
+          <div class="pool-config-header">
+            <div class="pool-config-title">⚙️ POOL CONFIGURATION</div>
+          </div>
+          <select id="poolSelect" onchange="updatePoolInfo()">
+            <option value="bitcoin.com">stratum.pool.bitcoin.com</option>
+            <option value="antpool">antpool.com</option>
+            <option value="f2pool">f2pool.com</option>
+            <option value="viabtc">viabtc.com</option>
+            <option value="slush">slushpool.com</option>
+          </select>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="workerName" placeholder="worker1" style="flex:1;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.85rem;">
+            <input type="text" id="workerPass" placeholder="x" style="width:60px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.85rem;text-align:center;">
+          </div>
+          <button class="btn-apply" onclick="applyPoolConfig()" style="margin-top: 12px;">Apply Configuration</button>
+        </div>
+        
+        <!-- Solo Mode Info -->
+        <div class="pool-info" id="soloInfo" style="display: none;">
+          <div class="pool-header">
+            <div class="pool-name">🎯 SOLO MINING</div>
+            <div class="pool-status solo">
+              <div class="pool-status-dot"></div>
+              <span>Direct to Blockchain</span>
+            </div>
+          </div>
+          <p style="color: var(--text2); font-size: 0.85rem; line-height: 1.6;">
+            ⛏️ You're mining directly for block rewards! Each block found earns you the full <strong>3.125 BTC</strong> reward. Higher risk, higher reward!
+          </p>
+        </div>
+        
+        <!-- Pool Info -->
+        <div class="pool-info" id="poolInfo">
+          <div class="pool-header">
+            <div class="pool-name" id="poolName">stratum.pool.bitcoin.com</div>
+            <div class="pool-status disconnected" id="poolStatus">
+              <div class="pool-status-dot"></div>
+              <span>Disconnected</span>
+            </div>
+          </div>
+          <div class="pool-stats">
+            <div class="pool-stat">
+              <div class="pool-stat-value" id="poolWorkers">0</div>
+              <div class="pool-stat-label">Workers</div>
+            </div>
+            <div class="pool-stat">
+              <div class="pool-stat-value" id="poolDiff">--</div>
+              <div class="pool-stat-label">Difficulty</div>
+            </div>
+            <div class="pool-stat">
+              <div class="pool-stat-value" id="poolPings">--</div>
+              <div class="pool-stat-label">Ping (ms)</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Power Stats -->
+        <div class="power-stats">
+          <div class="power-stat">
+            <div class="power-stat-value" id="powerDraw">0W</div>
+            <div class="power-stat-label">Power Draw</div>
+          </div>
+          <div class="power-stat">
+            <div class="power-stat-value" id="efficiency">--</div>
+            <div class="power-stat-label">J/TH</div>
+          </div>
+          <div class="power-stat">
+            <div class="power-stat-value" id="powerCost">$0.00</div>
+            <div class="power-stat-label">Cost/Day</div>
+          </div>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value success" id="hashrateStat">0</div>
+            <div class="stat-label">HASH RATE</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="tempStat">--</div>
+            <div class="stat-label">TEMP (°C)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="fanStat">--</div>
+            <div class="stat-label">FAN (RPM)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="sharesStat">0</div>
+            <div class="stat-label">SHARES</div>
+          </div>
+        </div>
+        
+        <div class="progress-section">
+          <div class="progress-item">
+            <div class="progress-header">
+              <span class="progress-label">Hashrate</span>
+              <span class="progress-value" id="hashratePercent">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill hashrate" id="hashrateBar" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-header">
+              <span class="progress-label">Temperature</span>
+              <span class="progress-value" id="tempPercent">--</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill temp" id="tempBar" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-header">
+              <span class="progress-label">Fan Speed</span>
+              <span class="progress-value" id="fanPercent">--</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill fan" id="fanBar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="control-buttons">
+          <button class="btn-control btn-start" id="startBtn" onclick="startMining()" disabled>
+            ▶ Start Mining
+          </button>
+          <button class="btn-control btn-stop" id="stopBtn" onclick="stopMining()" disabled>
+            ⏹ Stop
+          </button>
+        </div>
+        
+        <div style="margin-top: 24px;">
+          <div class="dashboard-title" style="font-size: 0.9rem;">SYSTEM LOG</div>
+          <div class="logs-container" id="logsContainer">
+            <div class="log-line">
+              <span class="log-time">[BOOT]</span>
+              <span class="log-info"> System ready. Press power to start.</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Block History -->
+        <div class="block-history" id="blockHistory" style="display: none;">
+          <div class="block-history-title">🎯 BLOCKS FOUND</div>
+          <div class="blocks-grid" id="blocksGrid"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Income Section -->
+    <div class="income-section">
+      <div class="income-header">
+        <div class="income-title">⚡ MINING REWARDS</div>
+        <div class="income-value" id="totalEarned">₿ 0.00000000</div>
+        <div class="income-fiat" id="fiatEarned">$0.00 USD</div>
+      </div>
+      <div class="income-grid">
+        <div class="income-stat">
+          <div class="income-stat-value" id="sharesTotal">0</div>
+          <div class="income-stat-label">Total Shares</div>
+        </div>
+        <div class="income-stat">
+          <div class="income-stat-value" id="avgHashrate">0</div>
+          <div class="income-stat-label">Avg Hashrate (GH/s)</div>
+        </div>
+        <div class="income-stat">
+          <div class="income-stat-value" id="luckStat">--</div>
+          <div class="income-stat-label">Pool Luck %</div>
+        </div>
+        <div class="income-stat">
+          <div class="income-stat-value" id="estDaily">$0.00</div>
+          <div class="income-stat-label">Est. Daily Revenue</div>
+        </div>
+        <div class="income-stat">
+          <div class="income-stat-value" id="blocksFound">0</div>
+          <div class="income-stat-label">Blocks Found</div>
+        </div>
+        <div class="income-stat">
+          <div class="income-stat-value" id="uptimeStat">0:00:00</div>
+          <div class="income-stat-label">Uptime</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Education Section -->
+    <div class="edu-section">
+      <h2 class="edu-title">Learn About <span>Bitcoin Mining</span></h2>
+      
+      <div class="edu-grid">
+        <div class="edu-card">
+          <div class="edu-icon">🔐</div>
+          <h3>What is Mining?</h3>
+          <p>Bitcoin mining is the process of adding transaction records to Bitcoin's public ledger. Miners compete to solve complex mathematical puzzles, and the winner gets newly created Bitcoin as a reward.</p>
+        </div>
+        
+        <div class="edu-card">
+          <div class="edu-icon">⚡</div>
+          <h3>Hash Rate</h3>
+          <p>Hash rate measures the miner's computational power. Higher hash rate = more chances to find blocks. The Bitaxe Ultra produces around 450 GH/s (billion hashes per second).</p>
+        </div>
+        
+        <div class="edu-card">
+          <div class="edu-icon">🏊</div>
+          <h3>Mining Pools</h3>
+          <p>Solo mining is extremely difficult. Pools combine many miners' hash power to find blocks more frequently. Rewards are shared proportionally based on each miner's contribution.</p>
+        </div>
+        
+        <div class="edu-card">
+          <div class="edu-icon">🎯</div>
+          <h3>Proof of Work</h3>
+          <p>Bitcoin uses Proof of Work (PoW) consensus. Miners must prove they've expended computational energy. This secures the network and creates new coins fairly.</p>
+        </div>
+        
+        <div class="edu-card">
+          <div class="edu-icon">📉</div>
+          <h3>Halving</h3>
+          <p>Every ~4 years, Bitcoin block rewards halve. In 2024, rewards went from 6.25 to 3.125 BTC. This decreasing supply is what makes Bitcoin deflationary.</p>
+        </div>
+        
+        <div class="edu-card">
+          <div class="edu-icon">💰</div>
+          <h3>Profitability</h3>
+          <p>Mining profit depends on: electricity cost, Bitcoin price, network difficulty, and hashrate. Use the calculator below to estimate your potential earnings.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="calc-section">
+      <h3 class="calc-title">⛏️ Mining Profitability Calculator</h3>
+      <div class="calc-inputs">
+        <div class="calc-input-group">
+          <label>Hash Rate (GH/s)</label>
+          <input type="number" class="calc-input" id="calcHashrate" value="450">
+        </div>
+        <div class="calc-input-group">
+          <label>Electricity ($/kWh)</label>
+          <input type="number" class="calc-input" id="calcPower" value="0.10" step="0.01">
+        </div>
+        <div class="calc-input-group">
+          <label>Power (Watts)</label>
+          <input type="number" class="calc-input" id="calcWatts" value="320">
+        </div>
+        <button class="btn-calc" onclick="calculateProfit()">Calculate</button>
+      </div>
+      <div class="calc-result" id="calcResult">
+        $2.47 / day
+        <span>Revenue: $4.32 | Costs: $1.85 | Pool fees: $0.22</span>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+    <p>₿ HiftyCo — Interactive Bitcoin Education</p>
+    <p style="margin-top: 8px;">Learn Bitcoin by doing. Simulation for educational purposes only.</p>
+  </footer>
+
+  <script>
+    // ASIC Models
+    const asicModels = {
+      bitaxe: { name: 'BITAXE', model: 'ULTRA', hashrate: 450, watts: 320, efficiency: 1.4 },
+      antminer: { name: 'ANTMINER', model: 'S19', hashrate: 95000, watts: 3250, efficiency: 34 },
+      whatsminer: { name: 'WHATSMINER', model: 'M30S+', hashrate: 86000, watts: 3200, efficiency: 37 },
+      braiins: { name: 'BRAIINS', model: 'OS+', hashrate: 120000, watts: 2800, efficiency: 23 }
+    };
+    
+    // Pool configurations
+    const pools = {
+      'bitcoin.com': { name: 'stratum.pool.bitcoin.com', fee: 2 },
+      'antpool': { name: 'antpool.com', fee: 2.5 },
+      'f2pool': { name: 'f2pool.com', fee: 3 },
+      'viabtc': { name: 'viabtc.com', fee: 2 },
+      'slush': { name: 'slushpool.com', fee: 2 }
+    };
+    
+    // State
+    let isPowered = false;
+    let isMining = false;
+    let soundEnabled = true;
+    let miningMode = 'pool'; // 'pool' or 'solo'
+    let selectedAsic = 'bitaxe';
+    let hashrate = 0;
+    let targetHashrate = 450;
+    let temperature = 0;
+    let fanSpeed = 0;
+    let shares = 0;
+    let totalShares = 0;
+    let totalEarned = 0;
+    let btcPrice = 70000;
+    let powerCostPerKwh = 0.10;
+    let blocksFound = 0;
+    let blockHistory = [];
+    let uptimeSeconds = 0;
+    let uptimeInterval;
+    
+    // Current ASIC
+    let currentAsic = asicModels[selectedAsic];
+    
+    // DOM Elements
+    const minerDevice = document.getElementById('minerDevice');
+    const displayHashrate = document.getElementById('displayHashrate');
+    const displayLabel = document.getElementById('displayLabel');
+    const ledPower = document.getElementById('ledPower');
+    const ledNetwork = document.getElementById('ledNetwork');
+    const ledFan = document.getElementById('ledFan');
+    const ledError = document.getElementById('ledError');
+    const ledBlock = document.getElementById('ledBlock');
+    const fan1 = document.getElementById('fan1');
+    const fan2 = document.getElementById('fan2');
+    const powerBtn = document.getElementById('powerBtn');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const logsContainer = document.getElementById('logsContainer');
+    
+    // Initialize ASIC selection
+    selectAsic('bitaxe');
+    
+    // Sound synthesis for fan noise and beeps
+    let audioContext = null;
+    let fanOscillator = null;
+    let fanGain = null;
+    
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+    
+    function playShareSound() {
+      if (!soundEnabled || !audioContext) return;
+      
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+      
+      osc.frequency.setValueAtTime(880, audioContext.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1760, audioContext.currentTime + 0.1);
+      
+      gain.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+      
+      osc.start();
+      osc.stop(audioContext.currentTime + 0.2);
+    }
+    
+    function playBlockSound() {
+      if (!soundEnabled || !audioContext) return;
+      
+      // Celebration sound
+      const frequencies = [523, 659, 784, 1047];
+      
+      frequencies.forEach((freq, i) => {
+        setTimeout(() => {
+          const osc = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+          
+          osc.connect(gain);
+          gain.connect(audioContext.destination);
+          
+          osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+          gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+          
+          osc.start();
+          osc.stop(audioContext.currentTime + 0.4);
+        }, i * 150);
+      });
+    }
+    
+    function startFanSound() {
+      if (!soundEnabled || !audioContext || fanOscillator) return;
+      
+      fanOscillator = audioContext.createOscillator();
+      fanGain = audioContext.createGain();
+      
+      fanOscillator.connect(fanGain);
+      fanGain.connect(audioContext.destination);
+      
+      fanOscillator.type = 'sawtooth';
+      fanOscillator.frequency.setValueAtTime(80, audioContext.currentTime);
+      fanGain.gain.setValueAtTime(0.03, audioContext.currentTime);
+      
+      fanOscillator.start();
+    }
+    
+    function stopFanSound() {
+      if (fanOscillator) {
+        fanOscillator.stop();
+        fanOscillator = null;
+        fanGain = null;
+      }
+    }
+    
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const toggle = document.getElementById('soundToggle');
+      
+      if (soundEnabled) {
+        toggle.classList.add('active');
+        toggle.innerHTML = '🔊 Sound On';
+        initAudio();
+        if (isMining) startFanSound();
+      } else {
+        toggle.classList.remove('active');
+        toggle.innerHTML = '🔇 Sound Off';
+        stopFanSound();
+      }
+    }
+    
+    // Add log
+    function addLog(message, type = 'info') {
+      const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+      const logLine = document.createElement('div');
+      logLine.className = 'log-line';
+      logLine.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-${type}">${message}</span>`;
+      logsContainer.appendChild(logLine);
+      logsContainer.scrollTop = logsContainer.scrollHeight;
+    }
+    
+    // Set mining mode
+    function setMode(mode) {
+      miningMode = mode;
+      
+      document.getElementById('modePool').classList.toggle('active', mode === 'pool');
+      document.getElementById('modeSolo').classList.toggle('active', mode === 'solo');
+      
+      document.getElementById('poolConfigSection').style.display = mode === 'pool' ? 'block' : 'none';
+      document.getElementById('poolInfo').style.display = mode === 'pool' ? 'block' : 'none';
+      document.getElementById('soloInfo').style.display = mode === 'solo' ? 'block' : 'none';
+      document.getElementById('blockHistory').style.display = mode === 'solo' ? 'block' : 'none';
+      
+      if (isPowered) {
+        addLog(mode === 'solo' ? 'Switched to SOLO mining mode' : 'Switched to POOL mining mode', 'warn');
+      }
+    }
+    
+    // Select ASIC
+    function selectAsic(asic) {
+      selectedAsic = asic;
+      currentAsic = asicModels[asic];
+      
+      // Update UI
+      document.querySelectorAll('.asic-card').forEach(card => card.classList.remove('selected'));
+      document.getElementById('asic-' + asic).classList.add('selected');
+      
+      // Update device
+      document.getElementById('brandName').textContent = currentAsic.name;
+      document.getElementById('brandModel').textContent = currentAsic.model;
+      
+      targetHashrate = currentAsic.hashrate;
+      
+      // Update calculator
+      document.getElementById('calcHashrate').value = currentAsic.hashrate;
+      document.getElementById('calcWatts').value = currentAsic.watts;
+      
+      // Update efficiency display
+      document.getElementById('efficiency').textContent = currentAsic.efficiency + ' J/TH';
+      document.getElementById('efficiency').className = 'power-stat-value ' + (currentAsic.efficiency < 30 ? 'efficient' : 'inefficient');
+      
+      calculateProfit();
+      
+      // Log
+      if (isPowered) {
+        addLog(`ASIC changed to ${currentAsic.name} ${currentAsic.model}`, 'warn');
+      }
+    }
+    
+    // Update pool info
+    function updatePoolInfo() {
+      const poolSelect = document.getElementById('poolSelect');
+      const pool = pools[poolSelect.value];
+      document.getElementById('poolName').textContent = pool.name;
+    }
+    
+    // Apply pool config
+    function applyPoolConfig() {
+      const workerName = document.getElementById('workerName').value || 'worker1';
+      const poolSelect = document.getElementById('poolSelect');
+      const pool = pools[poolSelect.value];
+      
+      addLog(`Pool: ${pool.name}`, 'info');
+      addLog(`Worker: ${workerName}`, 'info');
+      addLog(`Pool fee: ${pool.fee}%`, 'info');
+    }
+    
+    // Power toggle
+    function togglePower() {
+      initAudio();
+      isPowered = !isPowered;
+      
+      if (isPowered) {
+        minerDevice.classList.remove('Miner_off');
+        powerBtn.classList.add('on');
+        ledPower.classList.add('on');
+        
+        addLog(`Powering on ${currentAsic.name} ${currentAsic.model}...`, 'info');
+        
+        setTimeout(() => {
+          addLog('ASIC chip detected', 'info');
+        }, 500);
+        
+        setTimeout(() => {
+          addLog('Memory test: 512MB OK', 'info');
+        }, 1000);
+        
+        setTimeout(() => {
+          addLog('WiFi connected', 'info');
+          ledNetwork.classList.add('on');
+          updatePoolStatus(true);
+        }, 1500);
+        
+        setTimeout(() => {
+          addLog('Chip calibration complete', 'success');
+          displayLabel.textContent = miningMode === 'solo' ? 'TH/S - SOLO' : 'GH/S - READY';
+          startBtn.disabled = false;
+          
+          // Update display unit based on ASIC
+          if (currentAsic.hashrate >= 1000) {
+            displayHashrate.textContent = '0.00';
+            displayLabel.textContent = currentAsic.hashrate >= 100000 ? 'TH/S - READY' : 'GH/S - READY';
+          }
+        }, 2000);
+        
+      } else {
+        stopMining();
+        minerDevice.classList.add('Miner_off');
+        powerBtn.classList.remove('on');
+        ledPower.classList.remove('on');
+        ledNetwork.classList.remove('on');
+        ledFan.classList.remove('on');
+        
+        fan1.classList.remove('active');
+        fan2.classList.remove('active');
+        
+        stopFanSound();
+        
+        displayHashrate.textContent = '0.00';
+        displayLabel.textContent = 'GH/S - OFFLINE';
+        
+        addLog('System shutdown...', 'warn');
+        
+        document.getElementById('tempStat').textContent = '--';
+        document.getElementById('fanStat').textContent = '--';
+        document.getElementById('hashrateStat').textContent = '0';
+        
+        startBtn.disabled = true;
+        stopBtn.disabled = true;
+        
+        updatePoolStatus(false);
+      }
+    }
+    
+    function updatePoolStatus(connected) {
+      const statusEl = document.getElementById('poolStatus');
+      if (connected && miningMode === 'pool') {
+        statusEl.className = 'pool-status connected';
+        statusEl.innerHTML = '<div class="pool-status-dot"></div><span>Connected</span>';
+        document.getElementById('poolWorkers').textContent = '1';
+        document.getElementById('poolDiff').textContent = '82.5T';
+        document.getElementById('poolPings').textContent = Math.floor(Math.random() * 50 + 20);
+      } else if (connected && miningMode === 'solo') {
+        statusEl.className = 'pool-status solo';
+        statusEl.innerHTML = '<div class="pool-status-dot"></div><span>Mining</span>';
+      } else {
+        statusEl.className = 'pool-status disconnected';
+        statusEl.innerHTML = '<div class="pool-status-dot"></div><span>Disconnected</span>';
+        document.getElementById('poolWorkers').textContent = '0';
+        document.getElementById('poolDiff').textContent = '--';
+        document.getElementById('poolPings').textContent = '--';
+      }
+    }
+    
+    // Start mining
+    function startMining() {
+      if (!isPowered) return;
+      
+      initAudio();
+      isMining = true;
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      
+      ledFan.classList.add('on');
+      fan1.classList.add('active');
+      fan2.classList.add('active');
+      
+      startFanSound();
+      
+      const modeText = miningMode === 'solo' ? 'SOLO' : document.getElementById('poolSelect').value;
+      addLog(`Starting ${modeText} mining...`, 'info');
+      addLog(`Target hashrate: ${targetHashrate} ${currentAsic.hashrate >= 1000 ? 'GH/s' : 'TH/s'}`, 'info');
+      
+      displayLabel.textContent = currentAsic.hashrate >= 100000 ? 'TH/S - MINING' : 'GH/S - MINING';
+      
+      // Adaptive fan speed
+      fan1.style.setProperty('--fan-speed', '0.15s');
+      fan2.style.setProperty('--fan-speed', '0.15s');
+      
+      // Reset stats
+      shares = 0;
+      uptimeSeconds = 0;
+      
+      // Start uptime counter
+      uptimeInterval = setInterval(() => {
+        if (isMining) {
+          uptimeSeconds++;
+          const hours = Math.floor(uptimeSeconds / 3600);
+          const mins = Math.floor((uptimeSeconds % 3600) / 60);
+          const secs = uptimeSeconds % 60;
+          document.getElementById('uptimeStat').textContent = 
+            `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+      
+      simulateMining();
+    }
+    
+    // Stop mining
+    function stopMining() {
+      isMining = false;
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      
+      ledFan.classList.remove('on');
+      fan1.classList.remove('active');
+      fan2.classList.remove('active');
+      ledBlock.classList.remove('on');
+      
+      stopFanSound();
+      
+      addLog('Mining stopped by user', 'warn');
+      displayLabel.textContent = currentAsic.hashrate >= 100000 ? 'TH/S - IDLE' : 'GH/S - IDLE';
+      
+      clearInterval(uptimeInterval);
+    }
+    
+    // Main mining simulation
+    function simulateMining() {
+      // Ramp up hashrate
+      const rampUp = setInterval(() => {
+        if (!isMining) {
+          clearInterval(rampUp);
+          return;
+        }
+        
+        const increment = currentAsic.hashrate * 0.03;
+        hashrate += increment + (Math.random() * increment * 0.5);
+        
+        if (hashrate >= currentAsic.hashrate) {
+          hashrate = currentAsic.hashrate * (0.95 + Math.random() * 0.1);
+          clearInterval(rampUp);
+          
+          const unit = currentAsic.hashrate >= 100000 ? 'TH/s' : 'GH/s';
+          addLog(`Nominal hashrate achieved: ${formatHashrate(hashrate)} ${unit}`, 'success');
+        }
+        
+        updateDisplay();
+      }, 200);
+      
+      // Stats simulation
+      const statsInterval = setInterval(() => {
+        if (!isMining) {
+          clearInterval(statsInterval);
+          return;
+        }
+        
+        // Temperature rises
+        temperature = Math.min(90, temperature + (Math.random() * 4 - 1));
+        if (temperature < 35) temperature = 35;
+        
+        // Update heat sink colors
+        updateHeatSink();
+        
+        // Fan speed based on temp
+        fanSpeed = Math.min(6500, 2500 + (temperature * 50));
+        
+        // Random hashrate fluctuation
+        hashrate = Math.max(currentAsic.hashrate * 0.85, Math.min(currentAsic.hashrate * 1.1, hashrate + (Math.random() * currentAsic.hashrate * 0.02 - currentAsic.hashrate * 0.01)));
+        
+        // Share finding
+        if (Math.random() < (isMining ? 0.2 : 0.05)) {
+          shares++;
+          totalShares++;
+          
+          const diff = (Math.random() * 1000 + 100).toFixed(0);
+          addLog(`Share accepted! (diff: ${diff})`, 'hash');
+          
+          playShareSound();
+          
+          // Flash effect
+          const sharesStat = document.getElementById('sharesStat').parentElement;
+          sharesStat.classList.add('share-found');
+          setTimeout(() => sharesStat.classList.remove('share-found'), 500);
+          
+          // Pool mode: calculate earnings from shares
+          if (miningMode === 'pool') {
+            const shareValue = 0.000001 * (hashrate / currentAsic.hashrate);
+            totalEarned += shareValue;
+          }
+        }
+        
+        // Solo mode: block finding simulation
+        if (miningMode === 'solo') {
+          // Block probability based on hashrate (simplified)
+          // Real solo mining with 450 GH/s is extremely unlikely to find a block
+          const blockProbability = (hashrate / 180000000000000) * 100; // Approximate network hashrate
+          
+          if (Math.random() < blockProbability * 10) { // Boosted for demo
+            foundBlock();
+          }
+        }
+        
+        // Temperature warning
+        if (temperature > 80) {
+          addLog(`⚠️ Temperature critical: ${temperature.toFixed(0)}°C`, 'error');
+          ledError.classList.add('on');
+          setTimeout(() => ledError.classList.remove('on'), 2000);
+        } else if (temperature > 70) {
+          addLog(`⚠️ Temperature high: ${temperature.toFixed(0)}°C`, 'warn');
+        }
+        
+        updateDisplay();
+        updateEarnings();
+        updatePowerStats();
+      }, 1000);
+    }
+    
+    function foundBlock() {
+      blocksFound++;
+      const reward = 3.125;
+      totalEarned += reward;
+      blockHistory.push({ height: 876000 + blocksFound, reward: reward });
+      
+      addLog(`🎉 BLOCK FOUND! Height: 876${blocksFound.toString().padStart(3, '0')} Reward: ${reward} BTC`, 'block');
+      
+      // Show notification
+      const notification = document.getElementById('blockNotification');
+      notification.classList.add('show');
+      playBlockSound();
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 4000);
+      
+      // LED flash
+      ledBlock.classList.add('on');
+      setTimeout(() => ledBlock.classList.remove('on'), 3000);
+      
+      // Update block history UI
+      if (blockHistory.length <= 10) {
+        const grid = document.getElementById('blocksGrid');
+        const chip = document.createElement('div');
+        chip.className = 'block-chip';
+        chip.innerHTML = `
+          <div class="block-chip-value">#876${blocksFound.toString().padStart(3, '0')}</div>
+          <div class="block-chip-reward">+₿ ${reward}</div>
+        `;
+        grid.insertBefore(chip, grid.firstChild);
+      }
+      
+      document.getElementById('blocksFound').textContent = blocksFound;
+    }
+    
+    function updateHeatSink() {
+      const vanes = document.querySelectorAll('.heat-vane');
+      vanes.forEach((vane, i) => {
+        vane.classList.remove('hot', 'critical');
+        
+        // Stagger the heating effect
+        const threshold = 30 + (i * 5);
+        
+        if (temperature > 80) {
+          vane.classList.add('critical');
+        } else if (temperature > threshold) {
+          vane.classList.add('hot');
+        }
+      });
+    }
+    
+    function formatHashrate(hash) {
+      if (hash >= 1000000) {
+        return (hash / 1000000).toFixed(2);
+      } else if (hash >= 1000) {
+        return (hash / 1000).toFixed(2);
+      }
+      return hash.toFixed(2);
+    }
+    
+    function formatHashrateUnit(hash) {
+      if (hash >= 1000000) return 'PH/s';
+      if (hash >= 1000) return 'TH/s';
+      return 'GH/s';
+    }
+    
+    function updateDisplay() {
+      displayHashrate.textContent = formatHashrate(hashrate);
+      
+      // Update stat cards
+      const unit = formatHashrateUnit(currentAsic.hashrate);
+      document.getElementById('hashrateStat').textContent = formatHashrate(hashrate);
+      document.querySelector('#hashrateStat').nextElementSibling.textContent = `HASH RATE (${unit.replace('/s', '')})`;
+      
+      document.getElementById('tempStat').textContent = temperature.toFixed(0);
+      document.getElementById('fanStat').textContent = Math.floor(fanSpeed);
+      document.getElementById('sharesStat').textContent = shares;
+      
+      // Progress bars
+      const hashratePercent = Math.min(100, (hashrate / currentAsic.hashrate) * 100);
+      document.getElementById('hashratePercent').textContent = Math.round(hashratePercent) + '%';
+      document.getElementById('hashrateBar').style.width = hashratePercent + '%';
+      
+      const tempPercent = Math.min(100, (temperature / 90) * 100);
+      document.getElementById('tempPercent').textContent = temperature.toFixed(0) + '°C';
+      document.getElementById('tempBar').style.width = tempPercent + '%';
+      
+      const fanPercent = Math.min(100, (fanSpeed / 6500) * 100);
+      document.getElementById('fanPercent').textContent = Math.floor(fanSpeed) + ' RPM';
+      document.getElementById('fanBar').style.width = fanPercent + '%';
+      
+      // Temperature color
+      const tempStat = document.getElementById('tempStat');
+      if (temperature > 75) {
+        tempStat.className = 'stat-value danger';
+      } else if (temperature > 60) {
+        tempStat.className = 'stat-value warning';
+      } else {
+        tempStat.className = 'stat-value success';
+      }
+    }
+    
+    function updateEarnings() {
+      document.getElementById('totalEarned').textContent = '₿ ' + totalEarned.toFixed(8);
+      document.getElementById('fiatEarned').textContent = '$' + (totalEarned * btcPrice).toFixed(2) + ' USD';
+      document.getElementById('sharesTotal').textContent = totalShares;
+      document.getElementById('avgHashrate').textContent = formatHashrate(hashrate);
+      document.getElementById('luckStat').textContent = Math.floor(Math.random() * 30 + 85) + '%';
+      
+      // Estimated daily
+      const unit = formatHashrateUnit(currentAsic.hashrate);
+      if (miningMode === 'pool') {
+        const dailyRevenue = (hashrate / currentAsic.hashrate) * 4.32;
+        document.getElementById('estDaily').textContent = '$' + dailyRevenue.toFixed(2);
+      } else {
+        // Solo mining - more variable
+        const avgBlockTime = 600000; // 10 minutes in seconds
+        const blocksPerDay = 86400 / (avgBlockTime / (hashrate / 180000000000000));
+        const expectedRevenue = blocksPerDay * 3.125 * btcPrice;
+        document.getElementById('estDaily').textContent = '$' + expectedRevenue.toFixed(2) + ' (expected)';
+      }
+    }
+    
+    function updatePowerStats() {
+      const powerDraw = currentAsic.watts * (hashrate / currentAsic.hashrate);
+      document.getElementById('powerDraw').textContent = Math.round(powerDraw) + 'W';
+      
+      // Power cost per day
+      const powerCostPerDay = (powerDraw / 1000) * 24 * powerCostPerKwh;
+      document.getElementById('powerCost').textContent = '$' + powerCostPerDay.toFixed(2);
+    }
+    
+    function calculateProfit() {
+      const hashrate = parseFloat(document.getElementById('calcHashrate').value);
+      const powerCost = parseFloat(document.getElementById('calcPower').value);
+      const watts = parseFloat(document.getElementById('calcWatts').value);
+      
+      powerCostPerKwh = powerCost;
+      
+      // Calculate BTC per day (simplified)
+      const networkHashrate = 180000000000000; // 180 EH/s
+      const btcPerDay = 900 / (networkHashrate / hashrate * 600); // Simplified
+      
+      const revenue = btcPerDay * btcPrice;
+      const powerPerDay = (watts / 1000) * 24 * powerCost;
+      const poolFee = miningMode === 'pool' ? revenue * 0.02 : 0;
+      const profit = revenue - powerPerDay - poolFee;
+      
+      const result = document.getElementById('calcResult');
+      
+      if (miningMode === 'solo') {
+        result.innerHTML = `$${profit.toFixed(2)} / day
+          <span>Expected: ${btcPerDay.toFixed(6)} BTC/day | Costs: $${powerPerDay.toFixed(2)} (no pool fees)</span>`;
+      } else {
+        result.innerHTML = `$${profit.toFixed(2)} / day
+          <span>Revenue: $${revenue.toFixed(2)} | Costs: $${powerPerDay.toFixed(2)} | Pool fees: $${poolFee.toFixed(2)}</span>`;
+      }
+      
+      result.classList.toggle('negative', profit < 0);
+      result.style.color = profit > 0 ? 'var(--success)' : 'var(--danger)';
+    }
+    
+    // Initialize
+    updatePoolInfo();
+    calculateProfit();
+  </script>
+</body>
+</html>

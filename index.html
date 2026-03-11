@@ -609,6 +609,7 @@
     <div class="links">
       <a href="index.html">Home</a>
       <a href="blockchain.html">Blockchain</a>
+      <a href="miner.html">Mining</a>
       <a href="paths.html">Paths</a>
       <a href="topics.html">Topics</a>
       <a href="quiz.html">Quiz</a>
@@ -630,7 +631,7 @@
       <p>The complete guide to sound money. Learn what Bitcoin is, how it works, and try interactive simulators for wallets, mining, and nodes.</p>
       <div class="hero-btns">
         <a href="#what-is-money" class="btn btn-primary">Start Learning →</a>
-        <a href="#wallet" class="btn btn-secondary">Try Simulators</a>
+        <a href="miner.html" class="btn btn-secondary">⛏️ Try Mining Sim</a>
       </div>
     </div>
     <div class="scroll-indicator">
@@ -888,8 +889,8 @@
                   </div>
                 </div>
                 
-                <button id="create-wallet-btn" class="cc-btn" onclick="startWalletCreation()" style="font-size:1.1rem;padding:18px 40px;min-width:280px;">
-                  ✨ Generate Wallet
+                <button id="create-wallet-btn" class="cc-btn" onclick="startWalletCreation()" style="font-size:1.1rem;padding:18px 40px;min-width:280px;background:var(--primary);color:#000;">
+                  ✨ Generate 24-Word Wallet
                 </button>
                 
                 <div class="cc-warning" style="margin-top:20px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:14px;">
@@ -1088,67 +1089,187 @@
   <!-- MINER SIMULATOR -->
   <section id="miner" class="section" style="background:var(--bg2)">
     <div class="section-content">
-      <h2 class="section-title">⛏️ Solo <span>Miner</span></h2>
-      <p class="section-subtitle">Run your own Bitaxe — earn mining rewards directly</p>
+      <h2 class="section-title">⛏️ Pro <span>Miner</span></h2>
+      <p class="section-subtitle">Run a professional ASIC miner — pool or solo</p>
       
-      <div class="sim-tabs">
-        <div class="sim-tab active" onclick="switchSim('miner',1)">Dashboard</div>
-        <div class="sim-tab" onclick="switchSim('miner',2)">Pool Config</div>
-        <div class="sim-tab" onclick="switchSim('miner',3)">Logs</div>
+      <!-- ASIC Selector -->
+      <div style="display:flex;justify-content:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;" id="asicSelector">
+        <div class="sim-tab active" onclick="selectASIC('bitaxe')" data-asic="bitaxe" style="padding:10px 20px;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:8px;transition:all 0.3s;">
+          <div style="font-weight:700;font-size:0.9rem;">Bitaxe Ultra</div>
+          <div style="font-size:0.75rem;color:var(--text2);">450 GH/s • 320W</div>
+        </div>
+        <div class="sim-tab" onclick="selectASIC('antminer')" data-asic="antminer" style="padding:10px 20px;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:8px;transition:all 0.3s;">
+          <div style="font-weight:700;font-size:0.9rem;">Antminer S19</div>
+          <div style="font-size:0.75rem;color:var(--text2);">95 TH/s • 3250W</div>
+        </div>
+        <div class="sim-tab" onclick="selectASIC('whatsminer')" data-asic="whatsminer" style="padding:10px 20px;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:8px;transition:all 0.3s;">
+          <div style="font-weight:700;font-size:0.9rem;">Whatsminer M30S</div>
+          <div style="font-size:0.75rem;color:var(--text2);">86 TH/s • 3200W</div>
+        </div>
+        <div class="sim-tab" onclick="selectASIC('braiins')" data-asic="braiins" style="padding:10px 20px;cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:8px;transition:all 0.3s;">
+          <div style="font-weight:700;font-size:0.9rem;">Braiins OS+</div>
+          <div style="font-size:0.75rem;color:var(--text2);">120 TH/s • 2800W</div>
+        </div>
+      </div>
+      
+      <!-- Mode Toggle -->
+      <div style="display:flex;justify-content:center;gap:8px;margin-bottom:24px;">
+        <button class="cc-btn" id="modePool" onclick="setMiningMode('pool')" style="padding:12px 24px;background:var(--primary);color:#000;">🏊 Pool</button>
+        <button class="cc-btn cc-btn-outline" id="modeSolo" onclick="setMiningMode('solo')" style="padding:12px 24px;">⛏️ Solo</button>
       </div>
       
       <div class="device-showcase">
+        <!-- 3D ASIC Device -->
         <div class="device-3d">
-          <div class="device-wrapper">
-            <div class="bitaxe-device">
-              <span class="bitaxe-logo">BITAXE</span>
-              <div class="bitaxe-lights"><div class="bitaxe-light green"></div><div class="bitaxe-light red"></div></div>
-              <div class="bitaxe-chip"><span class="bitaxe-chip-text">BM1366<br><span style="color:var(--primary)">SHA256</span></span></div>
-              <div class="bitaxe-fans"><div class="fan"></div><div class="fan"></div></div>
-              <div class="bitaxe-heat"><div class="bitaxe-heat-fill" id="miner-heat-bar"></div></div>
+          <div class="device-wrapper" style="perspective:1000px;">
+            <div class="bitaxe-device" id="proMinerDevice" style="width:320px;height:260px;background:linear-gradient(145deg,#1a1a1f,#0d0d10);border-radius:20px;border:1px solid #2a2a30;box-shadow:0 40px 80px rgba(0,0,0,0.8);position:relative;overflow:hidden;transform:rotateX(5deg) rotateY(-5deg);transition:all 0.5s;">
+              <!-- Top Bar with LEDs -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-bottom:1px solid rgba(255,255,255,0.03);">
+                <div>
+                  <div style="font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:800;color:var(--primary);letter-spacing:2px;" id="asicBrand">BITAXE</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3);letter-spacing:1px;" id="asicModel">ULTRA</div>
+                </div>
+                <div style="display:flex;gap:14px;">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div class="led-power" id="ledPWR" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">PWR</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div class="led-net" id="ledNET" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">NET</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div class="led-fan" id="ledFAN" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">FAN</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div class="led-err" id="ledERR" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">ERR</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div class="led-blk" id="ledBLK" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">BLK</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- OLED Display -->
+              <div style="display:flex;justify-content:center;align-items:center;padding:16px;">
+                <div style="width:260px;height:70px;background:#080810;border-radius:8px;border:1px solid #15151a;box-shadow:inset 0 3px 10px rgba(0,0,0,0.8);display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;">
+                  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,40,60,0.08),transparent);"></div>
+                  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,136,0.2),transparent);animation:scanline 3s linear infinite;"></div>
+                  <div style="text-align:center;z-index:1;">
+                    <div style="font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:700;color:var(--success);text-shadow:0 0 20px rgba(0,255,136,0.5);" id="displayHash">0.00</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3);letter-spacing:2px;margin-top:2px;" id="displayUnit">GH/S</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Heat Sink -->
+              <div style="display:flex;justify-content:center;gap:3px;padding:8px 24px;" id="heatSink">
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
+              </div>
+              
+              <!-- Fans -->
+              <div style="display:flex;justify-content:center;gap:30px;padding:12px 0;">
+                <div class="fan-container" id="fanContainer1" style="width:70px;height:70px;position:relative;">
+                  <div style="width:70px;height:70px;background:linear-gradient(145deg,#151518,#0a0a0d);border-radius:50%;border:3px solid #1f1f24;display:flex;justify-content:center;align-items:center;">
+                    <div class="fan-blade" id="fanBlade1" style="width:60px;height:60px;background:conic-gradient(from 0deg,#1a1a1f 0deg,#25252a 30deg,#1a1a1f 60deg,#25252a 90deg,#1a1a1f 120deg,#25252a 150deg,#1a1a1f 180deg,#25252a 210deg,#1a1a1f 240deg,#25252a 270deg,#1a1a1f 300deg,#25252a 330deg,#1a1a1f 360deg);border-radius:50%;"></div>
+                  </div>
+                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;background:radial-gradient(circle,#2a2a30,#151518);border-radius:50%;border:2px solid #1a1a1f;"></div>
+                </div>
+                <div class="fan-container" id="fanContainer2" style="width:70px;height:70px;position:relative;">
+                  <div style="width:70px;height:70px;background:linear-gradient(145deg,#151518,#0a0a0d);border-radius:50%;border:3px solid #1f1f24;display:flex;justify-content:center;align-items:center;">
+                    <div class="fan-blade" id="fanBlade2" style="width:60px;height:60px;background:conic-gradient(from 0deg,#1a1a1f 0deg,#25252a 30deg,#1a1a1f 60deg,#25252a 90deg,#1a1a1f 120deg,#25252a 150deg,#1a1a1f 180deg,#25252a 210deg,#1a1a1f 240deg,#25252a 270deg,#1a1a1f 300deg,#25252a 330deg,#1a1a1f 360deg);border-radius:50%;"></div>
+                  </div>
+                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;background:radial-gradient(circle,#2a2a30,#151518);border-radius:50%;border:2px solid #1a1a1f;"></div>
+                </div>
+              </div>
+              
+              <!-- Power Button -->
+              <div style="display:flex;justify-content:center;padding:8px 0;">
+                <button onclick="togglePowerPro()" style="width:50px;height:50px;background:linear-gradient(145deg,#1a1a1f,#0d0d10);border:2px solid #2a2a30;border-radius:12px;cursor:pointer;display:flex;justify-content:center;align-items:center;transition:all 0.2s;font-size:1.3rem;" id="powerBtnPro">⏻</button>
+              </div>
             </div>
           </div>
         </div>
         
-        <div class="interface-sim">
+        <!-- Dashboard -->
+        <div class="interface-sim" style="max-width:480px;">
           <div class="interface-header">
             <div class="interface-dot"></div><div class="interface-dot"></div><div class="interface-dot"></div>
-            <span class="interface-title">Bitaxe Web Interface</span>
+            <span class="interface-title">Pro Miner Dashboard</span>
           </div>
-          <div class="interface-body">
-            <div class="interface-screen active" id="miner-1">
-              <div class="miner-stats">
-                <div class="miner-stat"><div class="miner-stat-value" id="hashrate">450</div><div class="miner-stat-label">GH/s</div></div>
-                <div class="miner-stat"><div class="miner-stat-value" id="temp">52°C</div><div class="miner-stat-label">Temperature</div></div>
-                <div class="miner-stat"><div class="miner-stat-value" id="shares">0</div><div class="miner-stat-label">Shares (24h)</div></div>
-                <div class="miner-stat"><div class="miner-stat-value" id="income">0</div><div class="miner-stat-label">BTC (lifetime)</div></div>
+          <div class="interface-body" style="padding:24px;background:var(--bg2);border-radius:0 0 12px 12px;">
+            <!-- Stats Grid -->
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;">
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+                <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:var(--success);" id="proHashrate">0</div>
+                <div style="font-size:0.7rem;color:var(--text3);margin-top:4px;" id="proHashrateUnit">GH/S</div>
               </div>
-              <div class="miner-gh" id="big-hash">450.2 GH/s</div>
-              <div class="miner-bar"><div class="miner-bar-fill" id="hash-bar" style="width:75%"></div></div>
-              <div style="text-align:center;">
-                <button class="cc-btn" onclick="startMining()">▶ Start Mining</button>
-                <button class="cc-btn cc-btn-outline" onclick="stopMining()">⏹ Stop</button>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+                <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:#00d4ff;" id="proTemp">--</div>
+                <div style="font-size:0.7rem;color:var(--text3);margin-top:4px;">TEMP °C</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+                <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:var(--warning);" id="proFan">--</div>
+                <div style="font-size:0.7rem;color:var(--text3);margin-top:4px;">FAN RPM</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+                <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:var(--primary);" id="proPower">0W</div>
+                <div style="font-size:0.7rem;color:var(--text3);margin-top:4px;">POWER</div>
               </div>
             </div>
-            <div class="interface-screen" id="miner-2">
-              <h4 style="margin-bottom:16px;">⚙️ Pool Configuration</h4>
-              <div style="margin-bottom:16px;">
-                <label style="display:block;color:var(--text2);font-size:0.85rem;margin-bottom:8px;">Stratum Pool</label>
-                <select style="width:100%;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);">
-                  <option>stratum.pool.bitcoin.com</option>
-                  <option>Solo CKPool</option>
-                  <option>AntPool</option>
-                </select>
-              </div>
-              <button class="cc-btn" onclick="applyPool()">Save & Apply</button>
+            
+            <!-- Progress Bars -->
+            <div style="margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.75rem;"><span style="color:var(--text2)">Hashrate</span><span id="hashPercent">0%</span></div>
+              <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden;"><div id="hashBar" style="height:100%;background:linear-gradient(90deg,var(--success),#00ffaa);width:0%;border-radius:3px;transition:width 0.3s;"></div></div>
             </div>
-            <div class="interface-screen" id="miner-3">
-              <h4 style="margin-bottom:16px;">📋 System Logs</h4>
-              <div class="miner-logs" id="miner-logs">
-                <div class="log-line"><span class="time">[00:00:01]</span> <span class="info">Bitaxe booted</span></div>
-                <div class="log-line"><span class="time">[00:00:02]</span> <span class="info">ASIC found: BM1366</span></div>
-                <div class="log-line"><span class="time">[00:00:03]</span> <span class="info">WiFi connected</span></div>
+            <div style="margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.75rem;"><span style="color:var(--text2)">Temperature</span><span id="tempPercent">--</span></div>
+              <div style="height:6px;background:var(--bg);border-radius:3px;overflow:hidden;"><div id="tempBar" style="height:100%;background:linear-gradient(90deg,var(--success),var(--warning),var(--danger));width:0%;border-radius:3px;transition:width 0.3s;"></div></div>
+            </div>
+            
+            <!-- Earnings -->
+            <div style="background:linear-gradient(135deg,rgba(247,147,26,0.15),rgba(0,255,136,0.08));border:1px solid rgba(247,147,26,0.3);border-radius:12px;padding:16px;margin-bottom:16px;text-align:center;">
+              <div style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--text2);letter-spacing:2px;">TOTAL EARNED</div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:800;color:var(--primary);text-shadow:0 0 20px rgba(247,147,26,0.5);" id="totalEarned">₿ 0.00000000</div>
+              <div style="font-size:0.85rem;color:var(--text2);" id="fiatEarned">$0.00 USD</div>
+            </div>
+            
+            <!-- Pool Info -->
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:16px;font-size:0.8rem;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                <span style="color:var(--text2);">Pool:</span>
+                <span id="poolNameDisplay" style="color:var(--success);">Not Connected</span>
               </div>
+              <div style="display:flex;justify-content:space-between;">
+                <span style="color:var(--text2);">Mode:</span>
+                <span id="modeDisplay" style="color:var(--primary);">Pool Mining</span>
+              </div>
+            </div>
+            
+            <!-- Logs -->
+            <div style="background:#080810;border-radius:8px;padding:12px;max-height:120px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:0.7rem;margin-bottom:16px;" id="proLogs">
+              <div class="log-line"><span class="time">[00:00:00]</span> <span class="info">Pro Miner ready</span></div>
+            </div>
+            
+            <!-- Controls -->
+            <div style="display:flex;gap:10px;">
+              <button class="cc-btn" id="proStartBtn" onclick="startMiningPro()" disabled style="flex:1;">▶ Start</button>
+              <button class="cc-btn cc-btn-outline" id="proStopBtn" onclick="stopMiningPro()" disabled style="flex:1;">⏹ Stop</button>
             </div>
           </div>
         </div>
@@ -2926,6 +3047,171 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
         if (!isPoweredOn) togglePower();
       }, 500);
     })();
+    
+    // ========== PRO MINER SIMULATOR ==========
+    const asicModels = {
+      bitaxe: { name: 'BITAXE', model: 'ULTRA', hashrate: 450, watts: 320, efficiency: 1.4 },
+      antminer: { name: 'ANTMINER', model: 'S19', hashrate: 95000, watts: 3250, efficiency: 34 },
+      whatsminer: { name: 'WHATSMINER', model: 'M30S+', hashrate: 86000, watts: 3200, efficiency: 37 },
+      braiins: { name: 'BRAIINS', model: 'OS+', hashrate: 120000, watts: 2800, efficiency: 23 }
+    };
+    
+    let proMining = false, proPowered = false, currentAsic = asicModels.bitaxe, miningMode = 'pool';
+    let proHashrate = 0, proTemp = 0, proFan = 0, proTotalEarned = 0, btcPrice = 70000;
+    
+    function selectASIC(asic) {
+      currentAsic = asicModels[asic];
+      document.getElementById('asicBrand').textContent = currentAsic.name;
+      document.getElementById('asicModel').textContent = currentAsic.model;
+      const unit = currentAsic.hashrate >= 100000 ? 'TH/S' : (currentAsic.hashrate >= 1000 ? 'GH/S' : 'MH/S');
+      document.getElementById('displayUnit').textContent = unit;
+      document.getElementById('proHashrateUnit').textContent = unit.replace('/S','');
+      document.querySelectorAll('#asicSelector>div').forEach(e => {e.style.background='var(--bg3)';e.style.borderColor='var(--border)';});
+      event.target.closest('div').style.background='rgba(247,147,26,0.2)';
+      event.target.closest('div').style.borderColor='var(--primary)';
+      if(proPowered) proAddLog(`ASIC: ${currentAsic.name} ${currentAsic.model}`);
+    }
+    
+    function setMiningMode(mode) {
+      miningMode = mode;
+      document.getElementById('modePool').style.background = mode==='pool'?'var(--primary)':'';
+      document.getElementById('modePool').style.color = mode==='pool'?'#000':'';
+      document.getElementById('modeSolo').style.background = mode==='solo'?'var(--primary)':'';
+      document.getElementById('modeSolo').style.color = mode==='solo'?'#000':'';
+      document.getElementById('modeDisplay').textContent = mode==='solo'?'Solo Mining':'Pool Mining';
+      if(proPowered) proAddLog(mode==='solo'?'SOLO mode':'POOL mode');
+    }
+    
+    function togglePowerPro() {
+      proPowered = !proPowered;
+      const btn = document.getElementById('powerBtnPro'), device = document.getElementById('proMinerDevice');
+      if(proPowered) {
+        btn.style.borderColor = 'var(--success)';
+        btn.style.boxShadow = '0 0 20px rgba(0,255,136,0.4)';
+        setLED('ledPWR','var(--success)');
+        device.style.filter = 'brightness(1)';
+        proAddLog(`⚡ ${currentAsic.name} ${currentAsic.model} booting...`);
+        setTimeout(()=>proAddLog('🔍 ASIC detected: BM1366'),600);
+        setTimeout(()=>{setLED('ledNET','#00d4ff');proAddLog('📶 WiFi connected');},1400);
+        setTimeout(()=>{
+          document.getElementById('displayUnit').textContent = currentAsic.hashrate>=100000?'TH/S - READY':'GH/S - READY';
+          document.getElementById('poolNameDisplay').textContent = miningMode==='solo'?'Direct ⛏️':'stratum.pool.bitcoin.com';
+          document.getElementById('proStartBtn').disabled = false;
+          proAddLog('✅ Ready to mine!');
+        },2200);
+      } else {
+        stopMiningPro();
+        btn.style.borderColor='var(--border)';btn.style.boxShadow='none';
+        ['ledPWR','ledNET','ledFAN'].forEach(id=>setLED(id,'#1a1a1a'));
+        device.style.filter = 'brightness(0.3)';
+        document.getElementById('displayHash').textContent='0.00';
+        document.getElementById('displayUnit').textContent='GH/S - OFF';
+        ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id).style.animation='none');
+        document.getElementById('proStartBtn').disabled = true;
+        proAddLog('🔴 System shutdown');
+      }
+    }
+    
+    function setLED(id,color) {
+      const el = document.getElementById(id);
+      el.style.background = color;
+      el.style.boxShadow = color==='#1a1a1a'?'none':'0 0 12px '+color;
+    }
+    
+    function startMiningPro() {
+      if(!proPowered) return;
+      proMining = true;
+      setLED('ledFAN','var(--warning)');
+      document.getElementById('proStartBtn').disabled = true;
+      document.getElementById('proStopBtn').disabled = false;
+      ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id).style.animation='spin 0.15s linear infinite');
+      
+      proAddLog(`⛏️ ${miningMode.toUpperCase()} mining started`);
+      proAddLog(`🎯 Target: ${currentAsic.hashrate} ${currentAsic.hashrate>=1000?'GH/s':'TH/s'}`);
+      
+      let rampTarget = currentAsic.hashrate, currentTarget = 0;
+      const rampInt = setInterval(()=>{
+        if(!proMining){clearInterval(rampInt);return;}
+        currentTarget += rampTarget * 0.08;
+        if(currentTarget >= rampTarget * 0.95){
+          currentTarget = rampTarget * (0.92 + Math.random()*0.15);
+          clearInterval(rampInt);proAddLog('🚀 Nominal hashrate achieved!');
+        }
+        proHashrate = currentTarget;updateProDisplay();
+      },150);
+      
+      proTemp = 38;
+      const statsInt = setInterval(()=>{
+        if(!proMining){clearInterval(statsInt);return;}
+        proTemp = Math.min(85, proTemp + (Math.random()*5 - 2));
+        proFan = Math.min(6500, 2200 + proTemp*52);
+        proHashrate = Math.max(currentAsic.hashrate*0.82, Math.min(currentAsic.hashrate*1.12, proHashrate + (Math.random()*currentAsic.hashrate*0.04 - currentAsic.hashrate*0.02)));
+        
+        document.querySelectorAll('#heatSink .heat-vane').forEach((v,i)=>{
+          v.classList.remove('hot','critical');
+          if(proTemp>80) v.classList.add('critical');
+          else if(proTemp>28+i*5) v.classList.add('hot');
+        });
+        
+        if(Math.random()<0.18){proAddLog('✓ Share accepted');}
+        if(miningMode==='solo' && Math.random()<0.00008){foundBlockPro();}
+        if(miningMode==='pool'){proTotalEarned += 0.0000012 * (proHashrate/currentAsic.hashrate);}
+        
+        if(proTemp>78){setLED('ledERR','var(--danger)');proAddLog('⚠️ HOT!');setTimeout(()=>setLED('ledERR','#1a1a1a'),1200);}
+        updateProDisplay();
+      },800);
+    }
+    
+    function stopMiningPro() {
+      proMining = false;
+      setLED('ledFAN','#1a1a1a');
+      document.getElementById('proStartBtn').disabled = false;
+      document.getElementById('proStopBtn').disabled = true;
+      ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id).style.animation='none');
+      proAddLog('⏹ Mining stopped');
+    }
+    
+    function foundBlockPro() {
+      proTotalEarned += 3.125;
+      setLED('ledBLK','var(--primary)');
+      proAddLog('🎉🎉 BLOCK FOUND! +₿3.125 BTC! 🎉🎉');
+      document.getElementById('totalEarned').style.textShadow = '0 0 30px var(--primary)';
+      setTimeout(()=>setLED('ledBLK','#1a1a1a'),3500);
+    }
+    
+    function updateProDisplay() {
+      const unit = currentAsic.hashrate>=100000?'TH/s':(currentAsic.hashrate>=1000?'GH/s':'MH/s');
+      const val = currentAsic.hashrate>=1000?(proHashrate/1000).toFixed(2):proHashrate.toFixed(0);
+      document.getElementById('displayHash').textContent = val;
+      document.getElementById('proHashrate').textContent = val;
+      document.getElementById('proTemp').textContent = proTemp.toFixed(0);
+      document.getElementById('proFan').textContent = Math.floor(proFan);
+      document.getElementById('proPower').textContent = Math.round(currentAsic.watts*(proHashrate/currentAsic.hashrate))+'W';
+      
+      const hp = Math.min(100,(proHashrate/currentAsic.hashrate)*100), tp = Math.min(100,(proTemp/90)*100);
+      document.getElementById('hashPercent').textContent = Math.round(hp)+'%';
+      document.getElementById('hashBar').style.width = hp+'%';
+      document.getElementById('tempPercent').textContent = proTemp.toFixed(0)+'°C';
+      document.getElementById('tempBar').style.width = tp+'%';
+      
+      document.getElementById('totalEarned').textContent = '₿ '+proTotalEarned.toFixed(8);
+      document.getElementById('fiatEarned').textContent = '$'+(proTotalEarned*btcPrice).toFixed(2)+' USD';
+    }
+    
+    function proAddLog(msg) {
+      const lc = document.getElementById('proLogs');
+      if(!lc) return;
+      const t = new Date().toLocaleTimeString('en-US',{hour12:false});
+      lc.innerHTML += `<div class="log-line"><span class="time">[${t}]</span> <span class="info">${msg}</span></div>`;
+      lc.scrollTop = lc.scrollHeight;
+    }
+    
+    const ps = document.createElement('style');
+    ps.textContent = `@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.heat-vane.hot{background:linear-gradient(180deg,#ff6b35,#c0392b)!important}
+.heat-vane.critical{background:linear-gradient(180deg,#ff0000,#8b0000)!important;animation:pulse .5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}`;
+    document.head.appendChild(ps);
   </script>
 </body>
 </html>
