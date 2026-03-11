@@ -900,8 +900,11 @@
                   <div id="verify-test-content"></div>
                 </div>
                 
-                <button id="continue-btn" class="cc-btn" onclick="startVerificationTest()" style="display:none;">✓ Continue to PIN</button>
-                <p id="verify-hint" style="display:none;color:var(--text2);font-size:0.8rem;margin-top:12px;text-align:center;">⏱️ Verification test will begin in a few seconds...<br>Or click continue above when ready</p>
+                <button id="confirm-written-btn" class="cc-btn" onclick="confirmWordsWritten()" style="display:none;background:linear-gradient(135deg,#00b894,#00a884);font-size:1rem;padding:16px 24px;">✓ I Have Written Down All Words</button>
+                <p style="color:var(--text2);font-size:0.85rem;margin-top:16px;text-align:center;display:none;" id="wait-hint">
+                  ✍️ Take your time — write every word on paper<br>
+                  <span style="color:var(--primary);">Click the button above when done</span>
+                </p>
                 <div style="background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.05) 100%); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 14px; margin: 12px 0;">
                 <span style="color: var(--danger); font-weight: 700; font-size: 0.9rem;">⚠️ CRITICAL: Write ALL ${selectedSeedLength} words in EXACT order</span>
                 <p style="color: var(--text2); font-size: 0.8rem; margin: 6px 0 0;">Never type these into a computer. Paper only!</p>
@@ -1695,12 +1698,17 @@
         // Move to step 2 (seed words)
         nextWalletSim(2);
         
-        // Show continue button after showing words
-        const continueBtn = document.getElementById('continue-btn');
-        if (continueBtn) {
-          continueBtn.style.display = 'inline-block';
-          continueBtn.textContent = wordCount === 12 ? '✓ Continue (Test 12 words)' : '✓ Continue (Test 24 words)';
+        // Show "I have written down" button and hint - NO auto-test
+        const confirmBtn = document.getElementById('confirm-written-btn');
+        const waitHint = document.getElementById('wait-hint');
+        if (confirmBtn) {
+          confirmBtn.style.display = 'inline-block';
+          confirmBtn.style.marginTop = '16px';
         }
+        if (waitHint) waitHint.style.display = 'block';
+        
+        // Store current words for verification
+        currentWords = words;
         
         // Set up verification indices for this word count
         if (wordCount === 12) {
@@ -1709,33 +1717,47 @@
           verifyIndices = [2, 11, 20];
         }
         
-        // Set up verification test AFTER showing words - words already hidden in modal
-        // Auto-trigger after delay, but user can click continue too
-        setTimeout(() => {
-          // If user hasn't clicked continue, show test
-          if (!seedVerified && currentWords.length > 0) {
-            // Hide word display first, then show the modal
-            const wordsDisplay = document.getElementById('wallet-words-display');
-            if (wordsDisplay) {
-              wordsDisplay.innerHTML = `<div style="color:#f7a526;text-align:center;padding:30px 20px;">
-                <div style="font-size:1.5rem;margin-bottom:12px;">📝 Verification Test</div>
-                <div style="color:#aaa;font-size:0.9rem;">Your seed phrase is hidden now.</div>
-              </div>`;
-            }
-            
-            // Update device screen
-            const screen = document.getElementById('cc-screen-text');
-            if (screen) {
-              screen.innerHTML = `<div style="font-size:0.45rem;color:#f7a526;text-align:center;padding:8px;">
-                <div style="font-size:0.55rem;margin-bottom:4px;">📝 TESTING MEMORY</div>
-                <div style="color:#00ff88;">Words hidden - prove you wrote them!</div>
-              </div>`;
-            }
-            
-            showVerificationModal();
-          }
-        }, 4000); // Give user 4 seconds to see words before test starts
+        // NO auto-trigger - user must confirm they've written the words
+        // User clicks "I Have Written Down All Words" to start test
       }, 1500);
+    }
+    
+    // User confirms they've written down the seed phrase - NOW start verification
+    function confirmWordsWritten() {
+      if (!currentWords || currentWords.length === 0) return;
+      
+      // Hide the confirm button
+      const confirmBtn = document.getElementById('confirm-written-btn');
+      const waitHint = document.getElementById('wait-hint');
+      if (confirmBtn) confirmBtn.style.display = 'none';
+      if (waitHint) waitHint.style.display = 'none';
+      
+      // Hide word display - user has had time to copy
+      const wordsDisplay = document.getElementById('wallet-words-display');
+      if (wordsDisplay) {
+        wordsDisplay.innerHTML = `<div style="color:#f7a526;text-align:center;padding:30px 20px;">
+          <div style="font-size:1.5rem;margin-bottom:12px;">📝 Verification Test</div>
+          <div style="color:#aaa;font-size:0.9rem;line-height:1.6;">
+            Type the words for the positions shown.<br>
+            Your seed phrase is hidden now —<br>
+            <span style="color:#00ff88;">this tests if you wrote them down correctly!</span>
+          </div>
+        </div>`;
+      }
+      
+      // Update device screen to show test mode
+      const screen = document.getElementById('cc-screen-text');
+      if (screen) {
+        screen.innerHTML = `<div style="font-size:0.45rem;color:#f7a526;text-align:center;padding:8px;">
+          <div style="font-size:0.55rem;margin-bottom:4px;">📝 VERIFICATION TEST</div>
+          <div style="color:#00ff88;">Words hidden - prove you wrote them!</div>
+          <div style="color:#666;margin-top:4px;font-size:0.35rem;">Answer 3 questions below</div>
+        </div>`;
+      }
+      
+      // Start verification test
+      verifyCurrent = 0;
+      setTimeout(() => showVerificationModal(), 300);
     }
     
     // Verification test - ask user to verify specific words
