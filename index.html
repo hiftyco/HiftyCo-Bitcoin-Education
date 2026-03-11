@@ -533,8 +533,9 @@
     
     .cc-screen { text-align: center; }
     .cc-screen h4 { font-size: 1.3rem; margin-bottom: 12px; color: var(--text); }
-    .cc-words { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
-    .cc-word { background: var(--bg2); padding: 14px 10px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; border: 1px solid var(--border); transition: all 0.3s; }
+    .cc-words { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+    .cc-word { background: linear-gradient(145deg, #12121a, #0a0a0f); padding: 16px 12px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; border: 1px solid #333; transition: all 0.3s; text-align: center; }
+    .cc-word span { display: block; color: #666; font-size: 0.7rem; margin-bottom: 4px; }
     .cc-word:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(247,147,26,0.2); }
     .cc-word span { color: var(--primary); margin-right: 4px; font-weight: 600; }
     .cc-btn { padding: 14px 28px; background: var(--primary); color: #000; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin: 6px; transition: all 0.3s; }
@@ -855,22 +856,36 @@
           <div class="interface-body">
             <div class="interface-screen active" id="wallet-1">
               <div class="cc-screen">
-                <h4>📦 Welcome to Cold Card</h4>
-                <p style="color:var(--text2);margin-bottom:20px;">This simulator mimics the real Cold Card setup process.</p>
-                <button class="cc-btn" onclick="nextWalletSim(2)">✓ Create New Wallet</button>
-                <div class="cc-tip">💡 The real device is air-gapped — it never connects to the internet.</div>
-                <div class="cc-edu-box">
-                  <h5>🎓 Why This Matters</h5>
-                  <p>Air-gapping means the device has no network capability. Your private keys never touch an internet-connected device. This is the gold standard for Bitcoin security.</p>
+                <h4>📦 Welcome to Cold Card Mk5</h4>
+                <p style="color:var(--text2);margin-bottom:20px;">Create your <strong>REAL Bitcoin wallet</strong> with cryptographically secure entropy.</p>
+                
+                <div style="background: linear-gradient(135deg, #0a1a2a 0%, #0a0a1a 100%); border: 1px solid #00ff88; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: left;">
+                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0 0 8px 0;">✅ <strong>24-word BIP39 mnemonic</strong> - Industry standard</p>
+                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0 0 8px 0;">✅ <strong>Crypto-secure randomness</strong> - Uses browser crypto API</p>
+                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0;">✅ <strong>Sparrow compatible</strong> - Import directly</p>
                 </div>
+                
+                <button class="cc-btn" onclick="startWalletCreation()" style="font-size: 1.1rem; padding: 16px 32px;">✓ Create REAL Wallet</button>
+                <div class="cc-warning" style="margin-top: 16px;">⚠️ This generates a REAL wallet. Write down your seed words!</div>
               </div>
             </div>
             <div class="interface-screen" id="wallet-2">
               <div class="cc-screen">
                 <h4>🔑 Your Recovery Phrase</h4>
                 <p style="color:var(--text2);font-size:0.85rem;">These 24 words can recover your bitcoin. Write them down IN ORDER.</p>
-                <div class="cc-words" id="wallet-words-display"></div>
-                <button class="cc-btn" onclick="document.getElementById('cc-screen-text').innerHTML='Words Saved!<br>Continue...'">I've Written All 24</button>
+                
+                <div class="cc-words" id="wallet-words-display" style="margin-bottom: 16px;">
+                  <div style="color:var(--text2);font-size:0.85rem;text-align:center;padding:20px;">
+                    ⏳ Creating your wallet...<br>Click "Create REAL Wallet" to begin.
+                  </div>
+                </div>
+                
+                <!-- Verification Test UI -->
+                <div id="verify-test" style="display:none; background: linear-gradient(135deg, #1a2a1a 0%, #0a1a0a 100%); border: 2px solid var(--primary); border-radius: 12px; padding: 16px; margin: 16px 0;">
+                  <div id="verify-test-content"></div>
+                </div>
+                
+                <button id="continue-btn" class="cc-btn" onclick="nextWalletSim(3)" style="display:none;">✓ Continue to PIN</button>
                 <div class="cc-warning">⚠️ NEVER type these into a computer. Write on paper only!</div>
               </div>
             </div>
@@ -1608,6 +1623,124 @@
       REAL_WALLET.address = deriveAddress(words);
       REAL_WALLET.created = true;
       return words;
+    }
+    
+    // Start wallet creation flow
+    function startWalletCreation() {
+      // Show loading state on UI
+      const btn = document.querySelector('#wallet-1 .cc-btn');
+      if (btn) {
+        btn.innerHTML = '⏳ Generating entropy...';
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+      }
+      
+      // Generate real wallet after short delay
+      setTimeout(() => {
+        const words = createRealWallet();
+        
+        // Update the UI with the seed words
+        updateWalletWordsUI(words);
+        
+        // Update device screen too
+        const words1 = words.slice(0, 8).map((w, i) => `${i+1}. ${w}`).join('<br>');
+        const words2 = words.slice(8, 16).map((w, i) => `${i+9}. ${w}`).join('<br>');
+        const words3 = words.slice(16, 24).map((w, i) => `${i+17}. ${w}`).join('<br>');
+        
+        const screen = document.getElementById('cc-screen-text');
+        if (screen) {
+          screen.innerHTML = `<div class="screen-content">
+            <div style="font-size:0.5rem;color:#00ff88;margin-bottom:3px;">🔑 WRITE THESE DOWN!</div>
+            <div style="display:flex;justify-content:space-between;font-size:0.4rem;color:#00aa66;">
+              <div>${words1}</div><div>${words2}</div><div>${words3}</div>
+            </div>
+          </div>`;
+        }
+        
+        // Move to step 2 (seed words)
+        nextWalletSim(2);
+        
+        // Re-enable button
+        if (btn) {
+          btn.innerHTML = '✓ Create REAL Wallet';
+          btn.disabled = false;
+          btn.style.opacity = '1';
+        }
+        
+        // Set up verification after showing words
+        setTimeout(() => setupVerificationTest(words), 1000);
+      }, 1500);
+    }
+    
+    // Verification test - ask user to verify specific words
+    let verifyIndices = [];
+    let verifyCurrent = 0;
+    
+    function setupVerificationTest(words) {
+      // Pick 3 random words to verify (word #3, #8, #15)
+      verifyIndices = [2, 7, 14]; // 0-indexed
+      verifyCurrent = 0;
+      
+      // Show verification UI
+      const verifyDiv = document.getElementById('verify-test');
+      if (verifyDiv) {
+        verifyDiv.style.display = 'block';
+        showNextVerification(words);
+      }
+    }
+    
+    function showNextVerification(words) {
+      const verifyDiv = document.getElementById('verify-test-content');
+      const idx = verifyIndices[verifyCurrent];
+      
+      if (verifyDiv) {
+        verifyDiv.innerHTML = `
+          <p style="color:var(--text2);font-size:0.85rem;margin-bottom:12px;">Verify you wrote the words correctly:</p>
+          <p style="color:var(--primary);font-size:1rem;font-weight:600;margin-bottom:16px;">What is word #${idx + 1}?</p>
+          <input type="text" id="verify-input" placeholder="Type word..." style="width:100%;padding:12px;border-radius:8px;background:#0a0a0f;border:2px solid #333;color:#fff;font-size:1rem;text-align:center;margin-bottom:12px;">
+          <button class="cc-btn" onclick="checkVerification('${words[idx]}')">✓ Check Answer</button>
+          <p id="verify-result" style="margin-top:12px;font-size:0.85rem;"></p>
+        `;
+      }
+      
+      // Focus input
+      setTimeout(() => {
+        const input = document.getElementById('verify-input');
+        if (input) input.focus();
+      }, 100);
+    }
+    
+    function checkVerification(correctWord) {
+      const input = document.getElementById('verify-input');
+      const result = document.getElementById('verify-result');
+      const userWord = input.value.trim().toLowerCase();
+      
+      if (userWord === correctWord.toLowerCase()) {
+        verifyCurrent++;
+        
+        if (verifyCurrent >= verifyIndices.length) {
+          // All verified!
+          document.getElementById('verify-test-content').innerHTML = `
+            <p style="color:#00ff88;font-size:1.1rem;font-weight:700;margin-bottom:12px;">✅ All Verified!</p>
+            <p style="color:var(--text2);font-size:0.9rem;">You confirmed 3 words correctly. Your seed is safely backed up.</p>
+            <button class="cc-btn" onclick="confirmSeedSaved()" style="margin-top:16px;">✓ Continue to PIN</button>
+          `;
+        } else {
+          showNextVerification(REAL_WALLET.mnemonic);
+          if (result) result.innerHTML = '<span style="color:#00ff88;">✓ Correct! Next word...</span>';
+        }
+      } else {
+        if (result) result.innerHTML = `<span style="color:#ff5f56;">✗ Incorrect. The correct word is: "${correctWord}"</span>`;
+      }
+    }
+    
+    function confirmSeedSaved() {
+      // Hide verification and move to PIN
+      const verifyDiv = document.getElementById('verify-test');
+      if (verifyDiv) verifyDiv.style.display = 'none';
+      
+      nextWalletSim(3);
+      seedVerified = true;
     }
     
     // Update the wallet words UI in the instruction panel
