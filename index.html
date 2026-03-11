@@ -1119,90 +1119,132 @@
         <button class="cc-btn cc-btn-outline" id="soundToggleBtn" onclick="toggleSound()" style="padding:12px 16px;">🔊</button>
       </div>
       
-      <div class="device-showcase">
-        <!-- 3D ASIC Device -->
-        <div class="device-3d">
-          <div class="device-wrapper" style="perspective:1000px;">
-            <div class="bitaxe-device" id="proMinerDevice" style="width:320px;height:260px;background:linear-gradient(145deg,#1a1a1f,#0d0d10);border-radius:20px;border:1px solid #2a2a30;box-shadow:0 40px 80px rgba(0,0,0,0.8);position:relative;overflow:hidden;transform:rotateX(5deg) rotateY(-5deg);transition:all 0.5s;">
-              <!-- Top Bar with LEDs -->
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-bottom:1px solid rgba(255,255,255,0.03);">
-                <div>
-                  <div style="font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:800;color:var(--primary);letter-spacing:2px;" id="asicBrand">BITAXE</div>
-                  <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3);letter-spacing:1px;" id="asicModel">ULTRA</div>
-                </div>
-                <div style="display:flex;gap:14px;">
-                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-                    <div class="led-power" id="ledPWR" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
-                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">PWR</div>
-                  </div>
-                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-                    <div class="led-net" id="ledNET" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
-                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">NET</div>
-                  </div>
-                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-                    <div class="led-fan" id="ledFAN" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
-                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">FAN</div>
-                  </div>
-                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-                    <div class="led-err" id="ledERR" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
-                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">ERR</div>
-                  </div>
-                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-                    <div class="led-blk" id="ledBLK" style="width:10px;height:10px;border-radius:50%;background:#1a1a1a;box-shadow:none;transition:all 0.3s;"></div>
-                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.5rem;color:var(--text3);">BLK</div>
-                  </div>
-                </div>
+      <div style="display:flex;justify-content:center;gap:40px;align-items:flex-start;flex-wrap:wrap;">
+        
+        <!-- REALISTIC ASIC MINER -->
+        <div style="perspective:1200px;">
+          <div id="realMiner" style="width:380px;background:linear-gradient(180deg,#1a1a1f 0%,#0d0d10 50%,#151518 100%);border-radius:24px;padding:20px;box-shadow:0 60px 140px rgba(0,0,0,0.9),inset 0 1px 0 rgba(255,255,255,0.05),inset 0 -1px 0 rgba(0,0,0,0.5);border:1px solid #2a2a30;position:relative;transform:rotateX(8deg) rotateY(-12deg);transition:all 0.5s;filter:brightness(0.25);" onmouseover="this.style.transform=proPowered?'rotateX(5deg) rotateY(-8deg)':'rotateX(8deg) rotateY(-12deg)'" onmouseout="this.style.transform=proPowered?'rotateX(3deg) rotateY(-5deg)':'rotateX(8deg) rotateY(-12deg)'">
+            
+            <!-- Top Panel -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div>
+                <div style="font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,#f7931a,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="realBrand">BITAXE</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:#666;letter-spacing:3px;margin-top:2px;" id="realModel">ULTRA SP31</div>
               </div>
-              
-              <!-- OLED Display -->
-              <div style="display:flex;justify-content:center;align-items:center;padding:16px;">
-                <div style="width:260px;height:70px;background:#080810;border-radius:8px;border:1px solid #15151a;box-shadow:inset 0 3px 10px rgba(0,0,0,0.8);display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;">
-                  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,40,60,0.08),transparent);"></div>
-                  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,136,0.2),transparent);animation:scanline 3s linear infinite;"></div>
-                  <div style="text-align:center;z-index:1;">
-                    <div style="font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:700;color:var(--success);text-shadow:0 0 20px rgba(0,255,136,0.5);" id="displayHash">0.00</div>
-                    <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3);letter-spacing:2px;margin-top:2px;" id="displayUnit">GH/S</div>
-                  </div>
+              <div style="display:flex;gap:12px;align-items:center;">
+                <!-- LED Indicators -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                  <div id="realLedPWR" style="width:12px;height:12px;border-radius:50%;background:#111;box-shadow:none;transition:all 0.3s;"></div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:0.45rem;color:#555;">PWR</div>
                 </div>
-              </div>
-              
-              <!-- Heat Sink -->
-              <div style="display:flex;justify-content:center;gap:3px;padding:8px 24px;" id="heatSink">
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-                <div class="heat-vane" style="width:6px;height:32px;background:linear-gradient(180deg,#25252a,#18181c);border-radius:2px;"></div>
-              </div>
-              
-              <!-- Fans -->
-              <div style="display:flex;justify-content:center;gap:30px;padding:12px 0;">
-                <div class="fan-container" id="fanContainer1" style="width:70px;height:70px;position:relative;">
-                  <div style="width:70px;height:70px;background:linear-gradient(145deg,#151518,#0a0a0d);border-radius:50%;border:3px solid #1f1f24;display:flex;justify-content:center;align-items:center;">
-                    <div class="fan-blade" id="fanBlade1" style="width:60px;height:60px;background:conic-gradient(from 0deg,#1a1a1f 0deg,#25252a 30deg,#1a1a1f 60deg,#25252a 90deg,#1a1a1f 120deg,#25252a 150deg,#1a1a1f 180deg,#25252a 210deg,#1a1a1f 240deg,#25252a 270deg,#1a1a1f 300deg,#25252a 330deg,#1a1a1f 360deg);border-radius:50%;"></div>
-                  </div>
-                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;background:radial-gradient(circle,#2a2a30,#151518);border-radius:50%;border:2px solid #1a1a1f;"></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                  <div id="realLedNET" style="width:12px;height:12px;border-radius:50%;background:#111;box-shadow:none;transition:all 0.3s;"></div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:0.45rem;color:#555;">NET</div>
                 </div>
-                <div class="fan-container" id="fanContainer2" style="width:70px;height:70px;position:relative;">
-                  <div style="width:70px;height:70px;background:linear-gradient(145deg,#151518,#0a0a0d);border-radius:50%;border:3px solid #1f1f24;display:flex;justify-content:center;align-items:center;">
-                    <div class="fan-blade" id="fanBlade2" style="width:60px;height:60px;background:conic-gradient(from 0deg,#1a1a1f 0deg,#25252a 30deg,#1a1a1f 60deg,#25252a 90deg,#1a1a1f 120deg,#25252a 150deg,#1a1a1f 180deg,#25252a 210deg,#1a1a1f 240deg,#25252a 270deg,#1a1a1f 300deg,#25252a 330deg,#1a1a1f 360deg);border-radius:50%;"></div>
-                  </div>
-                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;background:radial-gradient(circle,#2a2a30,#151518);border-radius:50%;border:2px solid #1a1a1f;"></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                  <div id="realLedFAN" style="width:12px;height:12px;border-radius:50%;background:#111;box-shadow:none;transition:all 0.3s;"></div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:0.45rem;color:#555;">FAN</div>
                 </div>
-              </div>
-              
-              <!-- Power Button -->
-              <div style="display:flex;justify-content:center;padding:8px 0;">
-                <button onclick="togglePowerPro()" style="width:50px;height:50px;background:linear-gradient(145deg,#1a1a1f,#0d0d10);border:2px solid #2a2a30;border-radius:12px;cursor:pointer;display:flex;justify-content:center;align-items:center;transition:all 0.2s;font-size:1.3rem;" id="powerBtnPro">⏻</button>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                  <div id="realLedERR" style="width:12px;height:12px;border-radius:50%;background:#111;box-shadow:none;transition:all 0.3s;"></div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:0.45rem;color:#555;">ERR</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                  <div id="realLedBLK" style="width:12px;height:12px;border-radius:50%;background:#111;box-shadow:none;transition:all 0.3s;"></div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:0.45rem;color:#555;">BLK</div>
+                </div>
               </div>
             </div>
+            
+            <!-- LCD Display -->
+            <div style="background:#050508;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:inset 0 4px 20px rgba(0,0,0,0.8),0 1px 0 rgba(255,255,255,0.03);border:1px solid #111;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:#444;">VOLTAGE</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:#444;">CURRENT</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#00ff88;" id="realVoltage">0.00 V</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#00d4ff;" id="realCurrent">0.00 A</div>
+              </div>
+              <div style="border-top:1px solid #1a1a1a;padding-top:8px;">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:#444;margin-bottom:4px;">HASH RATE</div>
+                <div style="font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:700;color:#00ff88;text-shadow:0 0 30px rgba(0,255,136,0.6);letter-spacing:2px;" id="realHashrate">0.00</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#666;letter-spacing:4px;margin-top:2px;" id="realHashUnit">GH/S</div>
+              </div>
+            </div>
+            
+            <!-- Temperature Bar -->
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:#555;">TEMP</div>
+              <div style="flex:1;height:8px;background:#111;border-radius:4px;overflow:hidden;">
+                <div id="realTempBar" style="height:100%;width:0%;background:linear-gradient(90deg,#00ff88,#ffd700,#ff4757);transition:width 0.3s;border-radius:4px;"></div>
+              </div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:0.9rem;font-weight:700;color:#00ff88;min-width:45px;text-align:right;" id="realTemp">--°C</div>
+            </div>
+            
+            <!-- Heat Sink -->
+            <div style="display:flex;justify-content:center;gap:4px;margin-bottom:16px;padding:12px;background:linear-gradient(180deg,#151518,#0a0a0d);border-radius:8px;" id="realHeatSink">
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+              <div class="hs-vane" style="width:8px;height:36px;background:linear-gradient(180deg,#2a2a30,#1a1a1f);border-radius:2px;transition:background 0.3s;"></div>
+            </div>
+            
+            <!-- Fans -->
+            <div style="display:flex;justify-content:center;gap:40px;margin-bottom:16px;">
+              <div style="position:relative;">
+                <div style="width:80px;height:80px;background:linear-gradient(145deg,#121215,#080810);border-radius:50%;border:4px solid #1a1a1f;box-shadow:inset 0 4px 15px rgba(0,0,0,0.8),0 2px 10px rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">
+                  <div id="realFan1" style="width:68px;height:68px;background:conic-gradient(from 0deg,#151518 0deg,#252528 30deg,#151518 60deg,#252528 90deg,#151518 120deg,#252528 150deg,#151518 180deg,#252528 210deg,#151518 240deg,#252528 270deg,#151518 300deg,#252528 330deg,#151518 360deg);border-radius:50%;"></div>
+                </div>
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;background:radial-gradient(circle,#2a2a30,#101012);border-radius:50%;border:3px solid #151518;"></div>
+                <!-- Fan guard -->
+                <svg style="position:absolute;top:-5px;left:-5px;width:90px;height:90px;pointer-events:none;" viewBox="0 0 90 90">
+                  <circle cx="45" cy="45" r="40" fill="none" stroke="#1a1a1f" stroke-width="2"/>
+                  <circle cx="45" cy="45" r="32" fill="none" stroke="#1a1a1f" stroke-width="1.5"/>
+                  <line x1="45" y1="5" x2="45" y2="85" stroke="#1a1a1f" stroke-width="1.5"/>
+                  <line x1="5" y1="45" x2="85" y2="45" stroke="#1a1a1f" stroke-width="1.5"/>
+                  <line x1="17" y1="17" x2="73" y2="73" stroke="#1a1a1f" stroke-width="1.5"/>
+                  <line x1="73" y1="17" x2="17" y2="73" stroke="#1a1a1f" stroke-width="1.5"/>
+                </svg>
+              </div>
+              <div style="position:relative;">
+                <div style="width:80px;height:80px;background:linear-gradient(145deg,#121215,#080810);border-radius:50%;border:4px solid #1a1a1f;box-shadow:inset 0 4px 15px rgba(0,0,0,0.8),0 2px 10px rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;">
+                  <div id="realFan2" style="width:68px;height:68px;background:conic-gradient(from 0deg,#151518 0deg,#252528 30deg,#151518 60deg,#252528 90deg,#151518 120deg,#252528 150deg,#151518 180deg,#252528 210deg,#151518 240deg,#252528 270deg,#151518 300deg,#252528 330deg,#151518 360deg);border-radius:50%;"></div>
+                </div>
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;background:radial-gradient(circle,#2a2a30,#101012);border-radius:50%;border:3px solid #151518;"></div>
+                <svg style="position:absolute;top:-5px;left:-5px;width:90px;height:90px;pointer-events:none;" viewBox="0 0 90 90">
+                  <circle cx="45" cy="45" r="40" fill="none" stroke="#1a1a1f" stroke-width="2"/>
+                  <circle cx="45" cy="45" r="32" fill="none" stroke="#1a1a1f" stroke-width="1.5"/>
+                  <line x1="45" y1="5" x2="45" y2="85" stroke="#1a1a1f" stroke-width="1.5"/>
+                  <line x1="5" y1="45" x2="85" y2="45" stroke="#1a1a1f" stroke-width="1.5"/>
+                  <line x1="17" y1="17" x2="73" y2="73" stroke="#1a1a1f" stroke-width="1.5"/>
+                  <line x1="73" y1="17" x2="17" y2="73" stroke="#1a1a1f" stroke-width="1.5"/>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Power Button -->
+            <div style="display:flex;justify-content:center;">
+              <button id="realPowerBtn" onclick="toggleRealPower()" style="width:60px;height:60px;background:linear-gradient(145deg,#1a1a1f,#0a0a0d);border:3px solid #252528;border-radius:50%;cursor:pointer;display:flex;justify-content:center;align-items:center;transition:all 0.2s;font-size:1.8rem;box-shadow:0 4px 15px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.03);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">⏻</button>
+            </div>
+            
+            <!-- Fan Speed Indicator -->
+            <div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-top:12px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:#444;">FAN</div>
+              <div style="flex:1;height:6px;background:#111;border-radius:3px;overflow:hidden;">
+                <div id="realFanBar" style="height:100%;width:0%;background:linear-gradient(90deg,#f7931a,#ffd700);transition:width 0.3s;border-radius:3px;"></div>
+              </div>
+              <div style="font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:700;color:#f7931a;min-width:50px;text-align:right;" id="realFanRPM">-- RPM</div>
+            </div>
+            
           </div>
         </div>
         
@@ -1269,8 +1311,8 @@
             
             <!-- Controls -->
             <div style="display:flex;gap:10px;">
-              <button class="cc-btn" id="proStartBtn" onclick="startMiningPro()" disabled style="flex:1;">▶ Start</button>
-              <button class="cc-btn cc-btn-outline" id="proStopBtn" onclick="stopMiningPro()" disabled style="flex:1;">⏹ Stop</button>
+              <button class="cc-btn" id="proStartBtn" onclick="startRealMining()" disabled style="flex:1;">▶ Start</button>
+              <button class="cc-btn cc-btn-outline" id="proStopBtn" onclick="stopRealMining()" disabled style="flex:1;">⏹ Stop</button>
             </div>
           </div>
         </div>
@@ -3144,12 +3186,15 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
       initAudio();
       proPowered = !proPowered;
       const btn = document.getElementById('powerBtnPro'), device = document.getElementById('proMinerDevice');
+      const realBtn = document.getElementById('realPowerBtn'), realDevice = document.getElementById('realMiner');
       if(proPowered) {
         playSound('boot');
         btn.style.borderColor = 'var(--success)';
         btn.style.boxShadow = '0 0 20px rgba(0,255,136,0.4)';
+        if(realBtn){realBtn.style.borderColor='var(--success)';realBtn.style.boxShadow='0 0 25px rgba(0,255,136,0.5)';}
         setLED('ledPWR','var(--success)');
-        device.style.filter = 'brightness(1)';
+        if(device) device.style.filter = 'brightness(1)';
+        if(realDevice) realDevice.style.filter = 'brightness(1)';
         proAddLog(`⚡ ${currentAsic.name} ${currentAsic.model} booting...`);
         setTimeout(()=>proAddLog('🔍 ASIC detected: BM1366'),600);
         setTimeout(()=>{setLED('ledNET','#00d4ff');proAddLog('📶 WiFi connected');},1400);
@@ -3162,11 +3207,15 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
       } else {
         stopMiningPro();
         btn.style.borderColor='var(--border)';btn.style.boxShadow='none';
+        if(realBtn){realBtn.style.borderColor='#252528';realBtn.style.boxShadow='none';}
         ['ledPWR','ledNET','ledFAN'].forEach(id=>setLED(id,'#1a1a1a'));
-        device.style.filter = 'brightness(0.3)';
-        document.getElementById('displayHash').textContent='0.00';
+        if(device) device.style.filter = 'brightness(0.3)';
+        if(realDevice) realDevice.style.filter = 'brightness(0.25)';
+        if(document.getElementById('displayHash')) document.getElementById('displayHash').textContent='0.00';
         document.getElementById('displayUnit').textContent='GH/S - OFF';
-        ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id).style.animation='none');
+        ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id) && (document.getElementById(id).style.animation='none'));
+        if(document.getElementById('realFan1')) document.getElementById('realFan1').style.animation='none';
+        if(document.getElementById('realFan2')) document.getElementById('realFan2').style.animation='none';
         document.getElementById('proStartBtn').disabled = true;
         proAddLog('🔴 System shutdown');
       }
@@ -3174,8 +3223,17 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     
     function setLED(id,color) {
       const el = document.getElementById(id);
-      el.style.background = color;
-      el.style.boxShadow = color==='#1a1a1a'?'none':'0 0 12px '+color;
+      const elReal = document.getElementById('real'+id.charAt(0).toUpperCase()+id.slice(1));
+      if(el){el.style.background = color; el.style.boxShadow = color==='#1a1a1a'?'none':'0 0 12px '+color;}
+      if(elReal){elReal.style.background = color; elReal.style.boxShadow = color==='#111'?'none':'0 0 15px '+color;}
+      if(id==='ledPWR' && elReal){
+        const device = document.getElementById('realMiner');
+        device.style.filter = color==='#111' ? 'brightness(0.25)' : 'brightness(1)';
+      }
+      if((id==='ledFAN' || id==='ledNET') && elReal){
+        document.getElementById('realFan1').style.animation = color==='#111'?'none':'spin 0.15s linear infinite';
+        document.getElementById('realFan2').style.animation = color==='#111'?'none':'spin 0.15s linear infinite';
+      }
     }
     
     function startMiningPro() {
@@ -3186,7 +3244,11 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
       startFanSound();
       document.getElementById('proStartBtn').disabled = true;
       document.getElementById('proStopBtn').disabled = false;
-      ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id).style.animation='spin 0.15s linear infinite');
+      ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id) && (document.getElementById(id).style.animation='spin 0.15s linear infinite'));
+      // Also animate realistic fans
+      const rf1 = document.getElementById('realFan1'), rf2 = document.getElementById('realFan2');
+      if(rf1) rf1.style.animation = 'spin 0.15s linear infinite';
+      if(rf2) rf2.style.animation = 'spin 0.15s linear infinite';
       
       proAddLog(`⛏️ ${miningMode.toUpperCase()} mining started`);
       proAddLog(`🎯 Target: ${currentAsic.hashrate} ${currentAsic.hashrate>=1000?'GH/s':'TH/s'}`);
@@ -3230,7 +3292,11 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
       setLED('ledFAN','#1a1a1a');
       document.getElementById('proStartBtn').disabled = false;
       document.getElementById('proStopBtn').disabled = true;
-      ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id).style.animation='none');
+      ['fanBlade1','fanBlade2'].forEach(id=>document.getElementById(id) && (document.getElementById(id).style.animation='none'));
+      // Stop realistic fans
+      const rf1 = document.getElementById('realFan1'), rf2 = document.getElementById('realFan2');
+      if(rf1) rf1.style.animation = 'none';
+      if(rf2) rf2.style.animation = 'none';
       proAddLog('⏹ Mining stopped');
     }
     
@@ -3244,9 +3310,9 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     }
     
     function updateProDisplay() {
+      // Update dashboard
       const unit = currentAsic.hashrate>=100000?'TH/s':(currentAsic.hashrate>=1000?'GH/s':'MH/s');
       const val = currentAsic.hashrate>=1000?(proHashrate/1000).toFixed(2):proHashrate.toFixed(0);
-      document.getElementById('displayHash').textContent = val;
       document.getElementById('proHashrate').textContent = val;
       document.getElementById('proTemp').textContent = proTemp.toFixed(0);
       document.getElementById('proFan').textContent = Math.floor(proFan);
@@ -3260,7 +3326,42 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
       
       document.getElementById('totalEarned').textContent = '₿ '+proTotalEarned.toFixed(8);
       document.getElementById('fiatEarned').textContent = '$'+(proTotalEarned*btcPrice).toFixed(2)+' USD';
+      
+      // Update realistic miner device
+      if(document.getElementById('realMiner')){
+        const rVal = currentAsic.hashrate>=1000?(proHashrate/1000).toFixed(2):proHashrate.toFixed(0);
+        document.getElementById('realHashrate').textContent = rVal;
+        document.getElementById('realHashUnit').textContent = unit.replace('/s','');
+        document.getElementById('realTemp').textContent = proTemp.toFixed(0)+'°C';
+        document.getElementById('realTempBar').style.width = tp+'%';
+        document.getElementById('realFanRPM').textContent = Math.floor(proFan)+' RPM';
+        document.getElementById('realFanBar').style.width = Math.min(100,(proFan/6500)*100)+'%';
+        
+        // Voltage & Current
+        const voltage = (currentAsic.watts * (proHashrate/currentAsic.hashrate) / 12).toFixed(2);
+        const current = (currentAsic.watts * (proHashrate/currentAsic.hashrate) / 12).toFixed(2);
+        document.getElementById('realVoltage').textContent = proMining ? voltage+' V' : '0.00 V';
+        document.getElementById('realCurrent').textContent = proMining ? current+' A' : '0.00 A';
+        
+        // Temp color
+        const tempEl = document.getElementById('realTemp');
+        if(proTemp>80) tempEl.style.color='#ff4757';
+        else if(proTemp>65) tempEl.style.color='#ffd700';
+        else tempEl.style.color='#00ff88';
+        
+        // Heat sink
+        document.querySelectorAll('#realHeatSink .hs-vane').forEach((v,i)=>{
+          v.classList.remove('hot','critical');
+          if(proTemp>80) v.classList.add('critical');
+          else if(proTemp>30+i*5) v.classList.add('hot');
+        });
+      }
     }
+    
+    // ========== REALISTIC MINER FUNCTIONS ==========
+    function toggleRealPower() { togglePowerPro(); }
+    function startRealMining() { startMiningPro(); }
+    function stopRealMining() { stopMiningPro(); }
     
     function proAddLog(msg) {
       const lc = document.getElementById('proLogs');
@@ -3274,6 +3375,9 @@ ${selectedMenu === 2 ? '▶' : ' '} Settings</div>
     ps.textContent = `@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .heat-vane.hot{background:linear-gradient(180deg,#ff6b35,#c0392b)!important}
 .heat-vane.critical{background:linear-gradient(180deg,#ff0000,#8b0000)!important;animation:pulse .5s infinite}
+.hs-vane{transition:background 0.3s}
+.hs-vane.hot{background:linear-gradient(180deg,#ff6b35,#c0392b)!important}
+.hs-vane.critical{background:linear-gradient(180deg,#ff0000,#8b0000)!important;animation:pulse .5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}`;
     document.head.appendChild(ps);
   </script>
