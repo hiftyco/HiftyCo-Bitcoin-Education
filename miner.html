@@ -23,7 +23,7 @@
       --led-green: #00ff88;
       --led-red: #ff4757;
       --led-blue: #00d4ff;
-      --led-orange: #f7931a;
+      --led-white: #ffffff;
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -134,6 +134,29 @@
       margin: 0 auto;
     }
     
+    /* Interaction Instructions */
+    .interaction-hint {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, rgba(247,147,26,0.1), rgba(0,255,136,0.05));
+      border: 1px solid rgba(247,147,26,0.3);
+      border-radius: 12px;
+      display: inline-block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .interaction-hint p {
+      color: var(--text2);
+      font-size: 0.95rem;
+    }
+    
+    .interaction-hint span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
     /* Mode Selector */
     .mode-selector {
       display: flex;
@@ -196,6 +219,7 @@
     .asic-card.selected {
       border-color: var(--primary);
       background: linear-gradient(135deg, rgba(247,147,26,0.15), rgba(247,147,26,0.05));
+      box-shadow: 0 0 30px rgba(247,147,26,0.3);
     }
     
     .asic-name {
@@ -231,41 +255,234 @@
     }
     
     .miner-device-container {
-      perspective: 1500px;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 500px;
+      min-height: 650px;
+      padding: 20px;
     }
     
-    .miner-wrapper {
-      transform-style: preserve-3d;
-      animation: float3d 6s ease-in-out infinite;
+    /* Cable Sockets on Desk */
+    .desk-sockets {
+      position: relative;
+      width: 500px;
+      height: 500px;
     }
     
-    @keyframes float3d {
-      0%, 100% { transform: rotateX(5deg) rotateY(-8deg) translateY(0); }
-      50% { transform: rotateX(-2deg) rotateY(4deg) translateY(-15px); }
+    .socket-panel {
+      position: absolute;
+      background: linear-gradient(145deg, #1a1a1f, #0a0a0d);
+      border: 2px solid #2a2a30;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 
+        inset 0 2px 8px rgba(0,0,0,0.5),
+        0 8px 24px rgba(0,0,0,0.5);
     }
     
+    .socket-panel::before {
+      content: attr(data-label);
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text3);
+      letter-spacing: 1px;
+    }
+    
+    .socket-panel.left {
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    .socket-panel.right {
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    .socket-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      color: var(--text2);
+      letter-spacing: 1px;
+    }
+    
+    /* Cable Sockets */
+    .socket {
+      width: 60px;
+      height: 60px;
+      background: #0a0a0d;
+      border: 2px solid #1a1a1f;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s;
+    }
+    
+    .socket:hover {
+      border-color: var(--primary);
+    }
+    
+    .socket-icon {
+      font-size: 1.5rem;
+      opacity: 0.4;
+      transition: all 0.3s;
+    }
+    
+    .socket.connected .socket-icon {
+      opacity: 1;
+    }
+    
+    .socket-label {
+      position: absolute;
+      bottom: -18px;
+      font-size: 0.6rem;
+      color: var(--text3);
+      white-space: nowrap;
+    }
+    
+    /* Cable */
+    .cable {
+      position: absolute;
+      height: 14px;
+      border-radius: 7px;
+      cursor: grab;
+      transition: all 0.3s ease;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+    }
+    
+    .cable:active {
+      cursor: grabbing;
+    }
+    
+    .cable.plugging {
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .cable-head {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 
+        inset 0 2px 4px rgba(255,255,255,0.2),
+        0 4px 8px rgba(0,0,0,0.5);
+    }
+    
+    .cable-body {
+      flex: 1;
+      height: 100%;
+      border-radius: 7px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cable-body::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 7px;
+    }
+    
+    .cable-power .cable-head { background: linear-gradient(145deg, #cc3333, #881111); }
+    .cable-power .cable-body { 
+      background: linear-gradient(90deg, #111, #cc3333 30%, #cc3333 70%, #111);
+      width: 200px;
+    }
+    
+    .cable-ethernet .cable-head { background: linear-gradient(145deg, #338833, #115511); }
+    .cable-ethernet .cable-body { 
+      background: linear-gradient(90deg, #111, #338833 30%, #338833 70%, #111);
+      width: 200px;
+    }
+    
+    .cable-usb .cable-head { background: linear-gradient(145deg, #3366cc, #113388); }
+    .cable-usb .cable-body { 
+      background: linear-gradient(90deg, #111, #3366cc 30%, #3366cc 70%, #111);
+      width: 150px;
+    }
+    
+    /* Connected state */
+    .cable.connected .cable-body {
+      width: 120px;
+    }
+    
+    .cable.connected .cable-head {
+      animation: cablePlugged 0.3s ease-out;
+    }
+    
+    @keyframes cablePlugged {
+      0% { transform: scale(1.2); }
+      50% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Power Cable (vertical) */
+    .cable-power-vertical {
+      position: absolute;
+      width: 14px;
+      height: 120px;
+      left: -60px;
+      top: 80px;
+      cursor: grab;
+      z-index: 10;
+    }
+    
+    .cable-power-vertical .cable-body {
+      width: 14px;
+      height: 100px;
+      background: linear-gradient(180deg, #111, #cc3333 30%, #cc3333 70%, #111);
+      position: absolute;
+      top: 20px;
+    }
+    
+    .cable-power-vertical.connected .cable-body {
+      height: 60px;
+      top: 30px;
+    }
+    
+    /* Miner Device */
     .miner-device {
       width: 380px;
-      height: 300px;
-      background: linear-gradient(145deg, #1a1a1f 0%, #0d0d10 50%, #151518 100%);
-      border-radius: 24px;
-      border: 1px solid #2a2a30;
+      height: 360px;
+      background: linear-gradient(145deg, #1e1e24 0%, #121218 50%, #181820 100%);
+      border-radius: 20px;
+      border: 2px solid #2a2a32;
       box-shadow: 
-        0 60px 120px rgba(0,0,0,0.8),
-        0 0 0 1px rgba(0,0,0,0.5) inset,
-        -15px -20px 40px rgba(0,0,0,0.6),
-        15px 20px 40px rgba(0,0,0,0.3),
-        0 0 80px rgba(247,147,26,0.08);
-      position: relative;
+        0 30px 80px rgba(0,0,0,0.8),
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 0 60px rgba(247,147,26,0.05);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
       flex-direction: column;
       padding: 0;
-      overflow: hidden;
-      transform-style: preserve-3d;
+      overflow: visible;
       transition: all 0.5s ease;
     }
     
@@ -273,23 +490,94 @@
       content: '';
       position: absolute;
       inset: 0;
-      border-radius: 24px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, transparent 40%, rgba(0,0,0,0.1) 100%);
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.02) 0%, transparent 50%);
       pointer-events: none;
     }
     
-    .miner-device::after {
+    .miner-device.powered {
+      box-shadow: 
+        0 30px 80px rgba(0,0,0,0.8),
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 0 100px rgba(0,255,136,0.15),
+        0 0 30px rgba(0,255,136,0.1);
+    }
+    
+    .miner-device.mining {
+      animation: miningPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes miningPulse {
+      0%, 100% { 
+        box-shadow: 
+          0 30px 80px rgba(0,0,0,0.8),
+          inset 0 1px 0 rgba(255,255,255,0.05),
+          0 0 80px rgba(0,255,136,0.2),
+          0 0 30px rgba(0,255,136,0.1);
+      }
+      50% { 
+        box-shadow: 
+          0 30px 80px rgba(0,0,0,0.8),
+          inset 0 1px 0 rgba(255,255,255,0.05),
+          0 0 120px rgba(0,255,136,0.3),
+          0 0 50px rgba(0,255,136,0.2);
+      }
+    }
+    
+    /* Mining Port on Miner */
+    .miner-ports {
+      position: absolute;
+      left: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .miner-port {
+      width: 40px;
+      height: 40px;
+      background: #0a0a0d;
+      border: 2px solid #1a1a1f;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .miner-port.waiting-cable::after {
       content: '';
       position: absolute;
-      top: 5%;
-      left: 8%;
-      width: 40%;
-      height: 25%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
-      border-radius: 50% 0 0 0;
-      pointer-events: none;
+      width: 10px;
+      height: 10px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: portWaiting 1s ease-in-out infinite;
     }
     
+    @keyframes portWaiting {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    
+    .miner-port.connected {
+      border-color: var(--success);
+      box-shadow: 0 0 15px rgba(0,255,136,0.3);
+    }
+    
+    .miner-port-icon {
+      font-size: 1.2rem;
+      opacity: 0.3;
+      transition: all 0.3s;
+    }
+    
+    .miner-port.connected .miner-port-icon {
+      opacity: 1;
+    }
+    
+    /* Top Bar */
     .miner-top-bar {
       display: flex;
       justify-content: space-between;
@@ -320,6 +608,7 @@
       letter-spacing: 1px;
     }
     
+    /* LED Indicators */
     .led-indicators {
       display: flex;
       gap: 16px;
@@ -342,7 +631,7 @@
     .led-power { background: #1a1a1a; box-shadow: none; }
     .led-power.on {
       background: var(--success);
-      box-shadow: 0 0 12px var(--success), 0 0 24px rgba(0,255,136,0.3);
+      box-shadow: 0 0 15px var(--success), 0 0 30px rgba(0,255,136,0.4);
       animation: ledPulse 2s ease-in-out infinite;
     }
     
@@ -354,20 +643,20 @@
     .led-network { background: #1a1a1a; box-shadow: none; }
     .led-network.on {
       background: var(--led-blue);
-      box-shadow: 0 0 12px var(--led-blue), 0 0 24px rgba(0,212,255,0.3);
+      box-shadow: 0 0 15px var(--led-blue), 0 0 30px rgba(0,212,255,0.4);
       animation: ledPulse 1.5s ease-in-out infinite;
     }
     
     .led-fan { background: #1a1a1a; box-shadow: none; }
     .led-fan.on {
-      background: var(--warning);
-      box-shadow: 0 0 12px var(--warning), 0 0 24px rgba(255,215,0,0.3);
+      background: var(--led-white);
+      box-shadow: 0 0 15px var(--led-white), 0 0 30px rgba(255,255,255,0.5);
     }
     
     .led-error { background: #1a1a1a; box-shadow: none; }
     .led-error.on {
       background: var(--danger);
-      box-shadow: 0 0 12px var(--danger);
+      box-shadow: 0 0 15px var(--danger);
       animation: ledBlink 0.5s infinite;
     }
     
@@ -379,7 +668,7 @@
     .led-block { background: #1a1a1a; box-shadow: none; }
     .led-block.on {
       background: var(--primary);
-      box-shadow: 0 0 20px var(--primary), 0 0 40px rgba(247,147,26,0.5);
+      box-shadow: 0 0 25px var(--primary), 0 0 50px rgba(247,147,26,0.6);
       animation: blockFound 1s ease-out;
     }
     
@@ -396,6 +685,7 @@
       letter-spacing: 1px;
     }
     
+    /* Display */
     .miner-display-container {
       flex: 1;
       display: flex;
@@ -406,8 +696,8 @@
     
     .miner-display {
       width: 100%;
-      max-width: 320px;
-      height: 100px;
+      max-width: 280px;
+      height: 80px;
       background: #080810;
       border-radius: 8px;
       border: 1px solid #15151a;
@@ -445,18 +735,14 @@
       to { top: 100%; }
     }
     
-    .display-content {
-      text-align: center;
-      z-index: 1;
-    }
-    
     .display-hashrate {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: var(--success);
       text-shadow: 0 0 20px rgba(0,255,136,0.5);
       transition: all 0.3s;
+      z-index: 1;
     }
     
     .display-hashrate.boosting {
@@ -466,12 +752,46 @@
     
     .display-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       color: var(--text3);
       letter-spacing: 2px;
       margin-top: 4px;
+      z-index: 1;
     }
     
+    /* Heat Sink */
+    .heat-sink {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      padding: 12px 24px;
+    }
+    
+    .heat-vane {
+      width: 8px;
+      height: 45px;
+      background: linear-gradient(180deg, #3a3a40, #1a1a1f);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    
+    .heat-vane.hot {
+      background: linear-gradient(180deg, #ff6b35, #c0392b);
+      box-shadow: 0 0 8px rgba(255,107,53,0.5);
+    }
+    
+    .heat-vane.critical {
+      background: linear-gradient(180deg, #ff0000, #8b0000);
+      box-shadow: 0 0 12px rgba(255,0,0,0.7);
+      animation: heatPulse 0.3s infinite;
+    }
+    
+    @keyframes heatPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    /* Fan Section */
     .fan-section {
       display: flex;
       justify-content: center;
@@ -485,36 +805,81 @@
       position: relative;
     }
     
+    .fan-container.active {
+      animation: fanVibrate 0.1s linear infinite;
+    }
+    
+    @keyframes fanVibrate {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(0.5px); }
+      75% { transform: translateX(-0.5px); }
+    }
+    
     .fan-housing {
       width: 80px;
       height: 80px;
-      background: linear-gradient(145deg, #151518, #0a0a0d);
+      background: linear-gradient(145deg, #1a1a1f, #0a0a0d);
       border-radius: 50%;
-      border: 3px solid #1f1f24;
+      border: 3px solid #2a2a30;
       box-shadow: 
-        inset 0 2px 8px rgba(0,0,0,0.5),
-        0 4px 12px rgba(0,0,0,0.4);
+        inset 0 2px 8px rgba(0,0,0,0.6),
+        0 4px 12px rgba(0,0,0,0.5);
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
+    }
+    
+    /* White LED Ring around fan */
+    .fan-led-ring {
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      border: 2px solid #222;
+      opacity: 0.5;
+      transition: all 0.3s;
+    }
+    
+    .fan-container.active .fan-led-ring {
+      opacity: 1;
+      border-color: #fff;
+      box-shadow: 
+        0 0 20px rgba(255,255,255,0.8),
+        0 0 40px rgba(255,255,255,0.5),
+        inset 0 0 15px rgba(255,255,255,0.2);
+      animation: ledRingPulse 1s ease-in-out infinite;
+    }
+    
+    @keyframes ledRingPulse {
+      0%, 100% { 
+        box-shadow: 
+          0 0 20px rgba(255,255,255,0.8),
+          0 0 40px rgba(255,255,255,0.5);
+      }
+      50% { 
+        box-shadow: 
+          0 0 30px rgba(255,255,255,1),
+          0 0 60px rgba(255,255,255,0.7);
+      }
     }
     
     .fan-blade {
-      width: 70px;
-      height: 70px;
+      width: 65px;
+      height: 65px;
       background: conic-gradient(
         from 0deg,
-        #1a1a1f 0deg, #25252a 30deg, #1a1a1f 60deg, #25252a 90deg,
-        #1a1a1f 120deg, #25252a 150deg, #1a1a1f 180deg, #25252a 210deg,
-        #1a1a1f 240deg, #25252a 270deg, #1a1a1f 300deg, #25252a 330deg,
-        #1a1a1f 360deg
+        #151518 0deg, #252528 30deg, #151518 60deg, #252528 90deg,
+        #151518 120deg, #252528 150deg, #151518 180deg, #252528 210deg,
+        #151518 240deg, #252528 270deg, #151518 300deg, #252528 330deg,
+        #151518 360deg
       );
       border-radius: 50%;
       transition: transform 0.1s linear;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
     }
     
     .fan-container.active .fan-blade {
-      animation: spin var(--fan-speed, 0.3s) linear infinite;
+      animation: spin 0.15s linear infinite;
     }
     
     @keyframes spin {
@@ -524,45 +889,14 @@
     
     .fan-center {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 20px;
-      height: 20px;
-      background: radial-gradient(circle, #2a2a30, #151518);
+      width: 18px;
+      height: 18px;
+      background: radial-gradient(circle, #333, #111);
       border-radius: 50%;
-      border: 2px solid #1a1a1f;
+      border: 2px solid #222;
     }
     
-    .heat-sink {
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-      padding: 12px 24px;
-    }
-    
-    .heat-vane {
-      width: 8px;
-      height: 40px;
-      background: linear-gradient(180deg, #25252a, #18181c);
-      border-radius: 2px;
-      transition: background 0.3s;
-    }
-    
-    .heat-vane.hot {
-      background: linear-gradient(180deg, #ff6b35, #c0392b);
-    }
-    
-    .heat-vane.critical {
-      background: linear-gradient(180deg, #ff0000, #8b0000);
-      animation: heatPulse 0.5s infinite;
-    }
-    
-    @keyframes heatPulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-    
+    /* Control Panel */
     .control-panel {
       display: flex;
       justify-content: center;
@@ -594,7 +928,6 @@
     .power-button:hover {
       transform: scale(1.08);
       border-color: var(--primary);
-      box-shadow: 0 6px 20px rgba(247,147,26,0.3);
     }
     
     .power-button:active {
@@ -603,7 +936,12 @@
     
     .power-button.on {
       border-color: var(--success);
-      box-shadow: 0 0 20px rgba(0,255,136,0.4);
+      box-shadow: 0 0 25px rgba(0,255,136,0.5);
+    }
+    
+    .power-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     
     .power-icon {
@@ -614,33 +952,165 @@
     
     .power-button.on .power-icon {
       color: var(--success);
-      text-shadow: 0 0 15px var(--success);
     }
     
-    /* Block Found Notification */
-    .block-notification {
-      position: fixed;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: linear-gradient(135deg, var(--primary), #ffd700);
-      color: #000;
-      padding: 20px 40px;
-      border-radius: 16px;
+    /* Overclock Panel */
+    .overclock-panel {
+      background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(247,147,26,0.05));
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 8px 16px;
+    }
+    
+    .overclock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .overclock-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.2rem;
+      font-size: 0.7rem;
+      color: var(--warning);
+      letter-spacing: 1px;
+    }
+    
+    .overclock-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--warning);
+    }
+    
+    .overclock-slider {
+      width: 100%;
+      height: 8px;
+      -webkit-appearance: none;
+      background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+    
+    .overclock-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--text);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    
+    .boost-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      background: linear-gradient(135deg, var(--warning), #ff9500);
+      border: none;
+      border-radius: 8px;
+      color: #000;
       font-weight: 700;
-      z-index: 2000;
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      box-shadow: 0 20px 60px rgba(247,147,26,0.5);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     
-    .block-notification.show {
-      transform: translateX(-50%) translateY(20px);
-      opacity: 1;
+    .boost-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255,215,0,0.4);
     }
     
+    .boost-btn:disabled {
+      background: var(--bg3);
+      color: var(--text3);
+      cursor: not-allowed;
+    }
+    
+    .boost-btn.active {
+      animation: boostActive 0.5s infinite;
+    }
+    
+    @keyframes boostActive {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.5); }
+      50% { box-shadow: 0 0 40px rgba(255,215,0,0.8); }
+    }
+    
+    /* Intensity Buttons */
+    .intensity-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .intensity-label {
+      font-size: 0.7rem;
+      color: var(--text2);
+    }
+    
+    .intensity-btns {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .intensity-btn {
+      width: 26px;
+      height: 26px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text2);
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .intensity-btn:hover {
+      border-color: var(--primary);
+    }
+    
+    .intensity-btn.active {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+    }
+    
+    /* Status Messages */
+    .connection-status {
+      text-align: center;
+      padding: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .status-message {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--bg3);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--text2);
+      transition: all 0.3s;
+    }
+    
+    .status-message.ready {
+      background: linear-gradient(135deg, rgba(247,147,26,0.2), rgba(247,147,26,0.1));
+      border: 1px solid rgba(247,147,26,0.3);
+      color: var(--primary);
+    }
+    
+    .status-message.connected {
+      background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,255,136,0.1));
+      border: 1px solid rgba(0,255,136,0.3);
+      color: var(--success);
+    }
+    
+    /* Stats Dashboard */
     .stats-dashboard {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -666,17 +1136,11 @@
       margin-bottom: 24px;
     }
     
-    .pool-config-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    
     .pool-config-title {
       font-family: 'Orbitron', sans-serif;
       font-size: 0.9rem;
       color: var(--primary);
+      margin-bottom: 16px;
     }
     
     .pool-config select {
@@ -714,6 +1178,7 @@
       box-shadow: 0 8px 20px rgba(247,147,26,0.4);
     }
     
+    /* Stats Grid */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -732,28 +1197,27 @@
     
     .stat-card:hover {
       border-color: var(--primary);
-      transform: translateY(-2px);
     }
     
     .stat-value {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: var(--primary);
-      text-shadow: 0 0 20px rgba(247,147,26,0.3);
     }
     
-    .stat-value.success { color: var(--success); text-shadow: 0 0 20px rgba(0,255,136,0.3); }
-    .stat-value.warning { color: var(--warning); text-shadow: 0 0 20px rgba(255,215,0,0.3); }
-    .stat-value.danger { color: var(--danger); text-shadow: 0 0 20px rgba(255,71,87,0.3); }
+    .stat-value.success { color: var(--success); }
+    .stat-value.warning { color: var(--warning); }
+    .stat-value.danger { color: var(--danger); }
     
     .stat-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text3);
       margin-top: 6px;
       letter-spacing: 1px;
     }
     
+    /* Progress Bars */
     .progress-section {
       margin-bottom: 24px;
     }
@@ -766,7 +1230,7 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
     
     .progress-label { color: var(--text2); }
@@ -785,18 +1249,11 @@
       transition: width 0.5s ease;
     }
     
-    .progress-fill.hashrate {
-      background: linear-gradient(90deg, var(--success), #00ffaa);
-    }
+    .progress-fill.hashrate { background: linear-gradient(90deg, var(--success), #00ffaa); }
+    .progress-fill.temp { background: linear-gradient(90deg, var(--success), var(--warning), var(--danger)); }
+    .progress-fill.fan { background: linear-gradient(90deg, var(--primary), var(--warning)); }
     
-    .progress-fill.temp {
-      background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
-    }
-    
-    .progress-fill.fan {
-      background: linear-gradient(90deg, var(--primary), var(--warning));
-    }
-    
+    /* Control Buttons */
     .control-buttons {
       display: flex;
       gap: 12px;
@@ -823,7 +1280,7 @@
       color: #000;
     }
     
-    .btn-start:hover {
+    .btn-start:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0,255,136,0.4);
     }
@@ -834,7 +1291,7 @@
       border: 1px solid var(--border);
     }
     
-    .btn-stop:hover {
+    .btn-stop:hover:not(:disabled) {
       border-color: var(--danger);
       color: var(--danger);
     }
@@ -845,14 +1302,16 @@
       transform: none !important;
     }
     
+    /* Logs */
     .logs-container {
       background: #080810;
       border-radius: 12px;
       padding: 16px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      max-height: 200px;
+      font-size: 0.7rem;
+      max-height: 180px;
       overflow-y: auto;
+      margin-top: 24px;
     }
     
     .log-line {
@@ -867,108 +1326,90 @@
     .log-hash { color: var(--primary); }
     .log-block { color: var(--primary); font-weight: bold; }
     
-    .pool-info {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-    
-    .pool-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    
-    .pool-name {
+    /* Block Notification */
+    .block-notification {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, var(--primary), #ffd700);
+      color: #000;
+      padding: 20px 40px;
+      border-radius: 16px;
       font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--primary);
+      font-size: 1.2rem;
+      font-weight: 700;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 20px 60px rgba(247,147,26,0.5);
     }
     
-    .pool-status {
+    .block-notification.show {
+      transform: translateX(-50%) translateY(20px);
+      opacity: 1;
+    }
+    
+    /* Confetti */
+    .confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1999;
+      overflow: hidden;
+    }
+    
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: -20px;
+      animation: confettiFall 4s linear forwards;
+    }
+    
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    
+    /* Achievement Popup */
+    .achievement-popup {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--bg2), var(--bg3));
+      border: 2px solid var(--success);
+      border-radius: 16px;
+      padding: 20px 24px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-    }
-    
-    .pool-status.connected { color: var(--success); }
-    .pool-status.disconnected { color: var(--danger); }
-    .pool-status.solo { color: var(--warning); }
-    
-    .pool-status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      animation: blink 2s infinite;
-    }
-    
-    .pool-status.connected .pool-status-dot { background: var(--success); }
-    .pool-status.disconnected .pool-status-dot { background: var(--danger); }
-    .pool-status.solo .pool-status-dot { background: var(--warning); }
-    
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    
-    .pool-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
+      z-index: 2000;
+      transform: translateX(150%);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
     
-    .pool-stat {
-      text-align: center;
+    .achievement-popup.show {
+      transform: translateX(0);
     }
     
-    .pool-stat-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
-      color: var(--text);
+    .achievement-icon {
+      font-size: 2.5rem;
     }
     
-    .pool-stat-label {
-      font-size: 0.7rem;
-      color: var(--text3);
-      margin-top: 4px;
+    .achievement-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--success);
     }
     
-    /* Power Stats */
-    .power-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 24px;
+    .achievement-desc {
+      font-size: 0.75rem;
+      color: var(--text2);
     }
     
-    .power-stat {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      text-align: center;
-    }
-    
-    .power-stat-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
-      color: var(--text);
-    }
-    
-    .power-stat-value.efficient { color: var(--success); }
-    .power-stat-value.inefficient { color: var(--warning); }
-    
-    .power-stat-label {
-      font-size: 0.65rem;
-      color: var(--text3);
-      margin-top: 4px;
-    }
-    
+    /* Income Section */
     .income-section {
       background: linear-gradient(135deg, rgba(247,147,26,0.1), rgba(0,255,136,0.05));
       border: 1px solid rgba(247,147,26,0.3);
@@ -1007,7 +1448,7 @@
     
     .income-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
     
@@ -1020,64 +1461,17 @@
     
     .income-stat-value {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.2rem;
+      font-size: 1rem;
       color: var(--success);
     }
     
     .income-stat-label {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: var(--text3);
       margin-top: 4px;
     }
     
-    /* Block History */
-    .block-history {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 24px;
-    }
-    
-    .block-history-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.9rem;
-      color: var(--primary);
-      margin-bottom: 16px;
-    }
-    
-    .blocks-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
-    }
-    
-    .block-chip {
-      background: linear-gradient(135deg, rgba(247,147,26,0.2), rgba(247,147,26,0.1));
-      border: 1px solid rgba(247,147,26,0.3);
-      border-radius: 8px;
-      padding: 10px;
-      text-align: center;
-      animation: blockChipIn 0.5s ease-out;
-    }
-    
-    @keyframes blockChipIn {
-      from { transform: scale(0); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    
-    .block-chip-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      color: var(--primary);
-    }
-    
-    .block-chip-reward {
-      font-size: 0.7rem;
-      color: var(--text2);
-      margin-top: 4px;
-    }
-    
+    /* Education Section */
     .edu-section {
       margin-top: 60px;
     }
@@ -1110,7 +1504,6 @@
     .edu-card:hover {
       border-color: var(--primary);
       transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
     
     .edu-icon {
@@ -1127,7 +1520,6 @@
     .edu-card p {
       color: var(--text2);
       line-height: 1.7;
-      font-size: 0.95rem;
     }
     
     .calc-section {
@@ -1151,7 +1543,6 @@
       justify-content: center;
       gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
     }
     
     .calc-input-group {
@@ -1196,7 +1587,6 @@
     
     .btn-calc:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 24px rgba(247,147,26,0.4);
     }
     
     .calc-result {
@@ -1228,70 +1618,19 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     
-    .miner-device.powered-off .miner-display {
-      background: #030305;
-      border-color: #0a0a0f;
+    /* Power off state */
+    .miner-device.powered-off {
+      filter: brightness(0.4);
     }
     
     .miner-device.powered-off .display-hashrate,
     .miner-device.powered-off .display-label {
-      color: #111;
+      color: #222;
       text-shadow: none;
     }
     
     .miner-device.powered-off .fan-container .fan-blade {
-      animation: none;
-    }
-    
-    .miner-device.powered-off .led-power.on,
-    .miner-device.powered-off .led-network.on,
-    .miner-device.powered-off .led-fan.on {
-      background: #1a1a1a;
-      box-shadow: none;
-      animation: none;
-    }
-    
-    .Miner_off {
-      filter: brightness(0.15);
-      transition: filter 0.5s;
-    }
-    
-    .share-found {
-      animation: shareFlash 0.5s ease-out;
-    }
-    
-    @keyframes shareFlash {
-      0% { background: rgba(0,255,136,0.3); }
-      100% { background: transparent; }
-    }
-    
-    /* Sound control */
-    .sound-toggle {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      color: var(--text2);
-      transition: all 0.3s;
-      z-index: 100;
-    }
-    
-    .sound-toggle:hover {
-      border-color: var(--primary);
-      color: var(--text);
-    }
-    
-    .sound-toggle.active {
-      border-color: var(--success);
-      color: var(--success);
+      animation: none !important;
     }
   </style>
 </head>
@@ -1304,8 +1643,14 @@
     🎉 BLOCK FOUND! +₿ 3.125
   </div>
   
-  <div class="sound-toggle" id="soundToggle" onclick="toggleSound()">
-    🔊 Sound On
+  <div class="confetti-container" id="confettiContainer"></div>
+  
+  <div class="achievement-popup" id="achievementPopup">
+    <div class="achievement-icon" id="achievementIcon">🏆</div>
+    <div class="achievement-text">
+      <div class="achievement-title" id="achievementTitle">Achievement Unlocked!</div>
+      <div class="achievement-desc" id="achievementDesc">Description</div>
+    </div>
   </div>
   
   <nav class="nav">
@@ -1324,6 +1669,13 @@
     <div class="hero-section">
       <h1 class="hero-title">⛏️ BITCOIN MINER</h1>
       <p class="hero-subtitle">Experience running a real Bitcoin ASIC miner. Power it on, configure your pool, and watch the hashrate roll in.</p>
+    </div>
+    
+    <!-- Interaction Hint -->
+    <div class="connection-status" id="connectionStatus">
+      <div class="status-message" id="statusMessage">
+        🔌 Click the cables below to plug them in
+      </div>
     </div>
     
     <!-- Mining Mode -->
@@ -1369,9 +1721,46 @@
     </div>
     
     <div class="miner-showcase">
+      <!-- Interactive Miner with Cables -->
       <div class="miner-device-container">
-        <div class="miner-wrapper" id="minerWrapper">
-          <div class="miner-device Miner_off" id="minerDevice">
+        <div class="desk-sockets">
+          
+          <!-- Left Socket Panel -->
+          <div class="socket-panel left" data-label="INPUTS">
+            <div class="socket-title">POWER &amp; DATA</div>
+            <div class="socket" id="socket-power" onclick="toggleCable('power')">
+              <span class="socket-icon">⚡</span>
+              <span class="socket-label">Power</span>
+            </div>
+            <div class="socket" id="socket-ethernet" onclick="toggleCable('ethernet')">
+              <span class="socket-icon">🌐</span>
+              <span class="socket-label">Ethernet</span>
+            </div>
+          </div>
+          
+          <!-- Interactive Cables -->
+          <div class="cable cable-power" id="cable-power" onclick="toggleCable('power')">
+            <div class="cable-body"></div>
+            <div class="cable-head">⚡</div>
+          </div>
+          
+          <div class="cable cable-ethernet" id="cable-ethernet" onclick="toggleCable('ethernet')">
+            <div class="cable-body"></div>
+            <div class="cable-head">🌐</div>
+          </div>
+          
+          <!-- Miner Device -->
+          <div class="miner-device powered-off" id="minerDevice">
+            <!-- Ports on the side -->
+            <div class="miner-ports">
+              <div class="miner-port waiting-cable" id="port-power">
+                <span class="miner-port-icon">⚡</span>
+              </div>
+              <div class="miner-port waiting-cable" id="port-ethernet">
+                <span class="miner-port-icon">🌐</span>
+              </div>
+            </div>
+            
             <div class="miner-top-bar">
               <div class="miner-brand">
                 <div>
@@ -1404,11 +1793,9 @@
             </div>
             
             <div class="miner-display-container">
-              <div class="miner-display" id="minerDisplay">
-                <div class="display-content">
-                  <div class="display-hashrate" id="displayHashrate">0.00</div>
-                  <div class="display-label" id="displayLabel">GH/S - OFFLINE</div>
-                </div>
+              <div class="miner-display">
+                <div class="display-hashrate" id="displayHashrate">0.00</div>
+                <div class="display-label" id="displayLabel">GH/S - OFFLINE</div>
               </div>
             </div>
             
@@ -1418,17 +1805,18 @@
               <div class="heat-vane"></div><div class="heat-vane"></div><div class="heat-vane"></div>
               <div class="heat-vane"></div><div class="heat-vane"></div><div class="heat-vane"></div>
               <div class="heat-vane"></div><div class="heat-vane"></div><div class="heat-vane"></div>
-              <div class="heat-vane"></div>
             </div>
             
             <div class="fan-section">
               <div class="fan-container" id="fan1">
+                <div class="fan-led-ring"></div>
                 <div class="fan-housing">
                   <div class="fan-blade"></div>
                   <div class="fan-center"></div>
                 </div>
               </div>
               <div class="fan-container" id="fan2">
+                <div class="fan-led-ring"></div>
                 <div class="fan-housing">
                   <div class="fan-blade"></div>
                   <div class="fan-center"></div>
@@ -1436,25 +1824,41 @@
               </div>
             </div>
             
-            <div class="control-panel">
-              <div class="power-button-container">
-                <button class="power-button" id="powerBtn" onclick="togglePower()">
-                  <span class="power-icon">⏻</span>
-                </button>
+            <div class="overclock-panel">
+              <div class="overclock-header">
+                <div class="overclock-title">🚀 OVERCLOCK</div>
+                <div class="overclock-value" id="overclockValue">100%</div>
               </div>
+              <input type="range" class="overclock-slider" id="overclockSlider" min="100" max="150" value="100" oninput="updateOverclock()">
+              <div class="intensity-control">
+                <span class="intensity-label">Intensity:</span>
+                <div class="intensity-btns">
+                  <button class="intensity-btn" onclick="setIntensity(1)">1</button>
+                  <button class="intensity-btn" onclick="setIntensity(2)">2</button>
+                  <button class="intensity-btn" onclick="setIntensity(3)">3</button>
+                  <button class="intensity-btn active" onclick="setIntensity(4)">4</button>
+                  <button class="intensity-btn" onclick="setIntensity(5)">5</button>
+                </div>
+              </div>
+              <button class="boost-btn" id="boostBtn" onclick="toggleBoost()" disabled>⚡ Activate Boost</button>
+            </div>
+            
+            <div class="control-panel">
+              <button class="power-button" id="powerBtn" onclick="togglePower()">
+                <span class="power-icon">⏻</span>
+              </button>
             </div>
           </div>
+          
         </div>
       </div>
       
+      <!-- Stats Dashboard -->
       <div class="stats-dashboard">
         <div class="dashboard-title">MINING DASHBOARD</div>
         
-        <!-- Pool Config -->
         <div class="pool-config" id="poolConfigSection">
-          <div class="pool-config-header">
-            <div class="pool-config-title">⚙️ POOL CONFIGURATION</div>
-          </div>
+          <div class="pool-config-title">⚙️ POOL CONFIGURATION</div>
           <select id="poolSelect" onchange="updatePoolInfo()">
             <option value="bitcoin.com">stratum.pool.bitcoin.com</option>
             <option value="antpool">antpool.com</option>
@@ -1466,25 +1870,11 @@
             <input type="text" id="workerName" placeholder="worker1" style="flex:1;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.85rem;">
             <input type="text" id="workerPass" placeholder="x" style="width:60px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.85rem;text-align:center;">
           </div>
-          <button class="btn-apply" onclick="applyPoolConfig()" style="margin-top: 12px;">Apply Configuration</button>
-        </div>
-        
-        <!-- Solo Mode Info -->
-        <div class="pool-info" id="soloInfo" style="display: none;">
-          <div class="pool-header">
-            <div class="pool-name">🎯 SOLO MINING</div>
-            <div class="pool-status solo">
-              <div class="pool-status-dot"></div>
-              <span>Direct to Blockchain</span>
-            </div>
-          </div>
-          <p style="color: var(--text2); font-size: 0.85rem; line-height: 1.6;">
-            ⛏️ You're mining directly for block rewards! Each block found earns you the full <strong>3.125 BTC</strong> reward. Higher risk, higher reward!
-          </p>
+          <button class="btn-apply" onclick="applyPoolConfig()">Apply Configuration</button>
         </div>
         
         <!-- Pool Info -->
-        <div class="pool-info" id="poolInfo">
+        <div class="pool-info" id="poolInfo" style="display: none;">
           <div class="pool-header">
             <div class="pool-name" id="poolName">stratum.pool.bitcoin.com</div>
             <div class="pool-status disconnected" id="poolStatus">
@@ -1492,42 +1882,22 @@
               <span>Disconnected</span>
             </div>
           </div>
-          <div class="pool-stats">
-            <div class="pool-stat">
-              <div class="pool-stat-value" id="poolWorkers">0</div>
-              <div class="pool-stat-label">Workers</div>
-            </div>
-            <div class="pool-stat">
-              <div class="pool-stat-value" id="poolDiff">--</div>
-              <div class="pool-stat-label">Difficulty</div>
-            </div>
-            <div class="pool-stat">
-              <div class="pool-stat-value" id="poolPings">--</div>
-              <div class="pool-stat-label">Ping (ms)</div>
+        </div>
+        
+        <!-- Solo Mode -->
+        <div class="pool-info" id="soloInfo" style="display: none;">
+          <div class="pool-header">
+            <div class="pool-name">🎯 SOLO MINING</div>
+            <div class="pool-status solo" style="color: var(--warning);">
+              <div class="pool-status-dot" style="background: var(--warning);"></div>
+              <span>Direct to Blockchain</span>
             </div>
           </div>
         </div>
         
-        <!-- Power Stats -->
-        <div class="power-stats">
-          <div class="power-stat">
-            <div class="power-stat-value" id="powerDraw">0W</div>
-            <div class="power-stat-label">Power Draw</div>
-          </div>
-          <div class="power-stat">
-            <div class="power-stat-value" id="efficiency">--</div>
-            <div class="power-stat-label">J/TH</div>
-          </div>
-          <div class="power-stat">
-            <div class="power-stat-value" id="powerCost">$0.00</div>
-            <div class="power-stat-label">Cost/Day</div>
-          </div>
-        </div>
-        
-        <!-- Stats Grid -->
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-value success" id="hashrateStat">0</div>
+            <div class="stat-value" id="hashrateStat">0</div>
             <div class="stat-label">HASH RATE</div>
           </div>
           <div class="stat-card">
@@ -1563,15 +1933,6 @@
               <div class="progress-fill temp" id="tempBar" style="width: 0%"></div>
             </div>
           </div>
-          <div class="progress-item">
-            <div class="progress-header">
-              <span class="progress-label">Fan Speed</span>
-              <span class="progress-value" id="fanPercent">--</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill fan" id="fanBar" style="width: 0%"></div>
-            </div>
-          </div>
         </div>
         
         <div class="control-buttons">
@@ -1583,20 +1944,11 @@
           </button>
         </div>
         
-        <div style="margin-top: 24px;">
-          <div class="dashboard-title" style="font-size: 0.9rem;">SYSTEM LOG</div>
-          <div class="logs-container" id="logsContainer">
-            <div class="log-line">
-              <span class="log-time">[BOOT]</span>
-              <span class="log-info"> System ready. Press power to start.</span>
-            </div>
+        <div class="logs-container" id="logsContainer">
+          <div class="log-line">
+            <span class="log-time">[BOOT]</span>
+            <span class="log-info"> Connect power & ethernet cables to begin.</span>
           </div>
-        </div>
-        
-        <!-- Block History -->
-        <div class="block-history" id="blockHistory" style="display: none;">
-          <div class="block-history-title">🎯 BLOCKS FOUND</div>
-          <div class="blocks-grid" id="blocksGrid"></div>
         </div>
       </div>
     </div>
@@ -1614,20 +1966,8 @@
           <div class="income-stat-label">Total Shares</div>
         </div>
         <div class="income-stat">
-          <div class="income-stat-value" id="avgHashrate">0</div>
-          <div class="income-stat-label">Avg Hashrate (GH/s)</div>
-        </div>
-        <div class="income-stat">
-          <div class="income-stat-value" id="luckStat">--</div>
-          <div class="income-stat-label">Pool Luck %</div>
-        </div>
-        <div class="income-stat">
           <div class="income-stat-value" id="estDaily">$0.00</div>
-          <div class="income-stat-label">Est. Daily Revenue</div>
-        </div>
-        <div class="income-stat">
-          <div class="income-stat-value" id="blocksFound">0</div>
-          <div class="income-stat-label">Blocks Found</div>
+          <div class="income-stat-label">Est. Daily</div>
         </div>
         <div class="income-stat">
           <div class="income-stat-value" id="uptimeStat">0:00:00</div>
@@ -1656,7 +1996,7 @@
         <div class="edu-card">
           <div class="edu-icon">🏊</div>
           <h3>Mining Pools</h3>
-          <p>Solo mining is extremely difficult. Pools combine many miners' hash power to find blocks more frequently. Rewards are shared proportionally based on each miner's contribution.</p>
+          <p>Pools combine many miners' hash power to find blocks more frequently. Rewards are shared proportionally based on each miner's contribution.</p>
         </div>
         
         <div class="edu-card">
@@ -1698,7 +2038,7 @@
       </div>
       <div class="calc-result" id="calcResult">
         $2.47 / day
-        <span>Revenue: $4.32 | Costs: $1.85 | Pool fees: $0.22</span>
+        <span>Revenue: $4.32 | Costs: $1.85</span>
       </div>
     </div>
   </div>
@@ -1709,7 +2049,7 @@
   </footer>
 
   <script>
-    // ASIC Models
+    // ===== STATE =====
     const asicModels = {
       bitaxe: { name: 'BITAXE', model: 'ULTRA', hashrate: 450, watts: 320, efficiency: 1.4 },
       antminer: { name: 'ANTMINER', model: 'S19', hashrate: 95000, watts: 3250, efficiency: 34 },
@@ -1717,7 +2057,6 @@
       braiins: { name: 'BRAIINS', model: 'OS+', hashrate: 120000, watts: 2800, efficiency: 23 }
     };
     
-    // Pool configurations
     const pools = {
       'bitcoin.com': { name: 'stratum.pool.bitcoin.com', fee: 2 },
       'antpool': { name: 'antpool.com', fee: 2.5 },
@@ -1726,11 +2065,12 @@
       'slush': { name: 'slushpool.com', fee: 2 }
     };
     
-    // State
+    // Connection state
+    let powerConnected = false;
+    let ethernetConnected = false;
     let isPowered = false;
     let isMining = false;
-    let soundEnabled = true;
-    let miningMode = 'pool'; // 'pool' or 'solo'
+    let miningMode = 'pool';
     let selectedAsic = 'bitaxe';
     let hashrate = 0;
     let targetHashrate = 450;
@@ -1742,12 +2082,13 @@
     let btcPrice = 70000;
     let powerCostPerKwh = 0.10;
     let blocksFound = 0;
-    let blockHistory = [];
     let uptimeSeconds = 0;
     let uptimeInterval;
     
-    // Current ASIC
     let currentAsic = asicModels[selectedAsic];
+    let overclockPercent = 100;
+    let isBoosting = false;
+    let intensity = 4;
     
     // DOM Elements
     const minerDevice = document.getElementById('minerDevice');
@@ -1765,104 +2106,63 @@
     const stopBtn = document.getElementById('stopBtn');
     const logsContainer = document.getElementById('logsContainer');
     
-    // Initialize ASIC selection
-    selectAsic('bitaxe');
-    
-    // Sound synthesis for fan noise and beeps
-    let audioContext = null;
-    let fanOscillator = null;
-    let fanGain = null;
-    
-    function initAudio() {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // ===== CABLE INTERACTION =====
+    function toggleCable(type) {
+      const cable = document.getElementById('cable-' + type);
+      const socket = document.getElementById('socket-' + type);
+      const port = document.getElementById('port-' + type);
+      
+      if (type === 'power') {
+        powerConnected = !powerConnected;
+        cable.classList.toggle('connected', powerConnected);
+        socket.classList.toggle('connected', powerConnected);
+        port.classList.toggle('connected', powerConnected);
+        port.classList.toggle('waiting-cable', !powerConnected);
+        
+        if (powerConnected) {
+          addLog('Power cable connected ⚡', 'info');
+        } else {
+          addLog('Power cable disconnected', 'warn');
+          if (isPowered) togglePower();
+        }
+      } else if (type === 'ethernet') {
+        ethernetConnected = !ethernetConnected;
+        cable.classList.toggle('connected', ethernetConnected);
+        socket.classList.toggle('connected', ethernetConnected);
+        port.classList.toggle('connected', ethernetConnected);
+        port.classList.toggle('waiting-cable', !ethernetConnected);
+        
+        if (ethernetConnected) {
+          addLog('Ethernet cable connected 🌐', 'info');
+          ledNetwork.classList.add('on');
+        } else {
+          addLog('Ethernet cable disconnected', 'warn');
+          ledNetwork.classList.remove('on');
+        }
       }
+      
+      checkReady();
     }
     
-    function playShareSound() {
-      if (!soundEnabled || !audioContext) return;
+    function checkReady() {
+      const statusMessage = document.getElementById('statusMessage');
       
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      
-      osc.connect(gain);
-      gain.connect(audioContext.destination);
-      
-      osc.frequency.setValueAtTime(880, audioContext.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1760, audioContext.currentTime + 0.1);
-      
-      gain.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-      
-      osc.start();
-      osc.stop(audioContext.currentTime + 0.2);
-    }
-    
-    function playBlockSound() {
-      if (!soundEnabled || !audioContext) return;
-      
-      // Celebration sound
-      const frequencies = [523, 659, 784, 1047];
-      
-      frequencies.forEach((freq, i) => {
-        setTimeout(() => {
-          const osc = audioContext.createOscillator();
-          const gain = audioContext.createGain();
-          
-          osc.connect(gain);
-          gain.connect(audioContext.destination);
-          
-          osc.frequency.setValueAtTime(freq, audioContext.currentTime);
-          gain.gain.setValueAtTime(0.2, audioContext.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-          
-          osc.start();
-          osc.stop(audioContext.currentTime + 0.4);
-        }, i * 150);
-      });
-    }
-    
-    function startFanSound() {
-      if (!soundEnabled || !audioContext || fanOscillator) return;
-      
-      fanOscillator = audioContext.createOscillator();
-      fanGain = audioContext.createGain();
-      
-      fanOscillator.connect(fanGain);
-      fanGain.connect(audioContext.destination);
-      
-      fanOscillator.type = 'sawtooth';
-      fanOscillator.frequency.setValueAtTime(80, audioContext.currentTime);
-      fanGain.gain.setValueAtTime(0.03, audioContext.currentTime);
-      
-      fanOscillator.start();
-    }
-    
-    function stopFanSound() {
-      if (fanOscillator) {
-        fanOscillator.stop();
-        fanOscillator = null;
-        fanGain = null;
-      }
-    }
-    
-    function toggleSound() {
-      soundEnabled = !soundEnabled;
-      const toggle = document.getElementById('soundToggle');
-      
-      if (soundEnabled) {
-        toggle.classList.add('active');
-        toggle.innerHTML = '🔊 Sound On';
-        initAudio();
-        if (isMining) startFanSound();
+      if (powerConnected && ethernetConnected) {
+        statusMessage.textContent = '✅ Ready to power on! Click the power button.';
+        statusMessage.className = 'status-message ready';
+      } else if (powerConnected) {
+        statusMessage.textContent = '🔌 Connect ethernet cable to start mining';
+        statusMessage.className = 'status-message';
+      } else if (ethernetConnected) {
+        statusMessage.textContent = '⚡ Connect power cable to start mining';
+        statusMessage.className = 'status-message';
       } else {
-        toggle.classList.remove('active');
-        toggle.innerHTML = '🔇 Sound Off';
-        stopFanSound();
+        statusMessage.textContent = '🔌 Click the cables to plug them in';
+        statusMessage.className = 'status-message';
       }
     }
     
-    // Add log
+    // ===== LOGGING =====
     function addLog(message, type = 'info') {
       const time = new Date().toLocaleTimeString('en-US', { hour12: false });
       const logLine = document.createElement('div');
@@ -1872,7 +2172,30 @@
       logsContainer.scrollTop = logsContainer.scrollHeight;
     }
     
-    // Set mining mode
+    // ===== ASIC SELECTION =====
+    function selectAsic(asic) {
+      selectedAsic = asic;
+      currentAsic = asicModels[asic];
+      
+      document.querySelectorAll('.asic-card').forEach(card => card.classList.remove('selected'));
+      document.getElementById('asic-' + asic).classList.add('selected');
+      
+      document.getElementById('brandName').textContent = currentAsic.name;
+      document.getElementById('brandModel').textContent = currentAsic.model;
+      
+      targetHashrate = currentAsic.hashrate;
+      
+      document.getElementById('calcHashrate').value = currentAsic.hashrate;
+      document.getElementById('calcWatts').value = currentAsic.watts;
+      
+      calculateProfit();
+      
+      if (isPowered) {
+        addLog(`ASIC changed to ${currentAsic.name} ${currentAsic.model}`, 'warn');
+      }
+    }
+    
+    // ===== MODE =====
     function setMode(mode) {
       miningMode = mode;
       
@@ -1882,155 +2205,129 @@
       document.getElementById('poolConfigSection').style.display = mode === 'pool' ? 'block' : 'none';
       document.getElementById('poolInfo').style.display = mode === 'pool' ? 'block' : 'none';
       document.getElementById('soloInfo').style.display = mode === 'solo' ? 'block' : 'none';
-      document.getElementById('blockHistory').style.display = mode === 'solo' ? 'block' : 'none';
       
       if (isPowered) {
-        addLog(mode === 'solo' ? 'Switched to SOLO mining mode' : 'Switched to POOL mining mode', 'warn');
+        addLog(mode === 'solo' ? 'Switched to SOLO mining' : 'Switched to POOL mining', 'warn');
       }
     }
     
-    // Select ASIC
-    function selectAsic(asic) {
-      selectedAsic = asic;
-      currentAsic = asicModels[asic];
+    // ===== OVERCLOCK =====
+    function updateOverclock() {
+      overclockPercent = parseInt(document.getElementById('overclockSlider').value);
+      document.getElementById('overclockValue').textContent = overclockPercent + '%';
       
-      // Update UI
-      document.querySelectorAll('.asic-card').forEach(card => card.classList.remove('selected'));
-      document.getElementById('asic-' + asic).classList.add('selected');
-      
-      // Update device
-      document.getElementById('brandName').textContent = currentAsic.name;
-      document.getElementById('brandModel').textContent = currentAsic.model;
-      
-      targetHashrate = currentAsic.hashrate;
-      
-      // Update calculator
-      document.getElementById('calcHashrate').value = currentAsic.hashrate;
-      document.getElementById('calcWatts').value = currentAsic.watts;
-      
-      // Update efficiency display
-      document.getElementById('efficiency').textContent = currentAsic.efficiency + ' J/TH';
-      document.getElementById('efficiency').className = 'power-stat-value ' + (currentAsic.efficiency < 30 ? 'efficient' : 'inefficient');
-      
-      calculateProfit();
-      
-      // Log
-      if (isPowered) {
-        addLog(`ASIC changed to ${currentAsic.name} ${currentAsic.model}`, 'warn');
+      if (isBoosting) {
+        targetHashrate = currentAsic.hashrate * (overclockPercent / 100);
       }
     }
     
-    // Update pool info
-    function updatePoolInfo() {
-      const poolSelect = document.getElementById('poolSelect');
-      const pool = pools[poolSelect.value];
-      document.getElementById('poolName').textContent = pool.name;
+    function setIntensity(level) {
+      intensity = level;
+      document.querySelectorAll('.intensity-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i + 1 === level);
+      });
     }
     
-    // Apply pool config
-    function applyPoolConfig() {
-      const workerName = document.getElementById('workerName').value || 'worker1';
-      const poolSelect = document.getElementById('poolSelect');
-      const pool = pools[poolSelect.value];
+    function toggleBoost() {
+      if (!isPowered || !isMining) return;
       
-      addLog(`Pool: ${pool.name}`, 'info');
-      addLog(`Worker: ${workerName}`, 'info');
-      addLog(`Pool fee: ${pool.fee}%`, 'info');
+      isBoosting = !isBoosting;
+      const boostBtn = document.getElementById('boostBtn');
+      
+      if (isBoosting) {
+        boostBtn.classList.add('active');
+        boostBtn.textContent = '⚡ BOOST ACTIVE';
+        displayHashrate.classList.add('boosting');
+        
+        targetHashrate = currentAsic.hashrate * (overclockPercent / 100) * 1.2;
+        addLog('🔥 BOOST ACTIVATED!', 'warn');
+        
+        temperature += 15;
+      } else {
+        boostBtn.classList.remove('active');
+        boostBtn.textContent = '⚡ Activate Boost';
+        displayHashrate.classList.remove('boosting');
+        
+        targetHashrate = currentAsic.hashrate;
+        addLog('Boost deactivated', 'info');
+      }
     }
     
-    // Power toggle
+    // ===== POWER =====
     function togglePower() {
-      initAudio();
+      if (!powerConnected) {
+        addLog('⚠️ Connect power cable first!', 'error');
+        return;
+      }
+      
       isPowered = !isPowered;
       
       if (isPowered) {
-        minerDevice.classList.remove('Miner_off');
+        minerDevice.classList.remove('powered-off');
+        minerDevice.classList.add('powered');
         powerBtn.classList.add('on');
         ledPower.classList.add('on');
         
         addLog(`Powering on ${currentAsic.name} ${currentAsic.model}...`, 'info');
         
         setTimeout(() => {
-          addLog('ASIC chip detected', 'info');
+          if (ethernetConnected) {
+            addLog('Network connected', 'success');
+            document.getElementById('poolStatus').className = 'pool-status connected';
+            document.getElementById('poolStatus').innerHTML = '<div class="pool-status-dot" style="background:var(--success)"></div><span>Connected</span>';
+          }
         }, 500);
         
         setTimeout(() => {
-          addLog('Memory test: 512MB OK', 'info');
-        }, 1000);
-        
-        setTimeout(() => {
-          addLog('WiFi connected', 'info');
-          ledNetwork.classList.add('on');
-          updatePoolStatus(true);
-        }, 1500);
-        
-        setTimeout(() => {
-          addLog('Chip calibration complete', 'success');
-          displayLabel.textContent = miningMode === 'solo' ? 'TH/S - SOLO' : 'GH/S - READY';
+          addLog(`${currentAsic.name} ${currentAsic.model} ready`, 'success');
+          displayLabel.textContent = currentAsic.hashrate >= 100000 ? 'TH/S - READY' : 'GH/S - READY';
           startBtn.disabled = false;
+          document.getElementById('boostBtn').disabled = false;
           
-          // Update display unit based on ASIC
           if (currentAsic.hashrate >= 1000) {
             displayHashrate.textContent = '0.00';
-            displayLabel.textContent = currentAsic.hashrate >= 100000 ? 'TH/S - READY' : 'GH/S - READY';
           }
-        }, 2000);
+        }, 1500);
         
       } else {
         stopMining();
-        minerDevice.classList.add('Miner_off');
+        minerDevice.classList.remove('powered');
+        minerDevice.classList.add('powered-off');
         powerBtn.classList.remove('on');
         ledPower.classList.remove('on');
-        ledNetwork.classList.remove('on');
-        ledFan.classList.remove('on');
         
         fan1.classList.remove('active');
         fan2.classList.remove('active');
         
-        stopFanSound();
-        
         displayHashrate.textContent = '0.00';
         displayLabel.textContent = 'GH/S - OFFLINE';
         
-        addLog('System shutdown...', 'warn');
+        addLog('System powered off', 'warn');
+        
+        startBtn.disabled = true;
+        stopBtn.disabled = true;
+        document.getElementById('boostBtn').disabled = true;
         
         document.getElementById('tempStat').textContent = '--';
         document.getElementById('fanStat').textContent = '--';
         document.getElementById('hashrateStat').textContent = '0';
         
-        startBtn.disabled = true;
-        stopBtn.disabled = true;
-        
-        updatePoolStatus(false);
+        document.getElementById('poolStatus').className = 'pool-status disconnected';
+        document.getElementById('poolStatus').innerHTML = '<div class="pool-status-dot"></div><span>Disconnected</span>';
       }
     }
     
-    function updatePoolStatus(connected) {
-      const statusEl = document.getElementById('poolStatus');
-      if (connected && miningMode === 'pool') {
-        statusEl.className = 'pool-status connected';
-        statusEl.innerHTML = '<div class="pool-status-dot"></div><span>Connected</span>';
-        document.getElementById('poolWorkers').textContent = '1';
-        document.getElementById('poolDiff').textContent = '82.5T';
-        document.getElementById('poolPings').textContent = Math.floor(Math.random() * 50 + 20);
-      } else if (connected && miningMode === 'solo') {
-        statusEl.className = 'pool-status solo';
-        statusEl.innerHTML = '<div class="pool-status-dot"></div><span>Mining</span>';
-      } else {
-        statusEl.className = 'pool-status disconnected';
-        statusEl.innerHTML = '<div class="pool-status-dot"></div><span>Disconnected</span>';
-        document.getElementById('poolWorkers').textContent = '0';
-        document.getElementById('poolDiff').textContent = '--';
-        document.getElementById('poolPings').textContent = '--';
-      }
-    }
-    
-    // Start mining
+    // ===== MINING =====
     function startMining() {
-      if (!isPowered) return;
+      if (!isPowered || !ethernetConnected) {
+        addLog('⚠️ Need power and network connection!', 'error');
+        return;
+      }
       
-      initAudio();
       isMining = true;
+      shares = 0;
+      uptimeSeconds = 0;
+      
       startBtn.disabled = true;
       stopBtn.disabled = false;
       
@@ -2038,38 +2335,27 @@
       fan1.classList.add('active');
       fan2.classList.add('active');
       
-      startFanSound();
+      minerDevice.classList.add('mining');
       
       const modeText = miningMode === 'solo' ? 'SOLO' : document.getElementById('poolSelect').value;
       addLog(`Starting ${modeText} mining...`, 'info');
-      addLog(`Target hashrate: ${targetHashrate} ${currentAsic.hashrate >= 1000 ? 'GH/s' : 'TH/s'}`, 'info');
+      addLog(`Target: ${targetHashrate} ${currentAsic.hashrate >= 1000 ? 'TH/s' : 'GH/s'}`, 'info');
       
       displayLabel.textContent = currentAsic.hashrate >= 100000 ? 'TH/S - MINING' : 'GH/S - MINING';
       
-      // Adaptive fan speed
-      fan1.style.setProperty('--fan-speed', '0.15s');
-      fan2.style.setProperty('--fan-speed', '0.15s');
-      
-      // Reset stats
-      shares = 0;
-      uptimeSeconds = 0;
-      
-      // Start uptime counter
       uptimeInterval = setInterval(() => {
         if (isMining) {
           uptimeSeconds++;
           const hours = Math.floor(uptimeSeconds / 3600);
           const mins = Math.floor((uptimeSeconds % 3600) / 60);
           const secs = uptimeSeconds % 60;
-          document.getElementById('uptimeStat').textContent = 
-            `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+          document.getElementById('uptimeStat').textContent = `${hours}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
       }, 1000);
       
       simulateMining();
     }
     
-    // Stop mining
     function stopMining() {
       isMining = false;
       startBtn.disabled = false;
@@ -2080,102 +2366,89 @@
       fan2.classList.remove('active');
       ledBlock.classList.remove('on');
       
-      stopFanSound();
+      minerDevice.classList.remove('mining');
       
-      addLog('Mining stopped by user', 'warn');
+      addLog('Mining stopped', 'warn');
       displayLabel.textContent = currentAsic.hashrate >= 100000 ? 'TH/S - IDLE' : 'GH/S - IDLE';
       
       clearInterval(uptimeInterval);
     }
     
-    // Main mining simulation
     function simulateMining() {
       // Ramp up hashrate
       const rampUp = setInterval(() => {
-        if (!isMining) {
-          clearInterval(rampUp);
-          return;
-        }
+        if (!isMining) { clearInterval(rampUp); return; }
         
-        const increment = currentAsic.hashrate * 0.03;
-        hashrate += increment + (Math.random() * increment * 0.5);
+        const increment = currentAsic.hashrate * 0.05;
+        hashrate += increment + (Math.random() * increment * 0.3);
         
-        if (hashrate >= currentAsic.hashrate) {
-          hashrate = currentAsic.hashrate * (0.95 + Math.random() * 0.1);
+        let multiplier = (overclockPercent / 100);
+        if (isBoosting) multiplier *= 1.2;
+        
+        if (hashrate >= currentAsic.hashrate * multiplier) {
+          hashrate = currentAsic.hashrate * multiplier * (0.95 + Math.random() * 0.1);
           clearInterval(rampUp);
-          
-          const unit = currentAsic.hashrate >= 100000 ? 'TH/s' : 'GH/s';
-          addLog(`Nominal hashrate achieved: ${formatHashrate(hashrate)} ${unit}`, 'success');
+          addLog(`Nominal hashrate achieved: ${formatHashrate(hashrate)} ${currentAsic.hashrate >= 1000 ? 'TH/s' : 'GH/s'}`, 'success');
         }
         
         updateDisplay();
       }, 200);
       
-      // Stats simulation
+      // Stats update
       const statsInterval = setInterval(() => {
-        if (!isMining) {
-          clearInterval(statsInterval);
-          return;
-        }
+        if (!isMining) { clearInterval(statsInterval); return; }
         
-        // Temperature rises
-        temperature = Math.min(90, temperature + (Math.random() * 4 - 1));
-        if (temperature < 35) temperature = 35;
+        // Temperature
+        const tempTarget = isBoosting ? 85 + Math.random() * 10 : 55 + Math.random() * 20;
+        temperature += (tempTarget - temperature) * 0.1;
         
-        // Update heat sink colors
         updateHeatSink();
         
-        // Fan speed based on temp
-        fanSpeed = Math.min(6500, 2500 + (temperature * 50));
+        // Fan
+        fanSpeed = Math.min(6500, 2000 + (temperature * 55));
         
-        // Random hashrate fluctuation
-        hashrate = Math.max(currentAsic.hashrate * 0.85, Math.min(currentAsic.hashrate * 1.1, hashrate + (Math.random() * currentAsic.hashrate * 0.02 - currentAsic.hashrate * 0.01)));
+        // Hasrate fluctuation
+        let fluctuation = isBoosting ? 0.06 : 0.03;
+        hashrate = Math.max(currentAsic.hashrate * 0.6, Math.min(currentAsic.hashrate * 1.4, 
+          hashrate + (hashrate * (Math.random() * fluctuation - fluctuation/2))));
+        
+        if (isBoosting) hashrate *= (overclockPercent / 100);
         
         // Share finding
-        if (Math.random() < (isMining ? 0.2 : 0.05)) {
+        const shareChance = 0.12 + (intensity - 1) * 0.04;
+        if (Math.random() < shareChance) {
           shares++;
           totalShares++;
           
-          const diff = (Math.random() * 1000 + 100).toFixed(0);
-          addLog(`Share accepted! (diff: ${diff})`, 'hash');
+          addLog(`Share accepted! (diff: ${Math.floor(Math.random() * 1000 + 100)})`, 'hash');
           
-          playShareSound();
-          
-          // Flash effect
-          const sharesStat = document.getElementById('sharesStat').parentElement;
-          sharesStat.classList.add('share-found');
-          setTimeout(() => sharesStat.classList.remove('share-found'), 500);
-          
-          // Pool mode: calculate earnings from shares
           if (miningMode === 'pool') {
             const shareValue = 0.000001 * (hashrate / currentAsic.hashrate);
             totalEarned += shareValue;
           }
         }
         
-        // Solo mode: block finding simulation
-        if (miningMode === 'solo') {
-          // Block probability based on hashrate (simplified)
-          // Real solo mining with 450 GH/s is extremely unlikely to find a block
-          const blockProbability = (hashrate / 180000000000000) * 100; // Approximate network hashrate
-          
-          if (Math.random() < blockProbability * 10) { // Boosted for demo
-            foundBlock();
-          }
+        // Solo - block finding
+        if (miningMode === 'solo' && Math.random() < 0.00001 * intensity) {
+          foundBlock();
         }
         
-        // Temperature warning
-        if (temperature > 80) {
+        // Temperature warnings
+        if (temperature > 85) {
           addLog(`⚠️ Temperature critical: ${temperature.toFixed(0)}°C`, 'error');
           ledError.classList.add('on');
-          setTimeout(() => ledError.classList.remove('on'), 2000);
+          setTimeout(() => ledError.classList.remove('on'), 1000);
+          
+          if (isBoosting && temperature > 95) {
+            addLog('Auto-throttling due to heat!', 'error');
+            toggleBoost();
+          }
         } else if (temperature > 70) {
-          addLog(`⚠️ Temperature high: ${temperature.toFixed(0)}°C`, 'warn');
+          addLog(`Temperature: ${temperature.toFixed(0)}°C`, 'warn');
         }
         
         updateDisplay();
         updateEarnings();
-        updatePowerStats();
       }, 1000);
     }
     
@@ -2183,145 +2456,112 @@
       blocksFound++;
       const reward = 3.125;
       totalEarned += reward;
-      blockHistory.push({ height: 876000 + blocksFound, reward: reward });
       
-      addLog(`🎉 BLOCK FOUND! Height: 876${blocksFound.toString().padStart(3, '0')} Reward: ${reward} BTC`, 'block');
+      addLog(`🎉 BLOCK FOUND! Reward: ${reward} BTC`, 'block');
       
-      // Show notification
-      const notification = document.getElementById('blockNotification');
-      notification.classList.add('show');
-      playBlockSound();
+      // Notification
+      document.getElementById('blockNotification').classList.add('show');
+      setTimeout(() => document.getElementById('blockNotification').classList.remove('show'), 4000);
       
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 4000);
-      
-      // LED flash
+      // LED
       ledBlock.classList.add('on');
       setTimeout(() => ledBlock.classList.remove('on'), 3000);
       
-      // Update block history UI
-      if (blockHistory.length <= 10) {
-        const grid = document.getElementById('blocksGrid');
-        const chip = document.createElement('div');
-        chip.className = 'block-chip';
-        chip.innerHTML = `
-          <div class="block-chip-value">#876${blocksFound.toString().padStart(3, '0')}</div>
-          <div class="block-chip-reward">+₿ ${reward}</div>
-        `;
-        grid.insertBefore(chip, grid.firstChild);
-      }
+      // Confetti
+      createConfetti();
+    }
+    
+    function createConfetti() {
+      const container = document.getElementById('confettiContainer');
+      const colors = ['#f7931a', '#ffd700', '#00ff88', '#ff4757', '#00d4ff'];
       
-      document.getElementById('blocksFound').textContent = blocksFound;
+      for (let i = 0; i < 80; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.animationDuration = (3 + Math.random() * 2) + 's';
+        if (Math.random() > 0.5) confetti.style.borderRadius = '50%';
+        container.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+    
+    function formatHashrate(hash) {
+      if (hash >= 1000000) return (hash / 1000000).toFixed(2);
+      if (hash >= 1000) return (hash / 1000).toFixed(2);
+      return hash.toFixed(2);
     }
     
     function updateHeatSink() {
       const vanes = document.querySelectorAll('.heat-vane');
       vanes.forEach((vane, i) => {
         vane.classList.remove('hot', 'critical');
-        
-        // Stagger the heating effect
         const threshold = 30 + (i * 5);
         
-        if (temperature > 80) {
-          vane.classList.add('critical');
-        } else if (temperature > threshold) {
-          vane.classList.add('hot');
-        }
+        if (temperature > 80) vane.classList.add('critical');
+        else if (temperature > threshold) vane.classList.add('hot');
       });
     }
     
-    function formatHashrate(hash) {
-      if (hash >= 1000000) {
-        return (hash / 1000000).toFixed(2);
-      } else if (hash >= 1000) {
-        return (hash / 1000).toFixed(2);
-      }
-      return hash.toFixed(2);
-    }
-    
-    function formatHashrateUnit(hash) {
-      if (hash >= 1000000) return 'PH/s';
-      if (hash >= 1000) return 'TH/s';
-      return 'GH/s';
-    }
-    
     function updateDisplay() {
+      const unit = currentAsic.hashrate >= 1000 ? 'TH/s' : 'GH/s';
       displayHashrate.textContent = formatHashrate(hashrate);
-      
-      // Update stat cards
-      const unit = formatHashrateUnit(currentAsic.hashrate);
       document.getElementById('hashrateStat').textContent = formatHashrate(hashrate);
-      document.querySelector('#hashrateStat').nextElementSibling.textContent = `HASH RATE (${unit.replace('/s', '')})`;
-      
       document.getElementById('tempStat').textContent = temperature.toFixed(0);
       document.getElementById('fanStat').textContent = Math.floor(fanSpeed);
       document.getElementById('sharesStat').textContent = shares;
       
-      // Progress bars
-      const hashratePercent = Math.min(100, (hashrate / currentAsic.hashrate) * 100);
-      document.getElementById('hashratePercent').textContent = Math.round(hashratePercent) + '%';
-      document.getElementById('hashrateBar').style.width = hashratePercent + '%';
+      // Progress
+      const hashPercent = Math.min(100, (hashrate / (currentAsic.hashrate * (overclockPercent/100))) * 100);
+      document.getElementById('hashratePercent').textContent = Math.round(hashPercent) + '%';
+      document.getElementById('hashrateBar').style.width = hashPercent + '%';
       
-      const tempPercent = Math.min(100, (temperature / 90) * 100);
+      const tempPercent = Math.min(100, (temperature / 95) * 100);
       document.getElementById('tempPercent').textContent = temperature.toFixed(0) + '°C';
       document.getElementById('tempBar').style.width = tempPercent + '%';
       
-      const fanPercent = Math.min(100, (fanSpeed / 6500) * 100);
-      document.getElementById('fanPercent').textContent = Math.floor(fanSpeed) + ' RPM';
-      document.getElementById('fanBar').style.width = fanPercent + '%';
-      
-      // Temperature color
+      // Temp color
       const tempStat = document.getElementById('tempStat');
-      if (temperature > 75) {
-        tempStat.className = 'stat-value danger';
-      } else if (temperature > 60) {
-        tempStat.className = 'stat-value warning';
-      } else {
-        tempStat.className = 'stat-value success';
-      }
+      if (temperature > 75) tempStat.className = 'stat-value danger';
+      else if (temperature > 60) tempStat.className = 'stat-value warning';
+      else tempStat.className = 'stat-value success';
     }
     
     function updateEarnings() {
       document.getElementById('totalEarned').textContent = '₿ ' + totalEarned.toFixed(8);
       document.getElementById('fiatEarned').textContent = '$' + (totalEarned * btcPrice).toFixed(2) + ' USD';
       document.getElementById('sharesTotal').textContent = totalShares;
-      document.getElementById('avgHashrate').textContent = formatHashrate(hashrate);
-      document.getElementById('luckStat').textContent = Math.floor(Math.random() * 30 + 85) + '%';
       
-      // Estimated daily
-      const unit = formatHashrateUnit(currentAsic.hashrate);
-      if (miningMode === 'pool') {
-        const dailyRevenue = (hashrate / currentAsic.hashrate) * 4.32;
-        document.getElementById('estDaily').textContent = '$' + dailyRevenue.toFixed(2);
-      } else {
-        // Solo mining - more variable
-        const avgBlockTime = 600000; // 10 minutes in seconds
-        const blocksPerDay = 86400 / (avgBlockTime / (hashrate / 180000000000000));
-        const expectedRevenue = blocksPerDay * 3.125 * btcPrice;
-        document.getElementById('estDaily').textContent = '$' + expectedRevenue.toFixed(2) + ' (expected)';
-      }
+      const dailyRevenue = (hashrate / currentAsic.hashrate) * 4.32;
+      document.getElementById('estDaily').textContent = '$' + dailyRevenue.toFixed(2);
     }
     
-    function updatePowerStats() {
-      const powerDraw = currentAsic.watts * (hashrate / currentAsic.hashrate);
-      document.getElementById('powerDraw').textContent = Math.round(powerDraw) + 'W';
-      
-      // Power cost per day
-      const powerCostPerDay = (powerDraw / 1000) * 24 * powerCostPerKwh;
-      document.getElementById('powerCost').textContent = '$' + powerCostPerDay.toFixed(2);
+    // ===== POOL CONFIG =====
+    function updatePoolInfo() {
+      const pool = pools[document.getElementById('poolSelect').value];
+      document.getElementById('poolName').textContent = pool.name;
     }
     
+    function applyPoolConfig() {
+      const worker = document.getElementById('workerName').value || 'worker1';
+      const pool = document.getElementById('poolSelect').value;
+      addLog(`Pool: ${pools[pool].name}`, 'info');
+      addLog(`Worker: ${worker}`, 'info');
+      addLog(`Fee: ${pools[pool].fee}%`, 'info');
+    }
+    
+    // ===== CALCULATOR =====
     function calculateProfit() {
-      const hashrate = parseFloat(document.getElementById('calcHashrate').value);
+      const hash = parseFloat(document.getElementById('calcHashrate').value);
       const powerCost = parseFloat(document.getElementById('calcPower').value);
       const watts = parseFloat(document.getElementById('calcWatts').value);
       
       powerCostPerKwh = powerCost;
       
-      // Calculate BTC per day (simplified)
-      const networkHashrate = 180000000000000; // 180 EH/s
-      const btcPerDay = 900 / (networkHashrate / hashrate * 600); // Simplified
+      const networkHash = 180000000000000;
+      const btcPerDay = 900 / (networkHash / hash * 600);
       
       const revenue = btcPerDay * btcPrice;
       const powerPerDay = (watts / 1000) * 24 * powerCost;
@@ -2329,21 +2569,13 @@
       const profit = revenue - powerPerDay - poolFee;
       
       const result = document.getElementById('calcResult');
-      
-      if (miningMode === 'solo') {
-        result.innerHTML = `$${profit.toFixed(2)} / day
-          <span>Expected: ${btcPerDay.toFixed(6)} BTC/day | Costs: $${powerPerDay.toFixed(2)} (no pool fees)</span>`;
-      } else {
-        result.innerHTML = `$${profit.toFixed(2)} / day
-          <span>Revenue: $${revenue.toFixed(2)} | Costs: $${powerPerDay.toFixed(2)} | Pool fees: $${poolFee.toFixed(2)}</span>`;
-      }
-      
+      result.innerHTML = `$${profit.toFixed(2)} / day
+        <span>Revenue: $${revenue.toFixed(2)} | Costs: $${powerPerDay.toFixed(2)}</span>`;
       result.classList.toggle('negative', profit < 0);
-      result.style.color = profit > 0 ? 'var(--success)' : 'var(--danger)';
     }
     
-    // Initialize
-    updatePoolInfo();
+    // ===== INIT =====
+    selectAsic('bitaxe');
     calculateProfit();
   </script>
 </body>
