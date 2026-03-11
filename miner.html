@@ -1446,13 +1446,90 @@
       margin-top: 4px;
     }
     
-    /* Solar Power Panel */
+    /* Solar Power Panel - Enhanced */
     .solar-panel {
       background: linear-gradient(135deg, #1a2332 0%, #0d1520 100%);
       border: 1px solid rgba(255,193,7,0.3);
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .solar-panel::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,193,7,0.05) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+    
+    .solar-panel.active::before {
+      opacity: 1;
+      animation: solarPulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes solarPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+    
+    .solar-grid-visual {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      justify-content: center;
+    }
+    
+    .solar-cell {
+      width: 50px;
+      height: 30px;
+      background: linear-gradient(135deg, #1e3a5f 0%, #0d1f33 100%);
+      border: 2px solid #2a4a6f;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .solar-cell::before {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+    }
+    
+    .solar-cell::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -100%;
+      width: 200%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,193,7,0.8), transparent);
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .solar-panel.active .solar-cell::after {
+      opacity: 1;
+      animation: solarRay 2s linear infinite;
+    }
+    
+    @keyframes solarRay {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .solar-panel.active .solar-cell {
+      border-color: #ffc107;
+      box-shadow: 0 0 15px rgba(255,193,7,0.4), inset 0 0 10px rgba(255,193,7,0.1);
     }
     
     .solar-header {
@@ -1464,6 +1541,16 @@
     
     .solar-icon {
       font-size: 1.4rem;
+      animation: sunGlow 3s ease-in-out infinite;
+    }
+    
+    @keyframes sunGlow {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.1); filter: brightness(1.3); }
+    }
+    
+    .solar-panel.active .solar-icon {
+      animation: sunGlow 1s ease-in-out infinite;
     }
     
     .solar-title {
@@ -1483,6 +1570,80 @@
     .solar-toggle label {
       font-size: 0.7rem;
       color: var(--text3);
+    }
+    
+    /* Custom toggle switch */
+    .solar-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--bg);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+      border: 1px solid var(--border);
+    }
+    
+    .solar-switch.active {
+      background: linear-gradient(90deg, #ffc107, #ffdb4d);
+      border-color: #ffc107;
+    }
+    
+    .solar-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .solar-switch.active::after {
+      transform: translateX(20px);
+    }
+    
+    /* Sun rays animation */
+    .sun-rays {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    
+    .solar-panel.active .sun-rays {
+      opacity: 1;
+    }
+    
+    .sun-ray {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: linear-gradient(180deg, #ffc107, transparent);
+      transform-origin: top center;
+      animation: rayRotate 8s linear infinite;
+    }
+    
+    .sun-ray:nth-child(1) { transform: rotate(0deg) translateY(-18px); animation-delay: 0s; }
+    .sun-ray:nth-child(2) { transform: rotate(45deg) translateY(-18px); animation-delay: -1s; }
+    .sun-ray:nth-child(3) { transform: rotate(90deg) translateY(-18px); animation-delay: -2s; }
+    .sun-ray:nth-child(4) { transform: rotate(135deg) translateY(-18px); animation-delay: -3s; }
+    .sun-ray:nth-child(5) { transform: rotate(180deg) translateY(-18px); animation-delay: -4s; }
+    .sun-ray:nth-child(6) { transform: rotate(225deg) translateY(-18px); animation-delay: -5s; }
+    .sun-ray:nth-child(7) { transform: rotate(270deg) translateY(-18px); animation-delay: -6s; }
+    .sun-ray:nth-child(8) { transform: rotate(315deg) translateY(-18px); animation-delay: -7s; }
+    
+    @keyframes rayRotate {
+      from { transform: rotate(0deg) translateY(-18px); }
+      to { transform: rotate(360deg) translateY(-18px); }
     }
     
     .solar-stats {
@@ -1580,6 +1741,154 @@
       font-size: 0.6rem;
       color: var(--text3);
       margin-top: 4px;
+    }
+    
+    /* Energy Flow Animation */
+    .energy-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 16px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .energy-source {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .energy-icon {
+      font-size: 2rem;
+      transition: transform 0.3s;
+    }
+    
+    .energy-source.solar .energy-icon {
+      animation: solarFloat 3s ease-in-out infinite;
+    }
+    
+    .energy-source.grid .energy-icon {
+      color: var(--text3);
+    }
+    
+    @keyframes solarFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+    
+    .energy-label {
+      font-size: 0.65rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .energy-source.active .energy-icon {
+      filter: drop-shadow(0 0 10px currentColor);
+    }
+    
+    .energy-source.solar.active .energy-icon {
+      color: #ffc107;
+    }
+    
+    .energy-source.grid.active .energy-icon {
+      color: #ff6b6b;
+    }
+    
+    .energy-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .arrow-line {
+      width: 60px;
+      height: 3px;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+    
+    .arrow-flow {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, #00ff88, transparent);
+      animation: flowRight 1.5s linear infinite;
+    }
+    
+    @keyframes flowRight {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .arrow-line.solar-flow .arrow-flow {
+      background: linear-gradient(90deg, transparent, #ffc107, transparent);
+    }
+    
+    .arrow-head {
+      width: 0; 
+      height: 0; 
+      border-left: 8px solid var(--border);
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      margin-top: -3px;
+    }
+    
+    .energy-arrow.active .arrow-line {
+      background: var(--bg);
+    }
+    
+    .energy-arrow.solar-active .arrow-line {
+      background: rgba(255,193,7,0.2);
+    }
+    
+    .energy-arrow.solar-active .arrow-head {
+      border-left-color: #ffc107;
+    }
+    
+    .energy-destination {
+      padding: 16px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      min-width: 100px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    
+    .energy-destination.active {
+      border-color: var(--success);
+      box-shadow: 0 0 20px rgba(0,255,136,0.2);
+    }
+    
+    .energy-destination.mining {
+      border-color: #f7931a;
+      box-shadow: 0 0 25px rgba(247,147,26,0.3);
+      animation: miningPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes miningPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(247,147,26,0.2); }
+      50% { box-shadow: 0 0 35px rgba(247,147,26,0.5); }
+    }
+    
+    .miner-icon {
+      font-size: 1.8rem;
+      margin-bottom: 4px;
+    }
+    
+    .miner-status {
+      font-size: 0.7rem;
+      color: var(--text3);
     }
     
     /* Efficiency Display */
@@ -2345,7 +2654,35 @@
     <!-- Income Section -->
     <div class="income-section">
       <div class="income-header">
-        <!-- Efficiency Bar -->
+        <!-- Energy Flow Visualization -->
+      <div class="energy-flow">
+        <div class="energy-source solar" id="energySourceSolar">
+          <div class="energy-icon">☀️</div>
+          <div class="energy-label">Solar</div>
+        </div>
+        <div class="energy-arrow" id="energyArrow">
+          <div class="arrow-line">
+            <div class="arrow-flow"></div>
+          </div>
+          <div class="arrow-head"></div>
+        </div>
+        <div class="energy-destination" id="energyDestination">
+          <div class="miner-icon">⛏️</div>
+          <div class="miner-status" id="minerEnergyStatus">Idle</div>
+        </div>
+        <div class="energy-arrow" id="energyArrowGrid">
+          <div class="arrow-line">
+            <div class="arrow-flow"></div>
+          </div>
+          <div class="arrow-head"></div>
+        </div>
+        <div class="energy-source grid" id="energySourceGrid">
+          <div class="energy-icon">🔌</div>
+          <div class="energy-label">Grid</div>
+        </div>
+      </div>
+      
+      <!-- Efficiency Bar -->
       <div class="efficiency-bar">
         <div class="efficiency-label">EFFICIENCY</div>
         <div class="efficiency-value" id="efficiencyValue">-- J/TH</div>
@@ -2371,33 +2708,61 @@
       </div>
       
       <!-- Solar Power Panel -->
-      <div class="solar-panel">
+      <div class="solar-panel" id="solarPanel">
+        <!-- Sun Rays Animation -->
+        <div class="sun-rays">
+          <div class="sun-ray"></div>
+          <div class="sun-ray"></div>
+          <div class="sun-ray"></div>
+          <div class="sun-ray"></div>
+          <div class="sun-ray"></div>
+          <div class="sun-ray"></div>
+          <div class="sun-ray"></div>
+          <div class="sun-ray"></div>
+        </div>
+        
+        <!-- Solar Cell Grid Visual -->
+        <div class="solar-grid-visual">
+          <div class="solar-cell"></div>
+          <div class="solar-cell"></div>
+          <div class="solar-cell"></div>
+          <div class="solar-cell"></div>
+          <div class="solar-cell"></div>
+          <div class="solar-cell"></div>
+        </div>
+        
         <div class="solar-header">
           <div class="solar-icon">☀️</div>
           <div class="solar-title">SOLAR POWER</div>
           <div class="solar-toggle">
             <label>Enable Solar</label>
-            <input type="checkbox" id="solarEnabled" onchange="toggleSolar()">
+            <div class="solar-switch" id="solarSwitch" onclick="toggleSolar()"></div>
           </div>
         </div>
-        <div class="solar-stats">
-          <div class="solar-stat">
+        
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+          <div class="solar-stat" style="flex:1;min-width:80px;">
             <div class="solar-stat-value" id="solarPower">0W</div>
-            <div class="solar-stat-label">GENERATING</div>
+            <div class="solar-stat-label">⚡ GENERATING</div>
           </div>
-          <div class="solar-stat">
+          <div class="solar-stat" style="flex:1;min-width:80px;">
             <div class="solar-stat-value" id="solarSaved">$0.00</div>
-            <div class="solar-stat-label">SAVED TODAY</div>
+            <div class="solar-stat-label">💰 SAVED TODAY</div>
           </div>
-          <div class="solar-stat">
+          <div class="solar-stat" style="flex:1;min-width:80px;">
             <div class="solar-stat-value" id="solarOffset">0%</div>
-            <div class="solar-stat-label">OFFSET</div>
+            <div class="solar-stat-label">🔋 OFFSET</div>
+          </div>
+          <div class="solar-stat" style="flex:1;min-width:80px;">
+            <div class="solar-stat-value" id="solarCO2">0g</div>
+            <div class="solar-stat-label">🌱 CO₂ SAVED</div>
           </div>
         </div>
+        
         <div class="solar-input">
-          <label>Solar Watts:</label>
+          <label>⚙️ Solar Watts:</label>
           <input type="number" id="solarWatts" value="400" placeholder="400" onchange="updateSolarStats()">
-          <label>Cost/kWh:</label>
+          <label>💵 Cost/kWh:</label>
           <input type="number" id="powerRate" value="0.12" step="0.01" placeholder="0.12" onchange="updatePowerCost()">
         </div>
       </div>
@@ -2632,9 +2997,20 @@
     
     // ===== SOLAR POWER =====
     function toggleSolar() {
-      solarEnabled = document.getElementById('solarEnabled').checked;
+      solarEnabled = !solarEnabled;
+      const switchEl = document.getElementById('solarSwitch');
+      const panelEl = document.getElementById('solarPanel');
+      
+      if (solarEnabled) {
+        switchEl.classList.add('active');
+        panelEl.classList.add('active');
+      } else {
+        switchEl.classList.remove('active');
+        panelEl.classList.remove('active');
+      }
+      
       updateSolarStats();
-      addLog(solarEnabled ? '☀️ Solar power enabled' : '☀️ Solar power disabled', 'info');
+      addLog(solarEnabled ? '☀️ Solar power enabled - Mining greener!' : '☀️ Solar power disabled', 'info');
     }
     
     function updateSolarStats() {
@@ -2648,6 +3024,10 @@
       const dailyKwh = (solarWatts / 1000) * hoursPerDay;
       const dailySavings = dailyKwh * powerCostPerKwh;
       solarSaved = dailySavings;
+      
+      // CO2 calculation (approx 0.4kg CO2 per kWh)
+      const co2Saved = dailyKwh * 0.4 * 1000; // in grams
+      document.getElementById('solarCO2').textContent = solarEnabled ? co2Saved.toFixed(0) + 'g' : '0g';
       document.getElementById('solarSaved').textContent = '$' + dailySavings.toFixed(2);
     }
     
@@ -2664,6 +3044,60 @@
         hashrateHistory.push(0);
       }
       updateHashrateChart();
+    }
+    
+    function updatePowerCost() {
+      powerCostPerKwh = parseFloat(document.getElementById('powerRate').value) || 0.12;
+      updateSolarStats();
+    }
+    
+    // ===== ENERGY FLOW UPDATE =====
+    function updateEnergyFlow() {
+      const solarSource = document.getElementById('energySourceSolar');
+      const gridSource = document.getElementById('energySourceGrid');
+      const arrowSolar = document.getElementById('energyArrow');
+      const arrowGrid = document.getElementById('energyArrowGrid');
+      const destination = document.getElementById('energyDestination');
+      const status = document.getElementById('minerEnergyStatus');
+      
+      // Update solar source
+      if (solarEnabled && solarWatts > 0) {
+        solarSource.classList.add('active');
+        arrowSolar.classList.add('solar-active');
+        arrowSolar.classList.add('active');
+      } else {
+        solarSource.classList.remove('active');
+        arrowSolar.classList.remove('solar-active');
+        arrowSolar.classList.remove('active');
+      }
+      
+      // Update grid source - active when solar doesn't cover 100%
+      const offsetPercent = currentWatts > 0 && solarEnabled ? (solarWatts / currentWatts) * 100 : 0;
+      if (offsetPercent < 100 && isMining) {
+        gridSource.classList.add('active');
+        arrowGrid.classList.add('active');
+      } else {
+        gridSource.classList.remove('active');
+        arrowGrid.classList.remove('active');
+      }
+      
+      // Update destination (miner)
+      if (isMining) {
+        destination.classList.add('mining');
+        destination.classList.add('active');
+        status.textContent = 'Mining ⚡';
+        status.style.color = '#f7931a';
+      } else if (proPowered) {
+        destination.classList.remove('mining');
+        destination.classList.add('active');
+        status.textContent = 'Powered On';
+        status.style.color = '#00ff88';
+      } else {
+        destination.classList.remove('mining');
+        destination.classList.remove('active');
+        status.textContent = 'Idle';
+        status.style.color = 'var(--text3)';
+      }
     }
     
     function updatePowerCost() {
@@ -3132,6 +3566,9 @@
       
       const dailyRevenue = (hashrate / currentAsic.hashrate) * 4.32;
       document.getElementById('estDaily').textContent = '$' + dailyRevenue.toFixed(2);
+      
+      // Update energy flow visualization
+      updateEnergyFlow();
     }
     
     // ===== POOL CONFIG =====
@@ -3182,6 +3619,7 @@
     selectAsic('bitaxe');
     updatePoolInfo();
     initializeChart();
+    updateEnergyFlow();
     setInterval(() => {
       if (isMining) {
         addHashrateDataPoint();
