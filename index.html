@@ -856,27 +856,42 @@
           <div class="interface-body">
             <div class="interface-screen active" id="wallet-1">
               <div class="cc-screen">
-                <h4>📦 Welcome to Cold Card Mk5</h4>
+                <h4>📦 Cold Card Mk5 Setup</h4>
                 <p style="color:var(--text2);margin-bottom:20px;">Create your <strong>REAL Bitcoin wallet</strong> with cryptographically secure entropy.</p>
                 
                 <div style="background: linear-gradient(135deg, #0a1a2a 0%, #0a0a1a 100%); border: 1px solid #00ff88; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: left;">
-                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0 0 8px 0;">✅ <strong>24-word BIP39 mnemonic</strong> - Industry standard</p>
-                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0 0 8px 0;">✅ <strong>Crypto-secure randomness</strong> - Uses browser crypto API</p>
-                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0;">✅ <strong>Sparrow compatible</strong> - Import directly</p>
+                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0 0 12px 0;">✅ <strong>BIP39 Compliant</strong> - Works with Sparrow, Electrum</p>
+                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0 0 8px 0;">✅ <strong>Your keys, your Bitcoin</strong> - Self-custody</p>
                 </div>
                 
-                <button class="cc-btn" onclick="startWalletCreation()" style="font-size: 1.1rem; padding: 16px 32px;">✓ Create REAL Wallet</button>
-                <div class="cc-warning" style="margin-top: 16px;">⚠️ This generates a REAL wallet. Write down your seed words!</div>
+                <p style="color:var(--text2);font-size:0.9rem;margin-bottom:12px;">Choose seed phrase length:</p>
+                <div style="display:flex;gap:12px;margin-bottom:20px;">
+                  <button id="btn-12word" class="cc-btn" onclick="selectSeedLength(12)" style="flex:1;background:#333;">12 Words</button>
+                  <button id="btn-24word" class="cc-btn" onclick="selectSeedLength(24)" style="flex:1;background:#f7a526;color:#000;">24 Words</button>
+                </div>
+                
+                <button id="create-wallet-btn" class="cc-btn" onclick="startWalletCreation()" style="font-size:1.1rem;padding:16px 32px;opacity:0.5;pointer-events:none;" disabled>✓ Create Wallet</button>
+                
+                <div class="cc-warning" style="margin-top:16px;">⚠️ Write down your words. Anyone with them can access your funds!</div>
               </div>
             </div>
             <div class="interface-screen" id="wallet-2">
               <div class="cc-screen">
                 <h4>🔑 Your Recovery Phrase</h4>
-                <p style="color:var(--text2);font-size:0.85rem;">These 24 words can recover your bitcoin. Write them down IN ORDER.</p>
+                <p style="color:var(--text2);font-size:0.85rem;margin-bottom:8px;">Write ALL words in EXACT order. Order matters!</p>
                 
-                <div class="cc-words" id="wallet-words-display" style="margin-bottom: 16px;">
-                  <div style="color:var(--text2);font-size:0.85rem;text-align:center;padding:20px;">
-                    ⏳ Creating your wallet...<br>Click "Create REAL Wallet" to begin.
+                <!-- Improved header with word count indicator -->
+                <div id="seed-header" style="display:none;background:linear-gradient(135deg,rgba(247,165,38,0.15),rgba(247,165,38,0.05));border:1px solid rgba(247,165,38,0.3);border-radius:10px;padding:12px;margin-bottom:16px;text-align:center;">
+                  <span id="seed-word-count" style="color:var(--primary);font-weight:700;font-size:1rem;">24</span>
+                  <span style="color:var(--text2);">words • </span>
+                  <span style="color:var(--success);">All displayed below</span>
+                </div>
+                
+                <div class="cc-words" id="wallet-words-display" style="margin-bottom: 16px;min-height:200px;">
+                  <div style="color:var(--text2);font-size:0.85rem;text-align:center;padding:40px 20px;">
+                    <div style="font-size:2rem;margin-bottom:12px;">📝</div>
+                    Select 12 or 24 words above<br>
+                    <span style="color:var(--primary);font-size:0.8rem;">Then click "Create Wallet"</span>
                   </div>
                 </div>
                 
@@ -885,8 +900,12 @@
                   <div id="verify-test-content"></div>
                 </div>
                 
-                <button id="continue-btn" class="cc-btn" onclick="nextWalletSim(3)" style="display:none;">✓ Continue to PIN</button>
-                <div class="cc-warning">⚠️ NEVER type these into a computer. Write on paper only!</div>
+                <button id="continue-btn" class="cc-btn" onclick="startVerificationTest()" style="display:none;">✓ Continue to PIN</button>
+                <p id="verify-hint" style="display:none;color:var(--text2);font-size:0.8rem;margin-top:12px;text-align:center;">⏱️ Verification test will begin in a few seconds...<br>Or click continue above when ready</p>
+                <div style="background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.05) 100%); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 14px; margin: 12px 0;">
+                <span style="color: var(--danger); font-weight: 700; font-size: 0.9rem;">⚠️ CRITICAL: Write ALL ${selectedSeedLength} words in EXACT order</span>
+                <p style="color: var(--text2); font-size: 0.8rem; margin: 6px 0 0;">Never type these into a computer. Paper only!</p>
+              </div>
               </div>
             </div>
             <div class="interface-screen" id="wallet-3">
@@ -1615,20 +1634,41 @@
     let selectedMenu = 0;
     let pinBuffer = '';
     let seedVerified = false;
+    let selectedSeedLength = 24; // Default to 24 words
+    
+    // Select seed phrase length
+    function selectSeedLength(length) {
+      selectedSeedLength = length;
+      
+      // Update button styles
+      document.getElementById('btn-12word').style.background = length === 12 ? '#f7a526' : '#333';
+      document.getElementById('btn-12word').style.color = length === 12 ? '#000' : '#fff';
+      document.getElementById('btn-24word').style.background = length === 24 ? '#f7a526' : '#333';
+      document.getElementById('btn-24word').style.color = length === 24 ? '#000' : '#fff';
+      
+      // Enable create button
+      const createBtn = document.getElementById('create-wallet-btn');
+      createBtn.disabled = false;
+      createBtn.style.opacity = '1';
+      createBtn.style.pointerEvents = 'auto';
+      createBtn.innerHTML = length === 12 ? '✓ Create 12-Word Wallet' : '✓ Create 24-Word Wallet';
+    }
     
     // Generate real wallet
     function createRealWallet() {
-      const words = generateMnemonic(256); // 24 words
+      const bits = selectedSeedLength === 12 ? 128 : 256;
+      const words = generateMnemonic(bits);
       REAL_WALLET.mnemonic = words;
       REAL_WALLET.address = deriveAddress(words);
       REAL_WALLET.created = true;
+      REAL_WALLET.wordCount = selectedSeedLength;
       return words;
     }
     
     // Start wallet creation flow
     function startWalletCreation() {
       // Show loading state on UI
-      const btn = document.querySelector('#wallet-1 .cc-btn');
+      const btn = document.getElementById('create-wallet-btn');
       if (btn) {
         btn.innerHTML = '⏳ Generating entropy...';
         btn.disabled = true;
@@ -1638,118 +1678,333 @@
       // Generate real wallet after short delay
       setTimeout(() => {
         const words = createRealWallet();
+        const wordCount = words.length;
+        
+        // Store for verification
+        currentWords = words;
+        
+        // Show the seed header with word count
+        const seedHeader = document.getElementById('seed-header');
+        const seedWordCount = document.getElementById('seed-word-count');
+        if (seedHeader) seedHeader.style.display = 'block';
+        if (seedWordCount) seedWordCount.textContent = wordCount;
         
         // Update the UI with the seed words
         updateWalletWordsUI(words);
         
-        // Update device screen too
-        const words1 = words.slice(0, 8).map((w, i) => `${i+1}. ${w}`).join('<br>');
-        const words2 = words.slice(8, 16).map((w, i) => `${i+9}. ${w}`).join('<br>');
-        const words3 = words.slice(16, 24).map((w, i) => `${i+17}. ${w}`).join('<br>');
-        
-        const screen = document.getElementById('cc-screen-text');
-        if (screen) {
-          screen.innerHTML = `<div class="screen-content">
-            <div style="font-size:0.5rem;color:#00ff88;margin-bottom:3px;">🔑 WRITE THESE DOWN!</div>
-            <div style="display:flex;justify-content:space-between;font-size:0.4rem;color:#00aa66;">
-              <div>${words1}</div><div>${words2}</div><div>${words3}</div>
-            </div>
-          </div>`;
-        }
-        
         // Move to step 2 (seed words)
         nextWalletSim(2);
         
-        // Re-enable button
-        if (btn) {
-          btn.innerHTML = '✓ Create REAL Wallet';
-          btn.disabled = false;
-          btn.style.opacity = '1';
+        // Show continue button after showing words
+        const continueBtn = document.getElementById('continue-btn');
+        if (continueBtn) {
+          continueBtn.style.display = 'inline-block';
+          continueBtn.textContent = wordCount === 12 ? '✓ Continue (Test 12 words)' : '✓ Continue (Test 24 words)';
         }
         
-        // Set up verification after showing words
-        setTimeout(() => setupVerificationTest(words), 1000);
+        // Set up verification indices for this word count
+        if (wordCount === 12) {
+          verifyIndices = [0, 5, 11];
+        } else {
+          verifyIndices = [2, 11, 20];
+        }
+        
+        // Set up verification test AFTER showing words - words already hidden in modal
+        // Auto-trigger after delay, but user can click continue too
+        setTimeout(() => {
+          // If user hasn't clicked continue, show test
+          if (!seedVerified && currentWords.length > 0) {
+            // Hide word display first, then show the modal
+            const wordsDisplay = document.getElementById('wallet-words-display');
+            if (wordsDisplay) {
+              wordsDisplay.innerHTML = `<div style="color:#f7a526;text-align:center;padding:30px 20px;">
+                <div style="font-size:1.5rem;margin-bottom:12px;">📝 Verification Test</div>
+                <div style="color:#aaa;font-size:0.9rem;">Your seed phrase is hidden now.</div>
+              </div>`;
+            }
+            
+            // Update device screen
+            const screen = document.getElementById('cc-screen-text');
+            if (screen) {
+              screen.innerHTML = `<div style="font-size:0.45rem;color:#f7a526;text-align:center;padding:8px;">
+                <div style="font-size:0.55rem;margin-bottom:4px;">📝 TESTING MEMORY</div>
+                <div style="color:#00ff88;">Words hidden - prove you wrote them!</div>
+              </div>`;
+            }
+            
+            showVerificationModal();
+          }
+        }, 4000); // Give user 4 seconds to see words before test starts
       }, 1500);
     }
     
     // Verification test - ask user to verify specific words
     let verifyIndices = [];
     let verifyCurrent = 0;
+    let currentWords = [];
     
     function setupVerificationTest(words) {
-      // Pick 3 random words to verify (word #3, #8, #15)
-      verifyIndices = [2, 7, 14]; // 0-indexed
+      currentWords = words; // Store for verification
+      const wordCount = words.length;
+      
+      // Pick 3 random words based on length (for 12 words: 1, 6, 12; for 24: 3, 12, 21)
+      if (wordCount === 12) {
+        verifyIndices = [0, 5, 11];
+      } else {
+        verifyIndices = [2, 11, 20]; // 3rd, 12th, 21st word
+      }
       verifyCurrent = 0;
       
-      // Show verification UI
-      const verifyDiv = document.getElementById('verify-test');
-      if (verifyDiv) {
-        verifyDiv.style.display = 'block';
-        showNextVerification(words);
+      // Hide the seed words from display first
+      const wordsDisplay = document.getElementById('wallet-words-display');
+      if (wordsDisplay) {
+        wordsDisplay.innerHTML = `<div style="color:#f7a526;text-align:center;padding:20px;">
+          <div style="font-size:1.2rem;margin-bottom:8px;">📝 Test Time!</div>
+          <div style="color:#aaa;font-size:0.85rem;">Your words will be hidden during the test.</div>
+        </div>`;
+      }
+      
+      // Hide device screen words, show test prompt
+      const screen = document.getElementById('cc-screen-text');
+      if (screen) {
+        screen.innerHTML = `<div style="font-size:0.45rem;color:#f7a526;text-align:center;padding:8px;">
+          <div style="font-size:0.55rem;margin-bottom:4px;">📝 VERIFICATION TEST</div>
+          <div style="color:#00ff88;">Answer 3 questions to continue</div>
+        </div>`;
+      }
+      
+      // Show verification modal after hiding words
+      setTimeout(() => {
+        // Clear word display before showing modal
+        const wordsDisplay = document.getElementById('wallet-words-display');
+        if (wordsDisplay) {
+          wordsDisplay.innerHTML = `<div style="color:#f7a526;text-align:center;padding:30px 20px;">
+            <div style="font-size:1.5rem;margin-bottom:12px;">📝 Verification Test</div>
+            <div style="color:#aaa;font-size:0.9rem;">Your seed phrase is hidden now.</div>
+          </div>`;
+        }
+        
+        // Update device screen
+        const screen = document.getElementById('cc-screen-text');
+        if (screen) {
+          screen.innerHTML = `<div style="font-size:0.45rem;color:#f7a526;text-align:center;padding:8px;">
+            <div style="font-size:0.55rem;margin-bottom:4px;">📝 TESTING MEMORY</div>
+            <div style="color:#00ff88;">Words hidden - prove you wrote them!</div>
+          </div>`;
+        }
+        
+        showVerificationModal();
+      }, 500);
+    }
+    
+    // Start verification test manually from continue button
+    function startVerificationTest() {
+      if (currentWords && currentWords.length > 0) {
+        // Hide word display now - user has had time to copy
+        const wordsDisplay = document.getElementById('wallet-words-display');
+        if (wordsDisplay) {
+          wordsDisplay.innerHTML = `<div style="color:#f7a526;text-align:center;padding:30px 20px;">
+            <div style="font-size:1.5rem;margin-bottom:12px;">📝 Verification Test</div>
+            <div style="color:#aaa;font-size:0.9rem;line-height:1.6;">
+              Type the words for the positions shown.<br>
+              Your seed phrase is hidden now —<br>
+              <span style="color:#00ff88;">this tests if you wrote them down!</span>
+            </div>
+          </div>`;
+        }
+        
+        // Hide device screen words
+        const screen = document.getElementById('cc-screen-text');
+        if (screen) {
+          screen.innerHTML = `<div style="font-size:0.45rem;color:#f7a526;text-align:center;padding:8px;">
+            <div style="font-size:0.55rem;margin-bottom:4px;">📝 VERIFICATION TEST</div>
+            <div style="color:#00ff88;">Word list hidden - testing memory</div>
+            <div style="color:#666;margin-top:4px;font-size:0.35rem;">Answer 3 questions below</div>
+          </div>`;
+        }
+        
+        // Show hint
+        const verifyHint = document.getElementById('verify-hint');
+        if (verifyHint) verifyHint.style.display = 'block';
+        
+        // Start the test
+        setTimeout(() => {
+          verifyCurrent = 0;
+          // Select different words based on length
+          if (currentWords.length === 12) {
+            verifyIndices = [0, 5, 11];
+          } else {
+            verifyIndices = [2, 11, 20];
+          }
+          showVerificationModal();
+        }, 500);
       }
     }
     
-    function showNextVerification(words) {
-      const verifyDiv = document.getElementById('verify-test-content');
+    function showVerificationModal() {
+      // Create modal overlay
+      const existing = document.getElementById('verify-modal');
+      if (existing) existing.remove();
+      
+      const modal = document.createElement('div');
+      modal.id = 'verify-modal';
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+      
       const idx = verifyIndices[verifyCurrent];
+      const wordCount = currentWords.length;
       
-      if (verifyDiv) {
-        verifyDiv.innerHTML = `
-          <p style="color:var(--text2);font-size:0.85rem;margin-bottom:12px;">Verify you wrote the words correctly:</p>
-          <p style="color:var(--primary);font-size:1rem;font-weight:600;margin-bottom:16px;">What is word #${idx + 1}?</p>
-          <input type="text" id="verify-input" placeholder="Type word..." style="width:100%;padding:12px;border-radius:8px;background:#0a0a0f;border:2px solid #333;color:#fff;font-size:1rem;text-align:center;margin-bottom:12px;">
-          <button class="cc-btn" onclick="checkVerification('${words[idx]}')">✓ Check Answer</button>
-          <p id="verify-result" style="margin-top:12px;font-size:0.85rem;"></p>
-        `;
-      }
+      // Format the word position nicely
+      const posLabels = wordCount === 12 ? ['1st', '6th', '12th'] : ['3rd', '12th', '21st'];
+      const positionText = posLabels[verifyCurrent] || `${idx + 1}th`;
       
-      // Focus input
+      modal.innerHTML = `
+        <div style="background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:2px solid #f7a526;border-radius:20px;padding:32px;max-width:400px;width:100%;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:16px;">📝</div>
+          <h3 style="color:#f7a526;margin-bottom:8px;">Verify Your Seed</h3>
+          <p style="color:#aaa;margin-bottom:24px;font-size:0.9rem;">Question ${verifyCurrent + 1} of ${verifyIndices.length}</p>
+          
+          <div style="background:#0a0a0f;padding:24px;border-radius:12px;margin-bottom:24px;">
+            <p style="color:#fff;font-size:1.3rem;font-weight:700;margin:0;">Word #${idx + 1}</p>
+            <p style="color:#666;font-size:0.85rem;margin:8px 0 0;">(${positionText} word in your list)</p>
+          </div>
+          
+          <input type="text" id="verify-input" autocomplete="off" placeholder="Type the word..." style="width:100%;padding:16px;border-radius:12px;background:#0a0a0f;border:2px solid #333;color:#fff;font-size:1.1rem;text-align:center;margin-bottom:16px;box-sizing:border-box;">
+          
+          <button class="cc-btn" onclick="submitVerification()" style="width:100%;font-size:1rem;">✓ Check Answer</button>
+          
+          <p id="verify-result" style="margin-top:16px;font-size:0.9rem;min-height:20px;"></p>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Focus input and listen for Enter
       setTimeout(() => {
         const input = document.getElementById('verify-input');
-        if (input) input.focus();
+        if (input) {
+          input.focus();
+          input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitVerification();
+          });
+        }
       }, 100);
     }
     
-    function checkVerification(correctWord) {
+    function submitVerification() {
       const input = document.getElementById('verify-input');
       const result = document.getElementById('verify-result');
+      const correctWord = currentWords[verifyIndices[verifyCurrent]];
       const userWord = input.value.trim().toLowerCase();
       
       if (userWord === correctWord.toLowerCase()) {
         verifyCurrent++;
         
-        if (verifyCurrent >= verifyIndices.length) {
-          // All verified!
-          document.getElementById('verify-test-content').innerHTML = `
-            <p style="color:#00ff88;font-size:1.1rem;font-weight:700;margin-bottom:12px;">✅ All Verified!</p>
-            <p style="color:var(--text2);font-size:0.9rem;">You confirmed 3 words correctly. Your seed is safely backed up.</p>
-            <button class="cc-btn" onclick="confirmSeedSaved()" style="margin-top:16px;">✓ Continue to PIN</button>
-          `;
-        } else {
-          showNextVerification(REAL_WALLET.mnemonic);
-          if (result) result.innerHTML = '<span style="color:#00ff88;">✓ Correct! Next word...</span>';
-        }
+        if (result) result.innerHTML = '<span style="color:#00ff88;">✓ Correct!</span>';
+        
+        setTimeout(() => {
+          if (verifyCurrent >= verifyIndices.length) {
+            // All verified!
+            const modal = document.getElementById('verify-modal');
+            if (modal) {
+              modal.innerHTML = `
+                <div style="background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:2px solid #00ff88;border-radius:20px;padding:32px;max-width:400px;width:100%;text-align:center;">
+                  <div style="font-size:3rem;margin-bottom:16px;">✅</div>
+                  <h3 style="color:#00ff88;margin-bottom:8px;">All Verified!</h3>
+                  <p style="color:#aaa;margin-bottom:24px;">You confirmed ${verifyIndices.length} words correctly.</p>
+                  <button class="cc-btn" onclick="confirmSeedSaved()" style="background:#00ff88;color:#000;font-size:1.1rem;">✓ Continue to PIN</button>
+                </div>
+              `;
+            }
+          } else {
+            showVerificationModal();
+          }
+        }, 600);
       } else {
-        if (result) result.innerHTML = `<span style="color:#ff5f56;">✗ Incorrect. The correct word is: "${correctWord}"</span>`;
+        if (result) result.innerHTML = `<span style="color:#ff5f56;">✗ Incorrect. Answer: "${correctWord}"</span>`;
       }
     }
     
     function confirmSeedSaved() {
-      // Hide verification and move to PIN
-      const verifyDiv = document.getElementById('verify-test');
-      if (verifyDiv) verifyDiv.style.display = 'none';
+      // Remove verification modal
+      const modal = document.getElementById('verify-modal');
+      if (modal) modal.remove();
       
+      // Move to PIN step
       nextWalletSim(3);
       seedVerified = true;
     }
     
-    // Update the wallet words UI in the instruction panel
+    // Update the wallet words UI in the instruction panel - IMPROVED for all words
     function updateWalletWordsUI(words) {
       const wordsContainer = document.getElementById('wallet-words-display');
       if (wordsContainer) {
-        wordsContainer.innerHTML = words.map((w, i) => 
-          `<div class="cc-word"><span>${i+1}.</span>${w}</div>`
-        ).join('');
+        // Show ALL words in a clean grid layout (2 columns for 24, single for 12)
+        const is12Words = words.length === 12;
+        let html = '';
+        
+        if (is12Words) {
+          // 12 words: 3 columns x 4 rows
+          html = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:700px;margin:0 auto;">
+            ${words.map((w, i) => `<div class="cc-word" style="padding:12px 8px;font-size:0.75rem;"><span style="color:var(--primary);font-size:0.65rem;">${String(i+1).padStart(2,'0')}</span>${w}</div>`).join('')}
+          </div>`;
+        } else {
+          // 24 words: 2 columns x 12 rows - clear & readable
+          const half = Math.ceil(words.length / 2);
+          const col1 = words.slice(0, half);
+          const col2 = words.slice(half);
+          
+          html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;width:100%;max-width:700px;margin:0 auto;">
+            ${words.map((w, i) => `<div class="cc-word" style="padding:10px 8px;font-size:0.7rem;display:flex;align-items:center;gap:8px;"><span style="color:var(--primary);font-size:0.6rem;min-width:24px;font-weight:700;">${String(i+1).padStart(2,'0')}</span><span style="flex:1;text-align:left;">${w}</span></div>`).join('')}
+          </div>`;
+        }
+        
+        wordsContainer.innerHTML = html;
+      }
+      
+      // Update device screen with ALL words displayed prominently
+      const screen = document.getElementById('cc-screen-text');
+      if (screen) {
+        const wordCount = words.length;
+        const is12 = wordCount === 12;
+        
+        if (is12) {
+          // 12 words: compact 2-column layout
+          const rows = [];
+          for (let i = 0; i < 4; i++) {
+            const cols = [];
+            for (let j = 0; j < 3; j++) {
+              const idx = i * 3 + j;
+              if (idx < words.length) {
+                cols.push(`<span style="color:#f7a526;">${String(idx+1).padStart(2,'0')}</span>${words[idx]}`);
+              }
+            }
+            rows.push(cols.join('   '));
+          }
+          
+          screen.innerHTML = `<div style="padding:4px;font-size:0.34rem;color:#00ff88;text-align:left;line-height:1.4;font-family:'JetBrains Mono',monospace;">
+            <div style="color:#f7a526;margin-bottom:4px;font-weight:700;text-align:center;">🔑 12-WORD SEED - WRITE ALL IN ORDER</div>
+            <div style="letter-spacing:0.5px;">${rows.join('<br>')}</div>
+          </div>`;
+        } else {
+          // 24 words: 2-column layout optimized for device screen
+          const half = Math.ceil(wordCount / 2);
+          let col1 = '', col2 = '';
+          
+          for (let i = 0; i < half; i++) {
+            col1 += `<span style="color:#f7a526;">${String(i+1).padStart(2,'0')}</span>${words[i]}<br>`;
+            if (i + half < wordCount) {
+              col2 += `<span style="color:#f7a526;">${String(i+half+1).padStart(2,'0')}</span>${words[i+half]}<br>`;
+            }
+          }
+          
+          screen.innerHTML = `<div style="padding:4px;font-size:0.32rem;color:#00ff88;text-align:left;line-height:1.3;font-family:'JetBrains Mono',monospace;">
+            <div style="color:#f7a526;margin-bottom:3px;font-weight:700;text-align:center;">🔑 24-WORD SEED - WRITE ALL IN ORDER</div>
+            <div style="display:flex;justify-content:space-gap:8px;gap:8px;">
+              <div style="flex:1;letter-spacing:0.5px;">${col1}</div>
+              <div style="flex:1;letter-spacing:0.5px;">${col2}</div>
+            </div>
+          </div>`;
+        }
       }
     }
     
