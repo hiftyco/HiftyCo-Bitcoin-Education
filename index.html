@@ -429,7 +429,26 @@
     /* Cold Card buttons now in 4x4 keypad - see .coldcard-keys above */
     /* Screen icons */
     .screen-icon { font-size: 1.8rem; margin-bottom: 8px; }
-    .screen-status { font-size: 0.6rem; color: #666; margin-top: 4px; }
+    .screen-status { 
+      font-size: 0.45rem; color: #00aa66; margin-top: 6px; 
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    /* Device display styling */
+    .screen-text {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.52rem;
+      line-height: 1.4;
+      color: #00ff88;
+      text-align: left;
+      padding: 5px;
+      white-space: pre;
+    }
+    .screen-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
     
     .bitaxe-device { 
       width: 320px; height: 210px; 
@@ -782,18 +801,18 @@
                 <div class="cc-key" onclick="pressKey(7, this)">7</div>
                 <div class="cc-key" onclick="pressKey(8, this)">8</div>
                 <div class="cc-key" onclick="pressKey(9, this)">9</div>
-                <div class="cc-key fn" onclick="pressKey('ok', this)">OK</div>
+                <div class="cc-key fn" onclick="pressKey('ok', this)">✓</div>
                 <div class="cc-key" onclick="pressKey(4, this)">4</div>
                 <div class="cc-key" onclick="pressKey(5, this)">5</div>
                 <div class="cc-key" onclick="pressKey(6, this)">6</div>
-                <div class="cc-key cc-key-empty"></div>
+                <div class="cc-key fn" onclick="handleMenuNav(-1)">▲</div>
                 <div class="cc-key" onclick="pressKey(1, this)">1</div>
                 <div class="cc-key" onclick="pressKey(2, this)">2</div>
                 <div class="cc-key" onclick="pressKey(3, this)">3</div>
-                <div class="cc-key cc-key-empty"></div>
+                <div class="cc-key fn" onclick="handleMenuNav(1)">▼</div>
                 <div class="cc-key fn" onclick="pressKey('0', this)">0</div>
-                <div class="cc-key" onclick="pressKey('00', this)">00</div>
-                <div class="cc-key" onclick="pressKey('#', this)">#</div>
+                <div class="cc-key fn" onclick="pressKey('00', this)">00</div>
+                <div class="cc-key fn" onclick="pressKey('#', this)">#</div>
               </div>
             </div>
           </div>
@@ -1224,6 +1243,75 @@
     // Cold Card power state
     let isPoweredOn = false;
     let enteredPin = '';
+    let walletStep = 0; // 0=menu, 1=new wallet, 2=seed words, 3=pin, 4=confirm, 5=ready
+    let selectedMenu = 0;
+    let pinBuffer = '';
+    let seedVerified = false;
+    
+    // Wallet flow screens shown on device display
+    const walletScreens = [
+      // Step 0 - Main Menu
+      {text: `🔐 COLDCARD Mk4
+────────────────
+▶ New Wallet
+  Restore
+  Settings`, status: 'Ready'},
+      // Step 1 - New Wallet Selected
+      {text: `📋 NEW WALLET
+────────────────
+Creating entropy...
+Please wait...`, status: 'Working'},
+      // Step 2 - Show Seed Words
+      {text: `🔑 RECOVERY 24W
+────────────────
+1.abandon  13.lamp
+2.bounce   14.norm
+3.camera   15.open
+4.dream    16.poem
+5.eager    17.quiet
+6.foster   18.rich
+7.great    19.solar
+8.hello    20.today
+9.island   21.unity
+10.journey 22.vivid
+11.kitchen 23.wave
+12.leader  24.youth`, status: 'Writing'},
+      // Step 3 - Verify Words
+      {text: `✅ VERIFY WORDS
+────────────────
+Word #1: abandon
+Word #12: leader
+Word #24: youth
+Press OK to confirm`, status: 'Verify'},
+      // Step 4 - Create PIN
+      {text: `🔐 CREATE PIN
+────────────────
+PIN: ${pinBuffer || '------'}
+6+ digits
+X = clear`, status: 'PIN'},
+      // Step 5 - Confirm PIN
+      {text: `🔐 CONFIRM PIN
+────────────────
+Confirm: ${pinBuffer || '------'}
+Re-enter PIN`, status: 'PIN'},
+      // Step 6 - Ready!
+      {text: `✅ WALLET READY!
+────────────────
+Address:
+bc1q...s8x2
+Backup: ✓`, status: 'Done'}
+    ];
+    
+    function updateDeviceScreen(step) {
+      const screen = document.getElementById('cc-screen-text');
+      if (!screen) return;
+      
+      const s = walletScreens[step] || walletScreens[0];
+      screen.innerHTML = `<div class="screen-content">
+        <div class="screen-text">${s.text.replace(/\n/g, '<br>')}</div>
+        <div class="screen-status">${s.status}</div>
+      </div>`;
+    }
     
     function togglePower() {
       const device = document.getElementById('coldcard-device');
@@ -1301,20 +1389,35 @@
         }, 200);
       }
       
-      // SD LED activity
-      const sdLed = document.getElementById('sd-led');
-      if (sdLed) {
-        setTimeout(() => {
-          sdLed.style.background = '#ffaa00';
-          sdLed.style.boxShadow = '0 0 15px #ffaa00';
+      // Handle key functions
+      if (key === 'ok') {
+        handleOkPress();
+        return;
+      }
+      if (key === 'x') {
+        handleXPress();
+        return;
+      }
+      
+      // Number keys for PIN entry
+      if (walletStep === 4 || walletStep === 5) {
+        if (pinBuffer.length < 8) {
+          pinBuffer += key;
+          updateDeviceScreen(walletStep);
+        }
+        // Flash SD LED
+        const sdLed = document.getElementById('sd-led');
+        if (sdLed) {
+          sdLed.style.background = '#00aaff';
+          sdLed.style.boxShadow = '0 0 15px #00aaff';
           setTimeout(() => {
             sdLed.style.background = '#00ff88';
             sdLed.style.boxShadow = '0 0 10px #00ff88';
-          }, 300);
-        }, 100);
+          }, 150);
+        }
       }
       
-      // Show key on screen
+      // Show key on screen briefly
       const screen = document.getElementById('cc-screen-text');
       if (screen) {
         const original = screen.innerHTML;
@@ -1322,7 +1425,113 @@
         screen.innerHTML = `<div class="screen-icon">⌨️</div>
           <div style="font-size:2rem;color:#00ff88;margin:10px 0;font-weight:bold;">${displayKey}</div>
           <div style="font-size:0.5rem;color:#666;">pressed</div>`;
-        setTimeout(() => screen.innerHTML = original, 350);
+        setTimeout(() => updateDeviceScreen(walletStep), 350);
+      }
+    }
+    
+    // Handle OK button press - advance through wallet flow
+    function handleOkPress() {
+      switch(walletStep) {
+        case 0: // Menu - New Wallet selected
+          if (selectedMenu === 0) { // New Wallet
+            walletStep = 1;
+            updateDeviceScreen(1);
+            setTimeout(() => {
+              walletStep = 2;
+              updateDeviceScreen(2);
+            }, 1500);
+          } else if (selectedMenu === 1) { // Restore
+            const screen = document.getElementById('cc-screen-text');
+            if (screen) screen.innerHTML = '<div class="screen-text" style="color:#666;">Restore not implemented</div>';
+            setTimeout(() => updateDeviceScreen(0), 1000);
+          } else { // Settings
+            const screen = document.getElementById('cc-screen-text');
+            if (screen) screen.innerHTML = '<div class="screen-text" style="color:#666;">Settings not implemented</div>';
+            setTimeout(() => updateDeviceScreen(0), 1000);
+          }
+          break;
+        case 2: // Seed words - continue to verify
+          walletStep = 3;
+          updateDeviceScreen(3);
+          break;
+        case 3: // Verified - go to PIN
+          pinBuffer = '';
+          walletStep = 4;
+          updateDeviceScreen(4);
+          break;
+        case 4: // Create PIN - confirm
+          if (pinBuffer.length >= 4) {
+            const firstPin = pinBuffer;
+            pinBuffer = '';
+            walletStep = 5;
+            window.tempPin = firstPin;
+            updateDeviceScreen(5);
+          }
+          break;
+        case 5: // Confirm PIN
+          if (pinBuffer === window.tempPin && pinBuffer.length >= 4) {
+            const sdLed = document.getElementById('sd-led');
+            if (sdLed) {
+              sdLed.style.background = '#00ff88';
+              sdLed.style.boxShadow = '0 0 20px #00ff88';
+            }
+            walletStep = 6;
+            updateDeviceScreen(6);
+          } else {
+            pinBuffer = '';
+            walletStep = 4;
+            const screen = document.getElementById('cc-screen-text');
+            if (screen) {
+              screen.innerHTML = '<div class="screen-text" style="color:#ff5f56;">❌ PIN MISMATCH!<br>Try again...</div>';
+              setTimeout(() => updateDeviceScreen(4), 1500);
+            }
+          }
+          break;
+        case 6: // Ready - show address
+          const screen = document.getElementById('cc-screen-text');
+          if (screen) {
+            screen.innerHTML = '<div class="screen-content"><div style="font-size:0.6rem;color:#00ff88;margin-bottom:5px;">✅ COMPLETE!</div><div style="font-size:0.4rem;color:#00aa66;">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div><div style="font-size:0.4rem;color:#666;margin-top:10px;">Wallet ready!</div></div>';
+          }
+          break;
+      }
+    }
+    
+    // Handle X button press - go back
+    function handleXPress() {
+      // Clear PIN if in PIN entry
+      if (walletStep === 4 || walletStep === 5) {
+        pinBuffer = '';
+        updateDeviceScreen(walletStep);
+        return;
+      }
+      
+      // Go back one step
+      if (walletStep > 0) {
+        walletStep--;
+        if (walletStep === 2) walletStep = 0;
+        if (walletStep === 3) walletStep = 2;
+        if (walletStep === 5) {
+          pinBuffer = '';
+          walletStep = 4;
+        }
+        updateDeviceScreen(walletStep);
+      }
+    }
+    
+    // Handle menu navigation with special keys (in step 0)
+    function handleMenuNav(direction) {
+      if (walletStep !== 0) return;
+      selectedMenu = (selectedMenu + direction + 3) % 3;
+      
+      const menus = ['▶ New Wallet', '▶ Restore', '▶ Settings'];
+      const screen = document.getElementById('cc-screen-text');
+      if (screen) {
+        screen.innerHTML = `<div class="screen-text">🔐 COLDCARD Mk4
+────────────────
+${selectedMenu === 0 ? '▶' : ' '} New Wallet
+${selectedMenu === 1 ? '▶' : ' '} Restore
+${selectedMenu === 2 ? '▶' : ' '} Settings</div>
+<div class="screen-status">Ready</div>`;
       }
     }
     
