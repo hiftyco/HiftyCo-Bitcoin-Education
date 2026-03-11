@@ -106,15 +106,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 15px;
+      padding: 20px;
     }
-    /* Main device body - REAL Cold Card Mk5 size ~96mm x 62mm x 12mm */
+    /* Main device body - ENLARGED for better readability */
     .coldcard-device { 
-      width: 320px; height: 380px;
+      width: 340px; height: 420px;
       max-width: 95vw;
-      max-height: 80vh;
+      max-height: 85vh;
       background: linear-gradient(165deg, #181818 0%, #0c0c0c 30%, #121212 60%, #1a1a1a 100%);
-      border-radius: 16px; 
+      border-radius: 20px; 
       border: 2px solid #252525;
       box-shadow: 
         0 60px 120px rgba(0,0,0,0.95),
@@ -125,8 +125,8 @@
         0 0 50px rgba(247,165,38,0.06);
       position: relative; 
       display: flex; flex-direction: column; 
-      padding: 8px 12px;
-      gap: 2px;
+      padding: 10px 14px;
+      gap: 3px;
       transform-style: preserve-3d;
       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
     }
@@ -158,19 +158,19 @@
     .coldcard-cover.slided { transform: translateY(-30px); }
     /* MicroSD slot */
     .coldcard-sd-slot {
-      position: absolute; right: 12px; bottom: 60px;
-      width: 28px; height: 8px; background: #0a0a0a;
+      position: absolute; right: 14px; bottom: 70px;
+      width: 32px; height: 10px; background: #0a0a0a;
       border-radius: 2px; border: 1px solid #222;
     }
     .coldcard-sd-slot::after {
-      content: 'SD'; position: absolute; top: -10px; left: 2px;
-      font-size: 0.35rem; color: #444; letter-spacing: 1px;
+      content: 'SD'; position: absolute; top: -12px; left: 3px;
+      font-size: 0.4rem; color: #444; letter-spacing: 1px;
     }
     /* USB-C Port - Cold Card Mk5 feature */
     .coldcard-usb-port {
-      position: absolute; left: 50%; bottom: 8px;
+      position: absolute; left: 50%; bottom: 10px;
       transform: translateX(-50%);
-      width: 18px; height: 8px; background: #0a0a0a;
+      width: 22px; height: 10px; background: #0a0a0a;
       border-radius: 4px; border: 1px solid #1a1a1a;
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
     }
@@ -245,12 +245,12 @@
       text-align: center;
       line-height: 1.4;
     }
-    /* === MAIN DISPLAY - Small centered OLED like real Cold Card === */
+    /* === MAIN DISPLAY - ENLARGED OLED for better readability === */
     .coldcard-screen { 
-      width: 280px;
-      height: 95px;
+      width: 300px;
+      height: 130px;
       align-self: center;
-      margin: 6px 0;
+      margin: 8px 0;
       box-shadow: 
         inset 0 3px 15px rgba(0,0,0,0.9),
         0 0 30px rgba(0,255,136,0.06),
@@ -258,6 +258,7 @@
       display: flex; align-items: center; justify-content: center;
       position: relative;
       overflow: hidden;
+      border-radius: 6px;
     }
     /* Screen scanline effect */
     .coldcard-screen::before { 
@@ -272,10 +273,10 @@
     }
     @keyframes scanline { from { top: -1px; } to { top: 100%; } }
     .screen-content { 
-      font-family: 'JetBrains Mono', monospace; font-size: 0.42rem; 
+      font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; 
       color: #00ff88; text-align: center; 
       text-shadow: 0 0 20px #00ff88, 0 0 40px rgba(0,255,136,0.5); 
-      z-index: 1; line-height: 1.5;
+      z-index: 1; line-height: 1.6;
       animation: textGlow 3s ease-in-out infinite;
     }
     @keyframes textGlow { 
@@ -532,29 +533,28 @@
     @keyframes screenFade { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
     
     .cc-screen { text-align: center; }
-    .cc-screen h4 { font-size: 1.3rem; margin-bottom: 12px; color: var(--text); }
-    .cc-words { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
-    .cc-word { background: linear-gradient(145deg, #12121a, #0a0a0f); padding: 16px 12px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; border: 1px solid #333; transition: all 0.3s; text-align: center; }
-    .cc-word span { display: block; color: #666; font-size: 0.7rem; margin-bottom: 4px; }
+    .cc-screen h4 { font-size: 1.5rem; margin-bottom: 16px; color: var(--text); }
+    .cc-words { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 24px 0; max-height: 380px; overflow-y: auto; padding: 4px; }
+    .cc-word { background: linear-gradient(145deg, #12121a, #0a0a0f); padding: 18px 14px; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; border: 1px solid #333; transition: all 0.3s; text-align: center; }
+    .cc-word span { display: inline; color: #f7a526; margin-right: 6px; font-weight: 700; font-size: 0.8rem; }
     .cc-word:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(247,147,26,0.2); }
-    .cc-word span { color: var(--primary); margin-right: 4px; font-weight: 600; }
-    .cc-btn { padding: 14px 28px; background: var(--primary); color: #000; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin: 6px; transition: all 0.3s; }
+    .cc-btn { padding: 16px 32px; background: var(--primary); color: #000; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin: 8px; transition: all 0.3s; font-size: 1rem; }
     .cc-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(247,147,26,0.4); }
-    .cc-btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .cc-btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
     .cc-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
     .cc-warning { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 16px; margin-top: 16px; font-size: 0.85rem; color: var(--danger); }
     .cc-tip { background: rgba(247,147,26,0.1); border-left: 3px solid var(--primary); padding: 14px 18px; margin-top: 16px; border-radius: 0 12px 12px 0; font-size: 0.85rem; color: var(--text2); }
     .cc-edu-box { background: linear-gradient(135deg, rgba(0,255,136,0.08), rgba(0,255,136,0.02)); border: 1px solid rgba(0,255,136,0.2); border-radius: 12px; padding: 16px; margin-top: 16px; font-size: 0.85rem; }
     .cc-edu-box h5 { color: var(--success); margin-bottom: 8px; font-size: 0.9rem; }
     .cc-edu-box p { color: var(--text2); line-height: 1.5; }
-    .cc-pin-display { display: flex; justify-content: center; gap: 14px; margin: 24px 0; }
-    .cc-pin-dot { width: 18px; height: 18px; background: var(--border); border-radius: 50%; transition: all 0.3s; border: 2px solid transparent; }
+    .cc-pin-display { display: flex; justify-content: center; gap: 16px; margin: 28px 0; }
+    .cc-pin-dot { width: 22px; height: 22px; background: var(--border); border-radius: 50%; transition: all 0.3s; border: 2px solid transparent; }
     .cc-pin-dot.filled { background: var(--primary); box-shadow: 0 0 15px var(--primary); transform: scale(1.1); }
-    .cc-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 220px; margin: 0 auto; }
-    .cc-key { width: 60px; height: 60px; background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; color: var(--text); font-size: 1.3rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .cc-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 260px; margin: 0 auto; }
+    .cc-key { width: 72px; height: 72px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; color: var(--text); font-size: 1.5rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .cc-key:hover { background: var(--bg3); border-color: var(--primary); transform: scale(1.05); }
     .cc-key:active { transform: scale(0.95); }
-    .cc-address { background: var(--bg2); padding: 18px; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; word-break: break-all; margin: 18px 0; border: 1px solid var(--border); color: var(--primary); }
+    .cc-address { background: var(--bg2); padding: 20px; border-radius: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; word-break: break-all; margin: 20px 0; border: 1px solid var(--border); color: var(--primary); }
     
     .miner-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
     .miner-stat { background: var(--bg2); padding: 18px; border-radius: 14px; text-align: center; border: 1px solid var(--border); transition: all 0.3s; }
@@ -856,23 +856,46 @@
           <div class="interface-body">
             <div class="interface-screen active" id="wallet-1">
               <div class="cc-screen">
-                <h4>📦 Cold Card Mk5 Setup</h4>
-                <p style="color:var(--text2);margin-bottom:20px;">Create your <strong>REAL Bitcoin wallet</strong> with cryptographically secure entropy.</p>
+                <h4>🆕 Create New Wallet</h4>
+                <p style="color:var(--text2);margin-bottom:24px;max-width:280px;margin-left:auto;margin-right:auto;">Generate a <strong>real BIP39 seed phrase</strong> with cryptographically secure entropy.</p>
                 
-                <div style="background: linear-gradient(135deg, #0a1a2a 0%, #0a0a1a 100%); border: 1px solid #00ff88; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: left;">
-                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0 0 12px 0;">✅ <strong>BIP39 Compliant</strong> - Works with Sparrow, Electrum</p>
-                  <p style="color: #00ff88; font-size: 0.85rem; margin: 0 0 8px 0;">✅ <strong>Your keys, your Bitcoin</strong> - Self-custody</p>
+                <!-- Premium selection cards -->
+                <div style="display:flex;flex-direction:column;gap:16px;max-width:300px;margin:0 auto 24px;">
+                  <!-- 12 Word Option -->
+                  <div id="seed-12-card" onclick="selectSeedLength(12)" class="seed-option-card" style="background:linear-gradient(145deg,#1a1a22,#0f0f14);border:2px solid #333;border-radius:16px;padding:20px;cursor:pointer;transition:all 0.3s;text-align:left;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                      <span style="color:#fff;font-size:1.1rem;font-weight:700;">12 Words</span>
+                      <span style="background:#2a2a33;color:#888;padding:4px 10px;border-radius:20px;font-size:0.75rem;">Quick</span>
+                    </div>
+                    <p style="color:#666;font-size:0.8rem;margin:0;">128-bit security. Good for small amounts. Easy to write down.</p>
+                    <div style="margin-top:12px;display:flex;gap:6px;">
+                      <span style="background:rgba(0,255,136,0.1);color:#00ff88;padding:4px 8px;border-radius:6px;font-size:0.7rem;">✅ BIP39</span>
+                      <span style="background:rgba(247,165,38,0.1);color:#f7a526;padding:4px 8px;border-radius:6px;font-size:0.7rem;">⚡ Fast</span>
+                    </div>
+                  </div>
+                  
+                  <!-- 24 Word Option -->
+                  <div id="seed-24-card" onclick="selectSeedLength(24)" class="seed-option-card selected" style="background:linear-gradient(145deg,#1a1a22,#0f0f14);border:2px solid #f7a526;border-radius:16px;padding:20px;cursor:pointer;transition:all 0.3s;text-align:left;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                      <span style="color:#fff;font-size:1.1rem;font-weight:700;">24 Words</span>
+                      <span style="background:#f7a526;color:#000;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">RECOMMENDED</span>
+                    </div>
+                    <p style="color:#666;font-size:0.8rem;margin:0;">256-bit security. Industry standard. Maximum protection.</p>
+                    <div style="margin-top:12px;display:flex;gap:6px;">
+                      <span style="background:rgba(0,255,136,0.1);color:#00ff88;padding:4px 8px;border-radius:6px;font-size:0.7rem;">✅ BIP39</span>
+                      <span style="background:rgba(0,136,255,0.1);color:#0088ff;padding:4px 8px;border-radius:6px;font-size:0.7rem;">🔒 Pro</span>
+                    </div>
+                  </div>
                 </div>
                 
-                <p style="color:var(--text2);font-size:0.9rem;margin-bottom:12px;">Choose seed phrase length:</p>
-                <div style="display:flex;gap:12px;margin-bottom:20px;">
-                  <button id="btn-12word" class="cc-btn" onclick="selectSeedLength(12)" style="flex:1;background:#333;">12 Words</button>
-                  <button id="btn-24word" class="cc-btn" onclick="selectSeedLength(24)" style="flex:1;background:#f7a526;color:#000;">24 Words</button>
+                <button id="create-wallet-btn" class="cc-btn" onclick="startWalletCreation()" style="font-size:1.1rem;padding:18px 40px;min-width:280px;">
+                  ✨ Generate Wallet
+                </button>
+                
+                <div class="cc-warning" style="margin-top:20px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:14px;">
+                  <span style="color:#ef4444;font-weight:600;">⚠️ </span>
+                  <span style="color:#888;font-size:0.85rem;">Your seed words are your Bitcoin. Write them down and never share!</span>
                 </div>
-                
-                <button id="create-wallet-btn" class="cc-btn" onclick="startWalletCreation()" style="font-size:1.1rem;padding:16px 32px;opacity:0.5;pointer-events:none;" disabled>✓ Create Wallet</button>
-                
-                <div class="cc-warning" style="margin-top:16px;">⚠️ Write down your words. Anyone with them can access your funds!</div>
               </div>
             </div>
             <div class="interface-screen" id="wallet-2">
@@ -2224,31 +2247,31 @@
     function selectSeedLength(len) {
       selectedSeedLength = len;
       
-      // Update button styles
-      document.querySelectorAll('.seed-length-btn').forEach(btn => {
-        btn.classList.remove('selected');
-        if (btn.textContent.includes(len)) btn.classList.add('selected');
-      });
-      
-      // Also update the main seed length buttons (line ~1713)
-      const btn12 = document.getElementById('btn-12word');
-      const btn24 = document.getElementById('btn-24word');
+      // Update card selection visuals
+      const card12 = document.getElementById('seed-12-card');
+      const card24 = document.getElementById('seed-24-card');
       const createBtn = document.getElementById('create-wallet-btn');
       
-      if (btn12) {
-        btn12.style.background = len === 12 ? '#f7a526' : '#333';
-        btn12.style.color = len === 12 ? '#000' : '#fff';
+      if (card12 && card24) {
+        if (len === 12) {
+          card12.style.borderColor = '#f7a526';
+          card12.style.background = 'linear-gradient(145deg,#2a2a32,#1a1a24)';
+          card24.style.borderColor = '#333';
+          card24.style.background = 'linear-gradient(145deg,#1a1a22,#0f0f14)';
+        } else {
+          card12.style.borderColor = '#333';
+          card12.style.background = 'linear-gradient(145deg,#1a1a22,#0f0f14)';
+          card24.style.borderColor = '#f7a526';
+          card24.style.background = 'linear-gradient(145deg,#2a2a32,#1a1a24)';
+        }
       }
-      if (btn24) {
-        btn24.style.background = len === 24 ? '#f7a526' : '#333';
-        btn24.style.color = len === 24 ? '#000' : '#fff';
-      }
+      
       // Enable create button
       if (createBtn) {
         createBtn.disabled = false;
         createBtn.style.opacity = '1';
         createBtn.style.pointerEvents = 'auto';
-        createBtn.innerHTML = len === 12 ? '✓ Create 12-Word Wallet' : '✓ Create 24-Word Wallet';
+        createBtn.innerHTML = len === 12 ? '✨ Generate 12-Word Wallet' : '✨ Generate 24-Word Wallet';
       }
       
       // Update the seed length warning text
