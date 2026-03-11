@@ -2567,7 +2567,9 @@ Backup: ✓`, status: 'Done'}
             const addr = REAL_WALLET.address;
             const shortAddr = addr.slice(0, 12) + '...' + addr.slice(-6);
             const hasPass = walletPassphrase ? '🔐' : '';
-            screen.innerHTML = `<div class="screen-content"><div style="font-size:0.55rem;color:#00ff88;margin-bottom:3px;">✅ WALLET READY! ${hasPass}</div><div style="font-size:0.35rem;color:#00aa66;word-break:break-all;">${addr.slice(0,20)}</div><div style="font-size:0.35rem;color:#00aa66;">...${addr.slice(-15)}</div><div style="font-size:0.35rem;color:#f7a526;margin-top:5px;">✓ BACKED UP</div></div>`;
+            // Generate QR code for the device screen
+            const qrUrl = `https://quickchart.io/qr?size=100&text=${encodeURIComponent(addr)}`;
+            screen.innerHTML = `<div class="screen-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;"><div style="font-size:0.5rem;color:#00ff88;margin-bottom:2px;">📥 RECEIVE</div><img src="${qrUrl}" style="width:70px;height:70px;border:1px solid #00aa66;border-radius:2px;" alt="QR"><div style="font-size:0.28rem;color:#00aa66;word-break:break-all;text-align:center;max-width:85px;">${addr}</div></div>`;
             
             // Update receive screen with real address
             setTimeout(() => {
