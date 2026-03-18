@@ -1,0 +1,16 @@
+{
+  "sat_tips": [
+    "Every Bitcoin is divisible to 8 decimal places (satoshis).",
+    "There will only ever be 21 million BTC, but 2.1 quadrillion sats.",
+    "Lightning Network settlements are measured in sats.",
+    "You can tip content creators in sats via Lightning.",
+    "1 satoshi = 0.00000001 BTC"
+  ],
+  "did_you_know": [
+    "Satoshi Nakamoto's real identity is still unknown.",
+    "The first Bitcoin transaction was for 10,000 BTC buying two pizzas.",
+    "Bitcoin's code has never been successfully hacked.",
+    "You can send Bitcoin without internet using satellite technology.",
+    "There are over 1 million Bitcoin wallets with at least $1."
+  ]
+}
