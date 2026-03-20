@@ -3,118 +3,1010 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paths - HiftyCo Bitcoin Education</title>
+  <title>Learning Paths - HiftyCo Bitcoin Education</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>₿</text></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --primary: #f7931a; --bg: #0d0d12; --bg2: #16161f; --text: #fff; --text2: #a0a0b0; --border: #2a2a3a; --success: #00d4aa; --danger: #ef4444; }
-    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    :root { 
+      --primary: #f7931a; 
+      --primary-glow: rgba(247,147,26,0.4);
+      --bg: #0d0d12; 
+      --bg2: #16161f; 
+      --bg3: #1e1e2a;
+      --text: #fff; 
+      --text2: #a0a0b0; 
+      --text3: #6a6a7a;
+      --border: #2a2a3a; 
+      --border-hover: #3a3a4a;
+      --success: #00d4aa; 
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+    body { 
+      font-family: 'Space Grotesk', sans-serif; 
+      background: var(--bg); 
+      color: var(--text); 
+      min-height: 100vh; 
+      overflow-x: hidden; 
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     
-    .nav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(13,13,18,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; backdrop-filter: blur(10px); }
+    /* Navigation */
+    .nav { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      height: 64px; 
+      background: rgba(13,13,18,0.95); 
+      border-bottom: 1px solid var(--border); 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 0 32px; 
+      z-index: 100; 
+      backdrop-filter: blur(10px); 
+    }
     .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 700; }
     .logo .btc { color: var(--primary); font-size: 1.5rem; }
     .logo .name { color: var(--text); }
     .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
     .logo a { text-decoration: none; }
-    .links { display: flex; gap: 28px; }
-    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
-    .links a:hover, .links a.active { color: var(--primary); }
     
-    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 60px; background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247,147,26,0.15) 0%, transparent 60%); }
-    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 16px; }
-    .hero h1 span { background: linear-gradient(135deg, var(--primary), #ffb347); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 560px; margin-bottom: 32px; }
+    /* Mobile Menu */
+    .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+    .links { display: flex; gap: 28px; }
+    .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; position: relative; }
+    .links a:hover, .links a.active { color: var(--primary); }
+    .links a.active::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 2px; background: var(--primary); border-radius: 2px; }
+    
+    /* Hero */
+    .hero { 
+      min-height: 60vh; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      text-align: center; 
+      padding: 120px 20px 60px; 
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247,147,26,0.15) 0%, transparent 60%); 
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '₿';
+      position: absolute;
+      font-size: 30rem;
+      opacity: 0.02;
+      color: var(--primary);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .hero h1 { 
+      font-size: clamp(2.5rem, 6vw, 4rem); 
+      font-weight: 700; 
+      margin-bottom: 16px; 
+      position: relative;
+    }
+    .hero h1 span { 
+      background: linear-gradient(135deg, var(--primary), #ffb347); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    .hero p { 
+      color: var(--text2); 
+      font-size: 1.2rem; 
+      max-width: 600px; 
+      margin-bottom: 32px; 
+      line-height: 1.6;
+    }
+    
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .stat { text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.85rem; color: var(--text3); }
+    
+    /* Buttons */
     .btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
-    .btn { padding: 12px 24px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; display: inline-block; }
+    .btn { 
+      padding: 14px 28px; 
+      border-radius: 12px; 
+      font-size: 1rem; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: all 0.3s; 
+      border: none; 
+      text-decoration: none; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px;
+    }
     .btn1 { background: var(--primary); color: #000; }
     .btn1:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,147,26,0.3); }
-    .btn2 { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn2 { background: var(--bg2); border: 1px solid var(--border); color: var(--text); }
     .btn2:hover { border-color: var(--primary); color: var(--primary); }
     
-    .section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
-    .sh { text-align: center; margin-bottom: 32px; }
-    .sh h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
-    .sh h2 span { color: var(--primary); }
-    .sh p { color: var(--text2); }
+    /* Section Styles */
+    .section { padding: 80px 20px; max-width: 1400px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-header h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; }
+    .section-header h2 span { color: var(--primary); }
+    .section-header p { color: var(--text2); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
     
-    .paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .path { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: all 0.3s; }
-    .path:hover { transform: translateY(-3px); border-color: var(--primary); }
-    .pathlvl { display: inline-block; padding: 4px 12px; border-radius: 16px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; }
-    .pathlvl.b { background: rgba(0,212,170,0.15); color: #00d4aa; }
-    .pathlvl.i { background: rgba(247,147,26,0.15); color: var(--primary); }
-    .pathlvl.a { background: rgba(239,68,68,0.15); color: #ef4444; }
-    .path h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
-    .path p { color: var(--text2); font-size: 0.9rem; }
+    /* Path Levels */
+    .level-tabs {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+    .level-tab {
+      padding: 12px 24px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text2);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .level-tab:hover { border-color: var(--border-hover); color: var(--text); }
+    .level-tab.active { 
+      background: var(--primary); 
+      color: #000; 
+      border-color: var(--primary); 
+    }
+    .level-tab.beginner { --tab-color: var(--success); }
+    .level-tab.intermediate { --tab-color: var(--warning); }
+    .level-tab.advanced { --tab-color: var(--danger); }
     
-    .footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
-    .footer p { color: #606070; }
+    /* Path Cards Grid */
+    .paths-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
+      gap: 24px; 
+    }
     
-    @media (max-width: 700px) { .nav { padding: 0 16px; } .links { display: none; } }
+    /* Path Card */
+    .path-card { 
+      background: var(--bg2); 
+      border: 1px solid var(--border); 
+      border-radius: 20px; 
+      padding: 32px; 
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .path-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), #ffd700);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .path-card:hover { 
+      transform: translateY(-4px); 
+      border-color: var(--primary);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .path-card:hover::before { opacity: 1; }
+    
+    .path-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .path-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(247,147,26,0.15);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+    .path-level {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .path-level.beginner { background: rgba(0,212,170,0.15); color: #00d4aa; }
+    .path-level.intermediate { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .path-level.advanced { background: rgba(239,68,68,0.15); color: #ef4444; }
+    
+    .path-card h3 { 
+      font-size: 1.3rem; 
+      font-weight: 600; 
+      margin-bottom: 12px; 
+    }
+    .path-card > p { 
+      color: var(--text2); 
+      font-size: 0.95rem; 
+      line-height: 1.6; 
+      margin-bottom: 20px; 
+    }
+    
+    /* Path Details */
+    .path-details {
+      background: var(--bg3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .path-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .path-detail-row:last-child { border-bottom: none; }
+    .path-detail-icon { font-size: 1.2rem; }
+    .path-detail-text { color: var(--text2); font-size: 0.9rem; }
+    .path-detail-text strong { color: var(--text); }
+    
+    /* Topics List */
+    .path-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .path-topic {
+      padding: 6px 12px;
+      background: var(--bg);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--text2);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Path Footer */
+    .path-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .path-meta {
+      display: flex;
+      gap: 16px;
+      color: var(--text3);
+      font-size: 0.85rem;
+    }
+    .path-meta span { display: flex; align-items: center; gap: 4px; }
+    .path-action {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.2s;
+    }
+    .path-action:hover { gap: 10px; }
+    
+    /* Demo Section */
+    .demo-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      margin-top: 60px;
+    }
+    .demo-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .demo-badge {
+      background: linear-gradient(135deg, var(--primary), #ffd700);
+      color: #000;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .demo-header h3 { font-size: 1.5rem; }
+    
+    /* Interactive Demo */
+    .demo-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    @media (max-width: 900px) { .demo-container { grid-template-columns: 1fr; } }
+    
+    .demo-interactive {
+      background: var(--bg3);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .demo-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .demo-title span { color: var(--primary); }
+    
+    /* Quiz Demo */
+    .quiz-option {
+      padding: 16px 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .quiz-option:hover { border-color: var(--primary); transform: translateX(4px); }
+    .quiz-option.correct { border-color: var(--success); background: rgba(0,212,170,0.1); }
+    .quiz-option.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); }
+    .quiz-letter { 
+      width: 28px; 
+      height: 28px; 
+      background: var(--border); 
+      border-radius: 6px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .quiz-feedback {
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 16px;
+      display: none;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct { background: rgba(0,212,170,0.15); color: var(--success); }
+    .quiz-feedback.wrong { background: rgba(239,68,68,0.15); color: var(--danger); }
+    
+    /* Simulation Demo */
+    .sim-container {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .sim-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .sim-label { font-size: 0.85rem; color: var(--text3); }
+    .sim-value { font-size: 1.2rem; font-weight: 600; color: var(--primary); }
+    .sim-bar {
+      height: 12px;
+      background: var(--bg3);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .sim-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #ffd700);
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+    .sim-controls { display: flex; gap: 12px; }
+    .sim-btn {
+      flex: 1;
+      padding: 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sim-btn:hover { border-color: var(--primary); }
+    .sim-btn.active { background: var(--primary); color: #000; }
+    
+    /* Pro Tips */
+    .pro-tips {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .pro-tip {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+    }
+    .pro-tip::before {
+      content: '💡';
+      position: absolute;
+      top: -12px;
+      left: 24px;
+      font-size: 1.5rem;
+      background: var(--bg);
+      padding: 4px 8px;
+    }
+    .pro-tip h4 { 
+      color: var(--primary); 
+      margin-bottom: 12px; 
+      font-size: 1.1rem; 
+    }
+    .pro-tip p { 
+      color: var(--text2); 
+      font-size: 0.95rem; 
+      line-height: 1.6; 
+    }
+    
+    /* Footer */
+    .footer { 
+      background: var(--bg2); 
+      border-top: 1px solid var(--border); 
+      padding: 48px 20px; 
+      text-align: center; 
+      margin-top: 80px;
+    }
+    .footer p { color: #606070; font-size: 0.9rem; }
+    .footer a { color: var(--primary); text-decoration: none; }
+    
+    /* Responsive */
+    @media (max-width: 800px) { 
+      .nav { padding: 0 16px; } 
+      .links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .paths-grid { grid-template-columns: 1fr; }
+      .hero { min-height: 50vh; padding: 100px 20px 40px; }
+      .stats-bar { gap: 24px; }
+    }
+    
+    /* Animation */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .path-card { animation: fadeInUp 0.6s ease forwards; }
+    .path-card:nth-child(1) { animation-delay: 0.1s; }
+    .path-card:nth-child(2) { animation-delay: 0.2s; }
+    .path-card:nth-child(3) { animation-delay: 0.3s; }
+    .path-card:nth-child(4) { animation-delay: 0.4s; }
+    .path-card:nth-child(5) { animation-delay: 0.5s; }
+    .path-card:nth-child(6) { animation-delay: 0.6s; }
   </style>
 </head>
 <body>
   <nav class="nav">
-    <div class="logo"><a href="index.html"><span class="btc">₿</span><span class="name">HiftyCo</span><span class="tag">EDUCATION</span></a></div>
+    <div class="logo">
+      <a href="index.html">
+        <span class="btc">₿</span>
+        <span class="name">HiftyCo</span>
+        <span class="tag">EDUCATION</span>
+      </a>
+    </div>
     <div class="links">
       <a href="index.html">Home</a>
       <a href="blockchain.html">Blockchain</a>
       <a href="paths.html" class="active">Paths</a>
-      <a href="journal.html">Journal</a>
-      <a href="progress.html">Progress</a>
-      <a href="quiz.html">Quiz</a>
       <a href="topics.html">Topics</a>
+      <a href="miner.html">Mining</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="progress.html">Progress</a>
     </div>
+    <button class="mobile-menu-btn">☰</button>
   </nav>
   
   <section class="hero">
     <h1>Learning <span>Paths</span></h1>
-    <p>Structured courses to take you from beginner to advanced Bitcoin expertise.</p>
-  </section>
-  
-  <section class="section">
-    <div class="sh">
-      <h2>Choose Your <span>Journey</span></h2>
-      <p>Structured learning paths for every level</p>
+    <p>Structured courses to take you from beginner to advanced Bitcoin expertise. Build real skills with interactive demos.</p>
+    
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Learning Paths</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">50+</div>
+        <div class="stat-label">Topics Covered</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Self-Custody Focus</div>
+      </div>
     </div>
     
-    <div class="paths">
-      <div class="path">
-        <span class="pathlvl b">BEGINNER</span>
+    <div class="btns">
+      <a href="#paths" class="btn btn1">Explore Paths →</a>
+      <a href="#demo" class="btn btn2">Try a Demo</a>
+    </div>
+  </section>
+  
+  <section class="section" id="paths">
+    <div class="section-header">
+      <h2>Choose Your <span>Journey</span></h2>
+      <p>Each path builds on the previous. Start from anywhere based on your current knowledge.</p>
+    </div>
+    
+    <div class="level-tabs">
+      <button class="level-tab active" data-level="all">All Paths</button>
+      <button class="level-tab beginner" data-level="beginner">Beginner</button>
+      <button class="level-tab intermediate" data-level="intermediate">Intermediate</button>
+      <button class="level-tab advanced" data-level="advanced">Advanced</button>
+    </div>
+    
+    <div class="paths-grid">
+      <!-- Path 1: Bitcoin Fundamentals -->
+      <div class="path-card" data-level="beginner">
+        <div class="path-header">
+          <div class="path-icon">📚</div>
+          <span class="path-level beginner">Beginner</span>
+        </div>
         <h3>Bitcoin Fundamentals</h3>
-        <p>Learn the basics: what is Bitcoin, how it works, and why it matters.</p>
+        <p>Master the basics: what is Bitcoin, how money evolved, and why Bitcoin matters for your financial sovereignty.</p>
+        
+        <div class="path-topics">
+          <span class="path-topic">#money</span>
+          <span class="path-topic">#basics</span>
+          <span class="path-topic">#history</span>
+        </div>
+        
+        <div class="path-details">
+          <div class="path-detail-row">
+            <span class="path-detail-icon">⏱️</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 2-3 hours</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">📖</span>
+            <span class="path-detail-text"><strong>Modules:</strong> 5 lessons + quiz</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">🎯</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> Fiat vs Bitcoin, sound money properties, Bitcoin's mission</span>
+          </div>
+        </div>
+        
+        <div class="path-footer">
+          <div class="path-meta">
+            <span>📚 5 Lessons</span>
+            <span>⏱️ 2-3h</span>
+          </div>
+          <a href="index.html" class="path-action">Start Learning →</a>
+        </div>
       </div>
-      <div class="path">
-        <span class="pathlvl b">BEGINNER</span>
-        <h3>Understanding Wallets</h3>
-        <p>Learn about hot vs cold wallets, seed phrases, and keeping your BTC safe.</p>
+      
+      <!-- Path 2: Wallet Mastery -->
+      <div class="path-card" data-level="beginner">
+        <div class="path-header">
+          <div class="path-icon">🔐</div>
+          <span class="path-level beginner">Beginner</span>
+        </div>
+        <h3>Wallet Mastery</h3>
+        <p>Learn to secure your Bitcoin like a pro. Understand hot vs cold wallets, seed phrases, and multi-sig security.</p>
+        
+        <div class="path-topics">
+          <span class="path-topic">#wallets</span>
+          <span class="path-topic">#security</span>
+          <span class="path-topic">#seed-phrases</span>
+        </div>
+        
+        <div class="path-details">
+          <div class="path-detail-row">
+            <span class="path-detail-icon">⏱️</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 3-4 hours</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">📖</span>
+            <span class="path-detail-text"><strong>Modules:</strong> 6 lessons + live demo</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">🎯</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> Generate real BIP39 wallets, understand derivation paths, setup hardware wallets</span>
+          </div>
+        </div>
+        
+        <div class="path-footer">
+          <div class="path-meta">
+            <span>📚 6 Lessons</span>
+            <span>⏱️ 3-4h</span>
+          </div>
+          <a href="index.html#wallet" class="path-action">Start Learning →</a>
+        </div>
       </div>
-      <div class="path">
-        <span class="pathlvl i">INTERMEDIATE</span>
+      
+      <!-- Path 3: Blockchain Deep Dive -->
+      <div class="path-card" data-level="intermediate">
+        <div class="path-header">
+          <div class="path-icon">⛓️</div>
+          <span class="path-level intermediate">Intermediate</span>
+        </div>
         <h3>Blockchain Deep Dive</h3>
-        <p>Understand the technical details: blocks, merkle trees, and consensus.</p>
+        <p>Understand the technical foundation: blocks, merkle trees, consensus mechanisms, and how validation works.</p>
+        
+        <div class="path-topics">
+          <span class="path-topic">#blocks</span>
+          <span class="path-topic">#merkle</span>
+          <span class="path-topic">#consensus</span>
+        </div>
+        
+        <div class="path-details">
+          <div class="path-detail-row">
+            <span class="path-detail-icon">⏱️</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 4-5 hours</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">📖</span>
+            <span class="path-detail-text"><strong>Modules:</strong> 7 lessons + visualizer</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">🎯</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> SHA-256, merkle trees, UTXO model, block validation</span>
+          </div>
+        </div>
+        
+        <div class="path-footer">
+          <div class="path-meta">
+            <span>📚 7 Lessons</span>
+            <span>⏱️ 4-5h</span>
+          </div>
+          <a href="blockchain.html" class="path-action">Start Learning →</a>
+        </div>
       </div>
-      <div class="path">
-        <span class="pathlvl i">INTERMEDIATE</span>
+      
+      <!-- Path 4: Mining & Network -->
+      <div class="path-card" data-level="intermediate">
+        <div class="path-header">
+          <div class="path-icon">⛏️</div>
+          <span class="path-level intermediate">Intermediate</span>
+        </div>
         <h3>Mining & Network</h3>
-        <p>Learn about Proof of Work, mining hardware, and network hashrate.</p>
+        <p>Learn Proof of Work, mining hardware, hashrate, difficulty adjustments, and the energy debate.</p>
+        
+        <div class="path-topics">
+          <span class="path-topic">#mining</span>
+          <span class="path-topic">#pow</span>
+          <span class="path-topic">#hashrate</span>
+        </div>
+        
+        <div class="path-details">
+          <div class="path-detail-row">
+            <span class="path-detail-icon">⏱️</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 4-6 hours</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">📖</span>
+            <span class="path-detail-text"><strong>Modules:</strong> 6 lessons + simulator</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">🎯</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> ASICs, mining pools, solo vs pool, hashrate economics</span>
+          </div>
+        </div>
+        
+        <div class="path-footer">
+          <div class="path-meta">
+            <span>📚 6 Lessons</span>
+            <span>⏱️ 4-6h</span>
+          </div>
+          <a href="miner.html" class="path-action">Start Learning →</a>
+        </div>
       </div>
-      <div class="path">
-        <span class="pathlvl a">ADVANCED</span>
+      
+      <!-- Path 5: Lightning Network -->
+      <div class="path-card" data-level="advanced">
+        <div class="path-header">
+          <div class="path-icon">⚡</div>
+          <span class="path-level advanced">Advanced</span>
+        </div>
         <h3>Lightning Network</h3>
-        <p>Master second-layer solutions, channels, and instant micropayments.</p>
+        <p>Master second-layer solutions: payment channels, routing, liquidity management, and LN apps.</p>
+        
+        <div class="path-topics">
+          <span class="path-topic">#ln</span>
+          <span class="path-topic">#layer2</span>
+          <span class="path-topic">#micropayments</span>
+        </div>
+        
+        <div class="path-details">
+          <div class="path-detail-row">
+            <span class="path-detail-icon">⏱️</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 6-8 hours</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">📖</span>
+            <span class="path-detail-text"><strong>Modules:</strong> 8 lessons + channel demo</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">🎯</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> HTLCs, onion routing, channel management, liquidity</span>
+          </div>
+        </div>
+        
+        <div class="path-footer">
+          <div class="path-meta">
+            <span>📚 8 Lessons</span>
+            <span>⏱️ 6-8h</span>
+          </div>
+          <a href="topics.html" class="path-action">Coming Soon →</a>
+        </div>
       </div>
-      <div class="path">
-        <span class="pathlvl a">ADVANCED</span>
+      
+      <!-- Path 6: Bitcoin Scripting -->
+      <div class="path-card" data-level="advanced">
+        <div class="path-header">
+          <div class="path-icon">📝</div>
+          <span class="path-level advanced">Advanced</span>
+        </div>
         <h3>Bitcoin Scripting</h3>
-        <p>Advanced: Understand multisig, timelocks, and smart contracts on Bitcoin.</p>
+        <p>Advanced programming on Bitcoin: multisig, timelocks, tapscript, and smart contracts the Bitcoin way.</p>
+        
+        <div class="path-topics">
+          <span class="path-topic">#script</span>
+          <span class="path-topic">#multisig</span>
+          <span class="path-topic">#taproot</span>
+        </div>
+        
+        <div class="path-details">
+          <div class="path-detail-row">
+            <span class="path-detail-icon">⏱️</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 8-10 hours</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">📖</span>
+            <span class="path-detail-text"><strong>Modules:</strong> 10 lessons + code labs</span>
+          </div>
+          <div class="path-detail-row">
+            <span class="path-detail-icon">🎯</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> OP codes, multisig, CLTV, CSV, tapscript, PSBTs</span>
+          </div>
+        </div>
+        
+        <div class="path-footer">
+          <div class="path-meta">
+            <span>📚 10 Lessons</span>
+            <span>⏱️ 8-10h</span>
+          </div>
+          <a href="topics.html" class="path-action">Coming Soon →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Interactive Demo Section -->
+  <section class="section" id="demo">
+    <div class="demo-section">
+      <div class="demo-header">
+        <span class="demo-badge">🎮 INTERACTIVE DEMO</span>
+        <h3>Try Before You Commit</h3>
+      </div>
+      
+      <div class="demo-container">
+        <!-- Quiz Demo -->
+        <div class="demo-interactive">
+          <div class="demo-title"><span>❓</span> Quick Knowledge Check</div>
+          <p style="color: var(--text2); margin-bottom: 20px; font-size: 0.95rem;">Test your Bitcoin knowledge with this quick quiz:</p>
+          
+          <div id="quiz-question" style="margin-bottom: 16px; font-weight: 600;">How many satoshis are in 1 Bitcoin?</div>
+          
+          <div class="quiz-option" onclick="checkAnswer(this, false)">
+            <span class="quiz-letter">A</span>
+            <span>1,000 sats</span>
+          </div>
+          <div class="quiz-option" onclick="checkAnswer(this, false)">
+            <span class="quiz-letter">B</span>
+            <span>10,000 sats</span>
+          </div>
+          <div class="quiz-option" onclick="checkAnswer(this, true)">
+            <span class="quiz-letter">C</span>
+            <span>100,000,000 sats</span>
+          </div>
+          <div class="quiz-option" onclick="checkAnswer(this, false)">
+            <span class="quiz-letter">D</span>
+            <span>1,000,000 sats</span>
+          </div>
+          
+          <div class="quiz-feedback" id="quiz-feedback"></div>
+        </div>
+        
+        <!-- Simulation Demo -->
+        <div class="demo-interactive">
+          <div class="demo-title"><span>⛏️</span> Mining Simulator</div>
+          <p style="color: var(--text2); margin-bottom: 20px; font-size: 0.95rem;">Try running a virtual ASIC miner:</p>
+          
+          <div class="sim-container">
+            <div class="sim-header">
+              <div>
+                <div class="sim-label">Hash Rate</div>
+                <div class="sim-value" id="hashrate-display">0 GH/s</div>
+              </div>
+              <div>
+                <div class="sim-label">Blocks Found</div>
+                <div class="sim-value" id="blocks-display">0</div>
+              </div>
+            </div>
+            
+            <div class="sim-bar">
+              <div class="sim-bar-fill" id="sim-bar-fill" style="width: 0%"></div>
+            </div>
+            
+            <div class="sim-controls">
+              <button class="sim-btn" id="sim-start" onclick="toggleMining()">▶ Start Mining</button>
+              <button class="sim-btn" onclick="resetMining()">↺ Reset</button>
+            </div>
+            
+            <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text3);">
+              💡 Real mining requires expensive ASIC hardware. This simulates hashrate accumulation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Pro Tips Section -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Pro <span>Tips</span></h2>
+      <p>Insights from experienced Bitcoiners to accelerate your journey.</p>
+    </div>
+    
+    <div class="pro-tips">
+      <div class="pro-tip">
+        <h4>Start with Small Amounts</h4>
+        <p>Never invest more than you can afford to lose. Buy your first $10-50 worth and actually send a transaction. Muscle memory beats theoretical knowledge.</p>
+      </div>
+      <div class="pro-tip">
+        <h4>Run a Node Early</h4>
+        <p>You don't need to understand everything first. Running a node (even a pruned one) teaches you more about Bitcoin than any book. Start with Umbrel or MyNode.</p>
+      </div>
+      <div class="pro-tip">
+        <h4>Learn the Command Line</h4>
+        <p>Bitcoin Core's CLI is your friend. Commands like `getblockchaininfo`, `listunspent`, and `createrawtransaction` give you ultimate control and understanding.</p>
+      </div>
+      <div class="pro-tip">
+        <h4>Multi-sig Is Your Friend</h4>
+        <p>For amounts over $10K, use 2-of-3 multi-sig. Seed phrases across different locations. Hardware wallets from different manufacturers. Never put all trust in one device.</p>
+      </div>
+      <div class="pro-tip">
+        <h4>Understand the Orange Pill</h4>
+        <p>Bitcoin changes how you think about money, banking, and trust. Be patient with newcomers. Share knowledge, not FUD. Lead by example.</p>
+      </div>
+      <div class="pro-tip">
+        <h4>Stay humble, stack sats</h4>
+        <p>Don't try to time the market. DCA weekly. Track wealth in sats, not USD. The goal isn't to get rich fast—it's financial sovereignty over decades.</p>
       </div>
     </div>
   </section>
   
   <footer class="footer">
-    <p>₿ HiftyCo - Education for the Bitcoin era</p>
+    <p>₿ HiftyCo - Education for the Bitcoin era<br>
+    <a href="index.html">Start Learning</a> · <a href="paths.html">Paths</a> · <a href="topics.html">Topics</a></p>
   </footer>
+  
+  <script>
+    // Level Filter Tabs
+    const levelTabs = document.querySelectorAll('.level-tab');
+    const pathCards = document.querySelectorAll('.path-card');
+    
+    levelTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active tab
+        levelTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const level = tab.dataset.level;
+        
+        // Filter cards
+        pathCards.forEach(card => {
+          if (level === 'all' || card.dataset.level === level) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+    
+    // Quiz Functionality
+    let quizAnswered = false;
+    function checkAnswer(element, isCorrect) {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      
+      const options = document.querySelectorAll('.quiz-option');
+      const feedback = document.getElementById('quiz-feedback');
+      
+      options.forEach(opt => {
+        opt.style.pointerEvents = 'none';
+        if (opt === element) {
+          opt.classList.add(isCorrect ? 'correct' : 'wrong');
+        }
+      });
+      
+      if (isCorrect) {
+        feedback.textContent = '🎉 Correct! 1 BTC = 100,000,000 sats. This is what makes micro-payments possible.';
+        feedback.className = 'quiz-feedback correct show';
+      } else {
+        feedback.textContent = '❌ Not quite. 1 BTC = 100,000,000 satoshis (sats). Each sat is worth $0.0000001 at $100K/BTC.';
+        feedback.className = 'quiz-feedback wrong show';
+      }
+    }
+    
+    // Mining Simulator
+    let mining = false;
+    let hashrate = 0;
+    let blocks = 0;
+    let miningInterval;
+    
+    function toggleMining() {
+      const btn = document.getElementById('sim-start');
+      
+      if (mining) {
+        clearInterval(miningInterval);
+        mining = false;
+        btn.textContent = '▶ Start Mining';
+        btn.classList.remove('active');
+      } else {
+        mining = true;
+        btn.textContent = '⏸ Pause';
+        btn.classList.add('active');
+        
+        miningInterval = setInterval(() => {
+          hashrate += Math.random() * 50 + 10;
+          blocks += (hashrate / 1000000) * 0.1; // Simplified probability
+          
+          if (Math.random() < 0.02) {
+            blocks = Math.floor(blocks) + 1;
+          }
+          
+          document.getElementById('hashrate-display').textContent = hashrate.toFixed(1) + ' GH/s';
+          document.getElementById('blocks-display').textContent = Math.floor(blocks);
+          document.getElementById('sim-bar-fill').style.width = Math.min(hashrate / 500 * 100, 100) + '%';
+        }, 500);
+      }
+    }
+    
+    function resetMining() {
+      clearInterval(miningInterval);
+      mining = false;
+      hashrate = 0;
+      blocks = 0;
+      
+      document.getElementById('hashrate-display').textContent = '0 GH/s';
+      document.getElementById('blocks-display').textContent = '0';
+      document.getElementById('sim-bar-fill').style.width = '0%';
+      document.getElementById('sim-start').textContent = '▶ Start Mining';
+      document.getElementById('sim-start').classList.remove('active');
+      
+      document.querySelectorAll('.quiz-option').forEach(opt => {
+        opt.classList.remove('correct', 'wrong');
+        opt.style.pointerEvents = 'auto';
+      });
+      document.getElementById('quiz-feedback').classList.remove('show');
+      quizAnswered = false;
+    }
+  </script>
 </body>
 </html>
