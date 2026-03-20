@@ -658,7 +658,7 @@
           <span class="path-topic">#history</span>
         </div>
         
-        <div class="lessons-toggle" onclick="toggleLessons(this)">
+        <div class="lessons-toggle" >
           <div class="lessons-toggle-left">
             <div class="lessons-toggle-icon">📖</div>
             <span class="lessons-toggle-text">View 33 Lessons</span>
@@ -741,7 +741,7 @@
           <span class="path-topic">#seed-phrases</span>
         </div>
         
-        <div class="lessons-toggle" onclick="toggleLessons(this)">
+        <div class="lessons-toggle" >
           <div class="lessons-toggle-left">
             <div class="lessons-toggle-icon">📖</div>
             <span class="lessons-toggle-text">View 33 Lessons</span>
@@ -824,7 +824,7 @@
           <span class="path-topic">#consensus</span>
         </div>
         
-        <div class="lessons-toggle" onclick="toggleLessons(this)">
+        <div class="lessons-toggle" >
           <div class="lessons-toggle-left">
             <div class="lessons-toggle-icon">📖</div>
             <span class="lessons-toggle-text">View 33 Lessons</span>
@@ -907,7 +907,7 @@
           <span class="path-topic">#hashrate</span>
         </div>
         
-        <div class="lessons-toggle" onclick="toggleLessons(this)">
+        <div class="lessons-toggle" >
           <div class="lessons-toggle-left">
             <div class="lessons-toggle-icon">📖</div>
             <span class="lessons-toggle-text">View 33 Lessons</span>
@@ -990,7 +990,7 @@
           <span class="path-topic">#micropayments</span>
         </div>
         
-        <div class="lessons-toggle" onclick="toggleLessons(this)">
+        <div class="lessons-toggle" >
           <div class="lessons-toggle-left">
             <div class="lessons-toggle-icon">📖</div>
             <span class="lessons-toggle-text">View 33 Lessons</span>
@@ -1073,7 +1073,7 @@
           <span class="path-topic">#taproot</span>
         </div>
         
-        <div class="lessons-toggle" onclick="toggleLessons(this)">
+        <div class="lessons-toggle" >
           <div class="lessons-toggle-left">
             <div class="lessons-toggle-icon">📖</div>
             <span class="lessons-toggle-text">View 33 Lessons</span>
@@ -1257,8 +1257,7 @@
   <script>
     // Level Filter Tabs
     const levelTabs = document.querySelectorAll('.level-tab');
-    const pathCards = document.querySelectorAll('.path-card');
-    
+    // Level Filter Tabs
     levelTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         levelTabs.forEach(t => t.classList.remove('active'));
@@ -1276,12 +1275,14 @@
       });
     });
     
-    // Lessons Toggle
-    function toggleLessons(element) {
-      element.classList.toggle('active');
-      const lessonsList = element.nextElementSibling;
-      lessonsList.classList.toggle('show');
-    }
+    // Lessons Toggle - using event delegation
+    document.querySelectorAll('.lessons-toggle').forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        const lessonsList = this.nextElementSibling;
+        lessonsList.classList.toggle('show');
+      });
+    });
     
     // Quiz Functionality
     let quizAnswered = false;
