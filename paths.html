@@ -14,6 +14,7 @@
       --bg: #0d0d12; 
       --bg2: #16161f; 
       --bg3: #1e1e2a;
+      --bg4: #252532;
       --text: #fff; 
       --text2: #a0a0b0; 
       --text3: #6a6a7a;
@@ -56,7 +57,6 @@
     .logo .tag { background: var(--primary); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
     .logo a { text-decoration: none; }
     
-    /* Mobile Menu */
     .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
     .links { display: flex; gap: 28px; }
     .links a { color: var(--text2); text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: color 0.2s; position: relative; }
@@ -65,7 +65,7 @@
     
     /* Hero */
     .hero { 
-      min-height: 60vh; 
+      min-height: 50vh; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
@@ -168,14 +168,11 @@
       color: #000; 
       border-color: var(--primary); 
     }
-    .level-tab.beginner { --tab-color: var(--success); }
-    .level-tab.intermediate { --tab-color: var(--warning); }
-    .level-tab.advanced { --tab-color: var(--danger); }
     
     /* Path Cards Grid */
     .paths-grid { 
       display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); 
       gap: 24px; 
     }
     
@@ -245,6 +242,95 @@
       font-size: 0.95rem; 
       line-height: 1.6; 
       margin-bottom: 20px; 
+    }
+    
+    /* Lessons Toggle */
+    .lessons-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg3);
+      border-radius: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 16px;
+    }
+    .lessons-toggle:hover { background: var(--bg4); }
+    .lessons-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .lessons-toggle-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(247,147,26,0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .lessons-toggle-text {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .lessons-toggle-arrow {
+      color: var(--text3);
+      transition: transform 0.3s;
+    }
+    .lessons-toggle.active .lessons-toggle-arrow {
+      transform: rotate(180deg);
+    }
+    
+    /* Lessons List */
+    .lessons-list {
+      display: none;
+      background: var(--bg3);
+      border-radius: 12px;
+      padding: 8px;
+      margin-bottom: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .lessons-list.show { display: block; }
+    
+    .lesson-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lesson-item:hover { background: var(--bg4); }
+    .lesson-number {
+      min-width: 28px;
+      height: 28px;
+      background: var(--bg2);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .lesson-content { flex: 1; }
+    .lesson-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    .lesson-desc {
+      font-size: 0.8rem;
+      color: var(--text3);
+      line-height: 1.4;
     }
     
     /* Path Details */
@@ -332,7 +418,6 @@
     }
     .demo-header h3 { font-size: 1.5rem; }
     
-    /* Interactive Demo */
     .demo-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -521,7 +606,7 @@
   
   <section class="hero">
     <h1>Learning <span>Paths</span></h1>
-    <p>Structured courses to take you from beginner to advanced Bitcoin expertise. Build real skills with interactive demos.</p>
+    <p>Master Bitcoin through 198 comprehensive lessons. Build real skills with interactive demos and hands-on exercises.</p>
     
     <div class="stats-bar">
       <div class="stat">
@@ -529,17 +614,17 @@
         <div class="stat-label">Learning Paths</div>
       </div>
       <div class="stat">
-        <div class="stat-value">50+</div>
-        <div class="stat-label">Topics Covered</div>
+        <div class="stat-value">198</div>
+        <div class="stat-label">Total Lessons</div>
       </div>
       <div class="stat">
-        <div class="stat-value">100%</div>
-        <div class="stat-label">Self-Custody Focus</div>
+        <div class="stat-value">33</div>
+        <div class="stat-label">Lessons Per Path</div>
       </div>
     </div>
     
     <div class="btns">
-      <a href="#paths" class="btn btn1">Explore Paths →</a>
+      <a href="#paths" class="btn btn1">Start Learning →</a>
       <a href="#demo" class="btn btn2">Try a Demo</a>
     </div>
   </section>
@@ -547,7 +632,7 @@
   <section class="section" id="paths">
     <div class="section-header">
       <h2>Choose Your <span>Journey</span></h2>
-      <p>Each path builds on the previous. Start from anywhere based on your current knowledge.</p>
+      <p>33 carefully crafted lessons per path. Click any path to see the full curriculum.</p>
     </div>
     
     <div class="level-tabs">
@@ -573,25 +658,69 @@
           <span class="path-topic">#history</span>
         </div>
         
+        <div class="lessons-toggle" onclick="toggleLessons(this)">
+          <div class="lessons-toggle-left">
+            <div class="lessons-toggle-icon">📖</div>
+            <span class="lessons-toggle-text">View 33 Lessons</span>
+          </div>
+          <span class="lessons-toggle-arrow">▼</span>
+        </div>
+        
+        <div class="lessons-list">
+          <div class="lesson-item"><div class="lesson-number">01</div><div class="lesson-content"><div class="lesson-title">The Evolution of Money</div><div class="lesson-desc">From barter to gold, paper, and digital—understanding what makes money work</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">02</div><div class="lesson-content"><div class="lesson-title">Commodity Money: The Age of Gold</div><div class="lesson-desc">Why gold became the standard and its limitations in the modern economy</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">03</div><div class="lesson-content"><div class="lesson-title">Fiat Currency: The Paper Standard</div><div class="lesson-desc">How governments replaced gold with paper and what that meant for purchasing power</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">04</div><div class="lesson-content"><div class="lesson-title">The Hidden Tax: Understanding Inflation</div><div class="lesson-desc">Why printing money devalues your savings and how it transfers wealth</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">05</div><div class="lesson-content"><div class="lesson-title">The Double Spend Problem</div><div class="lesson-desc">The fundamental challenge of digital money and why it mattered for centuries</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">06</div><div class="lesson-content"><div class="lesson-title">Satoshi's Discovery</div><div class="lesson-desc">How Proof of Work solved the double spend problem without a central authority</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">07</div><div class="lesson-content"><div class="lesson-title">The Whitepaper: Bitcoin: A Peer-to-Peer Electronic Cash System</div><div class="lesson-desc">Breaking down the 9-page document that changed money forever</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">08</div><div class="lesson-content"><div class="lesson-title">Decentralization: No Middleman Required</div><div class="lesson-desc">Why removing banks and governments from money matters</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">09</div><div class="lesson-content"><div class="lesson-title">The 21 Million Cap</div><div class="lesson-desc">Understanding Bitcoin's programmatic scarcity and why it matters</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">10</div><div class="lesson-content"><div class="lesson-title">Satoshis: The Smallest Unit</div><div class="lesson-desc">Why dividing Bitcoin into 100 million parts enables micro-payments</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">11</div><div class="lesson-content"><div class="lesson-title">Blockchain: The Public Ledger</div><div class="lesson-desc">How every transaction is recorded and verified by the network</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">12</div><div class="lesson-content"><div class="lesson-title">Cryptographic Keys: Your Digital Identity</div><div class="lesson-desc">Public keys, private keys, and how they secure your Bitcoin</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">13</div><div class="lesson-content"><div class="lesson-title">Addresses: Where You Receive Bitcoin</div><div class="lesson-desc">Understanding P2PKH, P2SH, and Bech32 address formats</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">14</div><div class="lesson-content"><div class="lesson-title">Transactions: Sending and Receiving</div><div class="lesson-desc">How Bitcoin moves from one address to another</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">15</div><div class="lesson-content"><div class="lesson-title">Transaction Fees: The Market for Block Space</div><div class="lesson-desc">Why fees vary and how to optimize your transaction costs</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">16</div><div class="lesson-content"><div class="lesson-title">Block Rewards and the Halving</div><div class="lesson-desc">How new Bitcoin enters circulation and the programmed supply schedule</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">17</div><div class="lesson-content"><div class="lesson-title">Mining: The Security backbone</div><div class="lesson-desc">How miners secure the network and why it matters</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">18</div><div class="lesson-content"><div class="lesson-title">Hash Rate and Network Security</div><div class="lesson-desc">Why more hash rate means a more secure Bitcoin</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">19</div><div class="lesson-content"><div class="lesson-title">Consensus: The Rules of the Game</div><div class="lesson-desc">How the network agrees on the valid blockchain</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">20</div><div class="lesson-content"><div class="lesson-title">51% Attacks and Network Safety</div><div class="lesson-desc">Understanding attack vectors and why Bitcoin survives them</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">21</div><div class="lesson-content"><div class="lesson-title">The First Block: Genesis</div><div class="lesson-desc">The historic first block and the embedded message</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">22</div><div class="lesson-content"><div class="lesson-title">Bitcoin Time: Block Height and Median Time</div><div class="lesson-desc">How Bitcoin measures time without a central clock</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">23</div><div class="lesson-content"><div class="lesson-title">Forks: Hard and Soft</div><div class="lesson-desc">Understanding network upgrades and chain splits</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">24</div><div class="lesson-content"><div class="lesson-title">Bitcoin vs. Altcoins</div><div class="lesson-desc">Why Bitcoin remains the dominant cryptocurrency</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">25</div><div class="lesson-content"><div class="lesson-title">Store of Value vs. Medium of Exchange</div><div class="lesson-desc">The debate about Bitcoin's utility and future use cases</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">26</div><div class="lesson-content"><div class="lesson-title">The Lightning Network: Bitcoin at Scale</div><div class="lesson-desc">How second-layer solutions enable millions of transactions</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">27</div><div class="lesson-content"><div class="lesson-title">Institutional Adoption</div><div class="lesson-desc">How companies and governments are embracing Bitcoin</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">28</div><div class="lesson-content"><div class="lesson-title">Regulation and Legal Frameworks</div><div class="lesson-desc">The evolving legal landscape for cryptocurrency</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">29</div><div class="lesson-content"><div class="lesson-title">Taxation: Bitcoin and the IRS</div><div class="lesson-desc">How to properly report Bitcoin transactions</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">30</div><div class="lesson-content"><div class="lesson-title">Self-Custody: Your Keys, Your Bitcoin</div><div class="lesson-desc">Why you should never leave Bitcoin on exchanges</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">31</div><div class="lesson-content"><div class="lesson-title">Cold Storage Fundamentals</div><div class="lesson-desc">Keeping your Bitcoin offline and secure</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">32</div><div class="lesson-content"><div class="lesson-title">Backup and Recovery</div><div class="lesson-desc">How to safely backup and recover your wallet</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">33</div><div class="lesson-content"><div class="lesson-title">Your First Bitcoin Transaction</div><div class="lesson-desc">Hands-on: send your first Bitcoin and understand the process</div></div></div>
+        </div>
+        
         <div class="path-details">
           <div class="path-detail-row">
             <span class="path-detail-icon">⏱️</span>
-            <span class="path-detail-text"><strong>Duration:</strong> 2-3 hours</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 15-20 hours</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">📖</span>
-            <span class="path-detail-text"><strong>Modules:</strong> 5 lessons + quiz</span>
+            <span class="path-detail-text"><strong>Lessons:</strong> 33 comprehensive modules</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">🎯</span>
-            <span class="path-detail-text"><strong>You'll learn:</strong> Fiat vs Bitcoin, sound money properties, Bitcoin's mission</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> Money evolution, Bitcoin basics, transactions, security fundamentals</span>
           </div>
         </div>
         
         <div class="path-footer">
           <div class="path-meta">
-            <span>📚 5 Lessons</span>
-            <span>⏱️ 2-3h</span>
+            <span>📚 33 Lessons</span>
+            <span>⏱️ 15-20h</span>
           </div>
           <a href="index.html" class="path-action">Start Learning →</a>
         </div>
@@ -612,27 +741,71 @@
           <span class="path-topic">#seed-phrases</span>
         </div>
         
+        <div class="lessons-toggle" onclick="toggleLessons(this)">
+          <div class="lessons-toggle-left">
+            <div class="lessons-toggle-icon">📖</div>
+            <span class="lessons-toggle-text">View 33 Lessons</span>
+          </div>
+          <span class="lessons-toggle-arrow">▼</span>
+        </div>
+        
+        <div class="lessons-list">
+          <div class="lesson-item"><div class="lesson-number">01</div><div class="lesson-content"><div class="lesson-title">What Is a Bitcoin Wallet?</div><div class="lesson-desc">Understanding that wallets don't actually store Bitcoin—they store keys</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">02</div><div class="lesson-content"><div class="lesson-title">Private Keys: The Secret Behind Bitcoin</div><div class="lesson-desc">What private keys are and why they're the most important thing to protect</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">03</div><div class="lesson-content"><div class="lesson-title">Public Keys and Addresses</div><div class="lesson-desc">How public keys generate addresses and why sharing your address is safe</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">04</div><div class="lesson-content"><div class="lesson-title">Hierarchical Deterministic Wallets (HD)</div><div class="lesson-desc">How one seed phrase generates unlimited addresses</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">05</div><div class="lesson-content"><div class="lesson-title">BIP39: The Seed Phrase Standard</div><div class="lesson-desc">Understanding the 12-24 word backup standard</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">06</div><div class="lesson-content"><div class="lesson-title">BIP32/44: Derivation Paths Explained</div><div class="lesson-desc">What is m/84'/0'/0'/0/0 and why it matters</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">07</div><div class="lesson-content"><div class="lesson-title">Hot Wallets: Convenience vs. Risk</div><div class="lesson-desc">Mobile wallets, desktop wallets, and when to use them</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">08</div><div class="lesson-content"><div class="lesson-title">Cold Wallets: Maximum Security</div><div class="lesson-desc">Why offline storage is essential for significant amounts</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">09</div><div class="lesson-content"><div class="lesson-title">Hardware Wallets Deep Dive</div><div class="lesson-desc">Cold Card, Trezor, Ledger—understanding the options</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">10</div><div class="lesson-content"><div class="lesson-title">Paper Wallets: Old School Security</div><div class="lesson-desc">How to create and safely store paper wallets</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">11</div><div class="lesson-content"><div class="lesson-title">Custodial vs. Non-Custodial</div><div class="lesson-desc">Why leaving Bitcoin on exchanges is risky business</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">12</div><div class="lesson-content"><div class="lesson-title">Multi-Signature Wallets</div><div class="lesson-desc">Requiring multiple keys to authorize transactions</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">13</div><div class="lesson-content"><div class="lesson-title">2-of-3 Multi-Sig Setup</div><div class="lesson-desc">Implementing geographic distribution of keys</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">14</div><div class="lesson-content"><div class="lesson-title">Hardware Wallet Air-Gapping</div><div class="lesson-desc">Keeping your keys isolated from compromised computers</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">15</div><div class="lesson-content"><div class="lesson-title">BIP39 Passphrases: The 25th Word</div><div class="lesson-desc">Adding extra security to your seed phrase</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">16</div><div class="lesson-content"><div class="lesson-title">Shamir Secret Sharing</div><div class="lesson-desc">Splitting your seed into fragments for additional security</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">17</div><div class="lesson-content"><div class="lesson-title">Backing Up Your Wallet</div><div class="lesson-desc">Best practices for creating secure backups</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">18</div><div class="lesson-content"><div class="lesson-title">Steel Backup Plates</div><div class="lesson-desc">Why paper backups aren't enough—fire and water resistance</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">19</div><div class="lesson-content"><div class="lesson-title">Geographic Distribution</div><div class="lesson-desc">Storing seed fragments in different locations</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">20</div><div class="lesson-content"><div class="lesson-title">Recovery Procedures</div><div class="lesson-desc">How to restore your wallet from seed phrase</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">21</div><div class="lesson-content"><div class="lesson-title">Verifying Wallet Integrity</div><div class="lesson-desc">Confirming your backup works before you need it</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">22</div><div class="lesson-content"><div class="lesson-title">Transaction Signing</div><div class="lesson-desc">How transactions are cryptographically signed</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">23</div><div class="lesson-content"><div class="lesson-title">Unsigned Transaction Attacks</div><div class="lesson-desc">Understanding malware that manipulates addresses</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">24</div><div class="lesson-content"><div class="lesson-title">Address Poisoning</div><div class="lesson-desc">How attackers send dust to learn your addresses</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">25</div><div class="lesson-content"><div class="lesson-title">Coin Control: UTXO Management</div><div class="lesson-desc">Choosing which unspent outputs to spend</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">26</div><div class="lesson-content"><div class="lesson-title">Change Addresses</div><div class="lesson-desc">Why your wallet generates new addresses for change</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">27</div><div class="lesson-content"><div class="lesson-title">Wallet Fingerprinting</div><div class="lesson-desc">How blockchain analysis identifies wallet software</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">28</div><div class="lesson-content"><div class="lesson-title">CoinJoin and Privacy</div><div class="lesson-desc">Mixing transactions to improve privacy</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">29</div><div class="lesson-content"><div class="lesson-title">Lightning Network Wallets</div><div class="lesson-desc">Wallets designed for instant, low-cost payments</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">30</div><div class="lesson-content"><div class="lesson-title">Watch-Only Wallets</div><div class="lesson-desc">Monitoring addresses without private keys</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">31</div><div class="lesson-content"><div class="lesson-title">Hardware Wallet Firmware</div><div class="lesson-desc">Keeping your device updated and secure</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">32</div><div class="lesson-content"><div class="lesson-title">Social Engineering Defense</div><div class="lesson-desc">Protecting against scams and manipulation</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">33</div><div class="lesson-content"><div class="lesson-title">Emergency Response Plan</div><div class="lesson-desc">What to do if your wallet is compromised</div></div></div>
+        </div>
+        
         <div class="path-details">
           <div class="path-detail-row">
             <span class="path-detail-icon">⏱️</span>
-            <span class="path-detail-text"><strong>Duration:</strong> 3-4 hours</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 18-24 hours</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">📖</span>
-            <span class="path-detail-text"><strong>Modules:</strong> 6 lessons + live demo</span>
+            <span class="path-detail-text"><strong>Lessons:</strong> 33 comprehensive modules</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">🎯</span>
-            <span class="path-detail-text"><strong>You'll learn:</strong> Generate real BIP39 wallets, understand derivation paths, setup hardware wallets</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> Wallet types, seed phrases, hardware wallets, multi-sig, security</span>
           </div>
         </div>
         
         <div class="path-footer">
           <div class="path-meta">
-            <span>📚 6 Lessons</span>
-            <span>⏱️ 3-4h</span>
+            <span>📚 33 Lessons</span>
+            <span>⏱️ 18-24h</span>
           </div>
-          <a href="index.html#wallet" class="path-action">Start Learning →</a>
+          <a href="index.html" class="path-action">Start Learning →</a>
         </div>
       </div>
       
@@ -651,25 +824,69 @@
           <span class="path-topic">#consensus</span>
         </div>
         
+        <div class="lessons-toggle" onclick="toggleLessons(this)">
+          <div class="lessons-toggle-left">
+            <div class="lessons-toggle-icon">📖</div>
+            <span class="lessons-toggle-text">View 33 Lessons</span>
+          </div>
+          <span class="lessons-toggle-arrow">▼</span>
+        </div>
+        
+        <div class="lessons-list">
+          <div class="lesson-item"><div class="lesson-number">01</div><div class="lesson-content"><div class="lesson-title">The Genesis Block</div><div class="lesson-desc">The first block in Bitcoin's blockchain and its significance</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">02</div><div class="lesson-content"><div class="lesson-title">Block Structure: Header and Body</div><div class="lesson-desc">Understanding the technical composition of blocks</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">03</div><div class="lesson-content"><div class="lesson-title">Block Header Components</div><div class="lesson-desc">Version, previous block hash, merkle root, timestamp, difficulty, nonce</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">04</div><div class="lesson-content"><div class="lesson-title">Merkle Trees Explained</div><div class="lesson-desc">How transactions are hashed together efficiently</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">05</div><div class="lesson-content"><div class="lesson-title">SPV: Simplified Payment Verification</div><div class="lesson-desc">Verifying payments without downloading the full blockchain</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">06</div><div class="lesson-content"><div class="lesson-title">SHA-256: The Hashing Algorithm</div><div class="lesson-desc">Understanding Secure Hash Algorithm 256-bit</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">07</div><div class="lesson-content"><div class="lesson-title">Hash Properties: Collision Resistance</div><div class="lesson-desc">Why it's practically impossible to find two inputs with same hash</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">08</div><div class="lesson-content"><div class="lesson-title">The Hash Puzzle: Finding the Nonce</div><div class="lesson-desc">How miners compete to find valid block hashes</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">09</div><div class="lesson-content"><div class="lesson-title">Target and Difficulty</div><div class="lesson-desc">How the network adjusts mining difficulty every 2016 blocks</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">10</div><div class="lesson-content"><div class="lesson-title">Difficulty Adjustment Algorithm</div><div class="lesson-desc">Understanding the precise formula that keeps block times at 10 minutes</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">11</div><div class="lesson-content"><div class="lesson-title">UTXO: Unspent Transaction Outputs</div><div class="lesson-desc">Bitcoin's ledger model explained in depth</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">12</div><div class="lesson-content"><div class="lesson-title">Account Model vs. UTXO</div><div class="lesson-desc">Comparing Bitcoin's model to Ethereum's account model</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">13</div><div class="lesson-content"><div class="lesson-title">Transaction Validation Rules</div><div class="lesson-desc">The complete set of rules nodes enforce</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">14</div><div class="lesson-content"><div class="lesson-title">Script: Bitcoin's Programming Language</div><div class="lesson-desc">Understanding Stack-based transaction validation</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">15</div><div class="lesson-content"><div class="lesson-title">P2PKH: Pay to Public Key Hash</div><div class="lesson-desc">The original Bitcoin transaction type</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">16</div><div class="lesson-content"><div class="lesson-title">P2SH: Pay to Script Hash</div><div class="lesson-desc">Enabling complex locking scripts</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">17</div><div class="lesson-content"><div class="lesson-title">P2WSH: Pay to Witness Script Hash</div><div class="lesson-desc">SegWit script encryption</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">18</div><div class="lesson-content"><div class="lesson-title">P2WPKH: Pay to Witness Public Key Hash</div><div class="lesson-desc">SegWit native transactions</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">19</div><div class="lesson-content"><div class="lesson-title">SegWit: Segregated Witness</div><div class="lesson-desc">The soft fork that increased block capacity</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">20</div><div class="lesson-content"><div class="lesson-title">Transaction Malleability</div><div class="lesson-desc">Understanding transaction ID changes and their impact</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">21</div><div class="lesson-content"><div class="lesson-title">Network Propagation</div><div class="lesson-desc">How transactions spread across the Bitcoin network</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">22</div><div class="lesson-content"><div class="lesson-title">Bloom Filters</div><div class="lesson-desc">How SPV clients request relevant transactions efficiently</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">23</div><div class="lesson-content"><div class="lesson-title">Compact Block Relay</div><div class="lesson-desc">Optimizing block propagation across nodes</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">24</div><div class="lesson-content"><div class="lesson-title">Chain Reorganizations</div><div class="lesson-desc">What happens when two miners find blocks simultaneously</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">25</div><div class="lesson-content"><div class="lesson-title">Orphan Blocks</div><div class="lesson-desc">Understanding discarded blocks in the network</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">26</div><div class="lesson-content"><div class="lesson-title">Confirmations and Finality</div><div class="lesson-desc">Why 6 confirmations is the traditional standard</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">27</div><div class="lesson-content"><div class="lesson-title">Selfish Mining</div><div class="lesson-desc">Understanding withholding attacks and their economics</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">28</div><div class="lesson-content"><div class="lesson-title">Sybil Attacks</div><div class="lesson-desc">How attackers flood the network with fake nodes</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">29</div><div class="lesson-content"><div class="lesson-title">Eclipse Attacks</div><div class="lesson-desc">Isolating a node from the honest network</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">30</div><div class="lesson-content"><div class="lesson-title">Light clients vs Full Nodes</div><div class="lesson-desc">Understanding the security tradeoffs</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">31</div><div class="lesson-content"><div class="lesson-title">Pruned Nodes</div><div class="lesson-desc">Running a full node without storing the entire blockchain</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">32</div><d iv class="lesson-content"><div class="lesson-title">Bitcoin Improvement Proposals (BIPs)</div><div class="lesson-desc">How Bitcoin evolves through community proposals</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">33</div><div class="lesson-content"><div class="lesson-title">Running Your Own Node</div><div class="lesson-desc">Hands-on: set up and operate a Bitcoin full node</div></div></div>
+        </div>
+        
         <div class="path-details">
           <div class="path-detail-row">
             <span class="path-detail-icon">⏱️</span>
-            <span class="path-detail-text"><strong>Duration:</strong> 4-5 hours</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 20-25 hours</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">📖</span>
-            <span class="path-detail-text"><strong>Modules:</strong> 7 lessons + visualizer</span>
+            <span class="path-detail-text"><strong>Lessons:</strong> 33 comprehensive modules</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">🎯</span>
-            <span class="path-detail-text"><strong>You'll learn:</strong> SHA-256, merkle trees, UTXO model, block validation</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> Block structure, merkle trees, consensus, scripts, node operation</span>
           </div>
         </div>
         
         <div class="path-footer">
           <div class="path-meta">
-            <span>📚 7 Lessons</span>
-            <span>⏱️ 4-5h</span>
+            <span>📚 33 Lessons</span>
+            <span>⏱️ 20-25h</span>
           </div>
           <a href="blockchain.html" class="path-action">Start Learning →</a>
         </div>
@@ -690,25 +907,69 @@
           <span class="path-topic">#hashrate</span>
         </div>
         
+        <div class="lessons-toggle" onclick="toggleLessons(this)">
+          <div class="lessons-toggle-left">
+            <div class="lessons-toggle-icon">📖</div>
+            <span class="lessons-toggle-text">View 33 Lessons</span>
+          </div>
+          <span class="lessons-toggle-arrow">▼</span>
+        </div>
+        
+        <div class="lessons-list">
+          <div class="lesson-item"><div class="lesson-number">01</div><div class="lesson-content"><div class="lesson-title">Proof of Work Explained</div><div class="lesson-desc">Why computational work secures the Bitcoin network</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">02</div><div class="lesson-content"><div class="lesson-title">The Hashcash Algorithm</div><div class="lesson-desc">The original Proof of Work system that inspired Bitcoin</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">03</div><div class="lesson-content"><div class="lesson-title">Mining: The Block Reward</div><div class="lesson-desc">How miners earn new Bitcoin for securing the network</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">04</div><div class="lesson-content"><div class="lesson-title">Transaction Fees: The Secondary Reward</div><div class="lesson-desc">How fees will sustain mining after block rewards end</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">05</div><div class="lesson-content"><div class="lesson-title">The Halving Cycle</div><div class="lesson-desc">Understanding the 4-year schedule and its market impact</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">06</div><div class="lesson-content"><div class="lesson-title">CPU Mining: The Early Days</div><div class="lesson-desc">When anyone could mine Bitcoin on their computer</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">07</div><div class="lesson-content"><div class="lesson-title">GPU Mining Era</div><div class="lesson-desc">The transition to graphics card mining</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">08</div><div class="lesson-content"><div class="lesson-title">FPGA Mining</div><div class="lesson-desc">Field-programmable gate arrays enter the scene</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">09</div><div class="lesson-content"><div class="lesson-title">ASICs: Application-Specific Integrated Circuits</div><div class="lesson-desc">The specialized hardware that dominates mining today</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">10</div><div class="lesson-content"><div class="lesson-title">Major ASIC Manufacturers</div><div class="lesson-desc">Bitmain, MicroBT, and the competitive landscape</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">11</div><div class="lesson-content"><div class="lesson-title">Hash Rate Measurements</div><div class="lesson-desc">From H/s to EH/s—understanding the scales</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">12</div><div class="lesson-content"><div class="lesson-title">Network Hash Rate</div><div class="lesson-desc">Why global hashrate matters for security</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">13</div><div class="lesson-content"><div class="lesson-title">Mining Difficulty Deep Dive</div><div class="lesson-desc">How the network maintains 10-minute block times</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">14</div><div class="lesson-content"><div class="lesson-title">Luck in Mining</div><div class="lesson-desc">Understanding variance in block discovery</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">15</div><div class="lesson-content"><div class="lesson-title">Solo Mining vs. Pool Mining</div><div class="lesson-desc">The economics of different mining approaches</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">16</div><div class="lesson-content"><div class="lesson-title">How Mining Pools Work</div><div class="lesson-desc">Share-based reward distribution systems</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">17</div><div class="lesson-content"><div class="lesson-title">Pool Payment Methods</div><div class="lesson-desc">PPS, PPLNS, FPPS, and their tradeoffs</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">18</div><div class="lesson-content"><div class="lesson-title">Stratum Protocol</div><div class="lesson-desc">The communication protocol between miners and pools</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">19</div><div class="lesson-content"><div class="lesson-title">Mining Farm Design</div><div class="lesson-desc">Infrastructure, power, cooling, and logistics</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">20</div><div class="lesson-content"><div class="lesson-title">Power Economics</div><div class="lesson-desc">Electricity costs and profitability calculations</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">21</div><div class="lesson-content"><div class="lesson-title">Renewable Energy Mining</div><div class="lesson-desc">The push for green Bitcoin mining</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">22</div><div class="lesson-content"><div class="lesson-title">Flaring and Waste Energy</div><div class="lesson-desc">Using excess natural gas for Bitcoin mining</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">23</div><div class="lesson-content"><div class="lesson-title">Heat Recovery</div><div class="lesson-desc">Mining as a heating solution</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">24</div><div class="lesson-content"><div class="lesson-title">Geographic Distribution</div><div class="lesson-desc">Where Bitcoin mining happens around the world</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">25</div><div class="lesson-content"><div class="lesson-title">Mining Regulation</div><div class="lesson-desc">Legal frameworks affecting mining operations</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">26</div><div class="lesson-content"><div class="lesson-title">The Energy Debate</div><div class="lesson-desc">Critiques and defenses of Bitcoin's energy use</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">27</div><div class="lesson-content"><div class="lesson-title">Hash Rate Derivatives</div><div class="lesson-desc">Trading hashrate as a financial instrument</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">28</div><div class="lesson-content"><div class="lesson-title">Mining Investment Vehicles</div><div class="lesson-desc">Public companies and ETFs in the mining space</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">29</div><div class="lesson-content"><div class="lesson-title">Home Mining Profitability</div><div class="lesson-desc">Can you still profitably mine at home?</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">30</div><div class="lesson-content"><div class="lesson-title">Braiins OS and Firmware</div><div class="lesson-desc">Open-source mining firmware options</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">31</div><div class="lesson-content"><div class="lesson-title">Mining Pool Switchting</div><div class="lesson-desc">When and why to change pools</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">32</div><div class="lesson-content"><div class="lesson-title">Future of Mining Technology</div><div class="lesson-desc">3nm chips, immersion cooling, and beyond</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">33</div><div class="lesson-content"><div class="lesson-title">Post-Halving Economics</div><div class="lesson-desc">What happens when block rewards become negligible</div></div></div>
+        </div>
+        
         <div class="path-details">
           <div class="path-detail-row">
             <span class="path-detail-icon">⏱️</span>
-            <span class="path-detail-text"><strong>Duration:</strong> 4-6 hours</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 20-28 hours</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">📖</span>
-            <span class="path-detail-text"><strong>Modules:</strong> 6 lessons + simulator</span>
+            <span class="path-detail-text"><strong>Lessons:</strong> 33 comprehensive modules</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">🎯</span>
-            <span class="path-detail-text"><strong>You'll learn:</strong> ASICs, mining pools, solo vs pool, hashrate economics</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> Proof of Work, ASICs, mining pools, economics, energy debates</span>
           </div>
         </div>
         
         <div class="path-footer">
           <div class="path-meta">
-            <span>📚 6 Lessons</span>
-            <span>⏱️ 4-6h</span>
+            <span>📚 33 Lessons</span>
+            <span>⏱️ 20-28h</span>
           </div>
           <a href="miner.html" class="path-action">Start Learning →</a>
         </div>
@@ -729,25 +990,69 @@
           <span class="path-topic">#micropayments</span>
         </div>
         
+        <div class="lessons-toggle" onclick="toggleLessons(this)">
+          <div class="lessons-toggle-left">
+            <div class="lessons-toggle-icon">📖</div>
+            <span class="lessons-toggle-text">View 33 Lessons</span>
+          </div>
+          <span class="lessons-toggle-arrow">▼</span>
+        </div>
+        
+        <div class="lessons-list">
+          <div class="lesson-item"><div class="lesson-number">01</div><div class="lesson-content"><div class="lesson-title">The Scaling Problem</div><div class="lesson-desc">Why Bitcoin needs second-layer solutions</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">02</div><div class="lesson-content"><div class="lesson-title">Bitcoin's Transaction Throughput</div><div class="lesson-desc">Understanding the 7 TPS limit and its implications</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">03</div><div class="lesson-content"><div class="lesson-title">Payment Channels: The Basics</div><div class="lesson-desc">How two parties transact off-chain</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">04</div><div class="lesson-content"><div class="lesson-title">Unidirectional Channels</div><div class="lesson-desc">Single-direction payment channels explained</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">05</div><div class="lesson-content"><div class="lesson-title">Bidirectional Channels</div><div class="lesson-desc">Enabling two-way off-chain payments</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">06</div><div class="lesson-content"><div class="lesson-title">RSMC: Revocable Sequence Maturity Contracts</div><div class="lesson-desc">The innovation that enabled Lightning</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">07</div><div class="lesson-content"><div class="lesson-title">HTLCs: Hash Time Locked Contracts</div><div class="lesson-desc">Conditional payments with atomic swaps</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">08</div><div class="lesson-content"><div class="lesson-title">Channel Funding Transaction</div><div class="lesson-desc">Opening a Lightning channel on-chain</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">09</div><div class="lesson-content"><div class="lesson-title">Commitment Transactions</div><div class="lesson-desc">How channel state is updated</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">10</div><div class="lesson-content"><div class="lesson-title">Breach Remedy: Justice Transactions</div><div class="lesson-desc">What happens if a party tries to cheat</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">11</div><div class="lesson-content"><div class="lesson-title">Channel Closing</div><div class="lesson-desc">Mutual close vs. unilateral close</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">12</div><div class="lesson-content"><div class="lesson-title">Onion Routing</div><div class="lesson-desc">How payments are routed privately</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">13</div><div class="lesson-content"><div class="lesson-title">Spherical Routing: The FLIGHT Algorithm</div><div class="lesson-desc">Lightning's pathfinding approach</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">14</div><div class="lesson-content"><div class="lesson-title">Multi-Path Payments</div><div class="lesson-desc">Splitting large payments across multiple routes</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">15</div><div class="lesson-content"><div class="lesson-title">Liquidty Management</div><div class="lesson-desc">Managing inbound and outbound capacity</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">16</div><div class="lesson-content"><div class="lesson-title">Channel Rebalancing</div><div class="lesson-desc">Techniques to optimize liquidity</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">17</div><div class="lesson-content"><div class="lesson-title">Loop, Pool, and submarine Swaps</div><div class="lesson-desc">Liquidity services from Lightning Labs</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">18</div><div class="lesson-content"><div class="lesson-title">Dual Funding</div><div class="lesson-desc">Both parties contributing to channel capacity</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">19</div><div class="lesson-content"><div class="lesson-title">Splicing</div><div class="lesson-desc">Adding and removing funds from active channels</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">20</div><div class="lesson-content"><div class="lesson-title">Wumbo Channels</div><div class="lesson-desc">Higher capacity channels for large payments</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">21</div><div class="lesson-content"><div class="lesson-title">Zero-Conf Channels</div><div class="lesson-desc">Instant channel opening with JIT routing</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">22</div><div class="lesson-content"><div class="lesson-title">Eltoo: Simplified Channel Construction</div><div class="lesson-desc">The proposed update mechanism for Lightning</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">23</div><div class="lesson-content"><div class="lesson-title">PTLCs: Point Time Locked Contracts</div><div class="lesson-desc">Improving privacy with Schnorr signatures</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">24</div><div class="lesson-content"><div class="lesson-title">Watchtowers</div><div class="lesson-desc">Third-party monitoring for channel security</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">25</div><div class="lesson-content"><div class="lesson-title">Lightning Nodes</div><div class="lesson-desc">Running LND, c-lightning, or Eclair</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">26</div><div class="lesson-content"><div class="lesson-title">Lightning Wallets</div><div class="lesson-desc">Phoenix, Breez, Wallet of Satoshi, and more</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">27</div><div class="lesson-content"><div class="lesson-title">Lightning Address</div><div class="lesson-desc">Human-readable payment identifiers (lnurl)</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">28</div><div class="lesson-content"><div class="lesson-title">LNURL and Lightning QR Codes</div><div class="lesson-desc">Standardized payment requests</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">29</div><div class="lesson-content"><div class="lesson-title">App Layer: LN Apps</div><div class="lesson-desc">Games, tipping, and micro-payment applications</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">30</div><div class="lesson-content"><div class="lesson-title">Cross-Chain Swaps</div><div class="lesson-desc">Atomic swaps between Lightning and other chains</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">31</div><div class="lesson-content"><div class="lesson-title">Fedimint: Federated E-Cash</div><div class="lesson-desc">Custodial Lightning with cryptographic privacy</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">32</div><div class="lesson-content"><div class="lesson-title">Ark: Another Layer 2 Approach</div><div class="lesson-desc">Understanding the Ark protocol</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">33</div><div class="lesson-content"><div class="lesson-title">The Future of Lightning</div><div class="lesson-desc">Where the network is heading</div></div></div>
+        </div>
+        
         <div class="path-details">
           <div class="path-detail-row">
             <span class="path-detail-icon">⏱️</span>
-            <span class="path-detail-text"><strong>Duration:</strong> 6-8 hours</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 24-30 hours</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">📖</span>
-            <span class="path-detail-text"><strong>Modules:</strong> 8 lessons + channel demo</span>
+            <span class="path-detail-text"><strong>Lessons:</strong> 33 comprehensive modules</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">🎯</span>
-            <span class="path-detail-text"><strong>You'll learn:</strong> HTLCs, onion routing, channel management, liquidity</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> Payment channels, HTLCs, routing, liquidity, node operation</span>
           </div>
         </div>
         
         <div class="path-footer">
           <div class="path-meta">
-            <span>📚 8 Lessons</span>
-            <span>⏱️ 6-8h</span>
+            <span>📚 33 Lessons</span>
+            <span>⏱️ 24-30h</span>
           </div>
           <a href="topics.html" class="path-action">Coming Soon →</a>
         </div>
@@ -768,25 +1073,69 @@
           <span class="path-topic">#taproot</span>
         </div>
         
+        <div class="lessons-toggle" onclick="toggleLessons(this)">
+          <div class="lessons-toggle-left">
+            <div class="lessons-toggle-icon">📖</div>
+            <span class="lessons-toggle-text">View 33 Lessons</span>
+          </div>
+          <span class="lessons-toggle-arrow">▼</span>
+        </div>
+        
+        <div class="lessons-list">
+          <div class="lesson-item"><div class="lesson-number">01</div><div class="lesson-content"><div class="lesson-title">Bitcoin Script: A Turing-Incomplete Language</div><div class="lesson-desc">Why Bitcoin intentionally limits what scripts can do</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">02</div><div class="lesson-content"><div class="lesson-title">Script Operation Codes (OP Codes)</div><div class="lesson-desc">The complete set of Bitcoin's stack-based language</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">03</div><div class="lesson-content"><div class="lesson-title">Stack-Based Execution</div><div class="lesson-desc">How Bitcoin validates scripts using a stack</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">04</div><div class="lesson-content"><div class="lesson-title">P2PK: Pay to Public Key</div><div class="lesson-desc">The original output type</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">05</div><div class="lesson-content"><div class="lesson-title">Signature Verification</div><div class="lesson-desc">ECDSA and how signatures are validated</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">06</div><div class="lesson-content"><div class="lesson-title">OP_CHECKSIG and Friends</div><div class="lesson-desc">Signature verification opcodes explained</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">07</div><div class="lesson-content"><div class="lesson-title">Multi-Signature Scripts</div><div class="lesson-desc">Requiring multiple signatures to spend</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">08</div><div class="lesson-content"><div class="lesson-title">M-of-N Threshold Schemes</div><div class="lesson-desc">Generalizing multi-sig to any threshold</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">09</div><div class="lesson-content"><div class="lesson-title">Time Locks: CLTV</div><div class="lesson-desc">CheckLockTimeVerify for absolute time constraints</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">10</div><div class="lesson-content"><div class="lesson-title">Time Locks: CSV</div><div class="lesson-desc">CheckSequenceVerify for relative time constraints</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">11</div><div class="lesson-content"><div class="lesson-title">Hash Locks: HASH256 and Hash160</div><div class="lesson-desc">Using hashes for conditional reveals</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">12</div><div class="lesson-content"><div class="lesson-title">Creating HTLCs in Script</div><div class="lesson-desc">Hash Time Locked Contracts from scratch</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">13</div><div class="lesson-content"><div class="lesson-title">OP_RETURN and Data on Blockchain</div><div class="lesson-desc">Storing data in Bitcoin transactions</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">14</div><div class="lesson-content"><div class="lesson-title">Ordinals and Inscriptions</div><div class="lesson-desc">Storing arbitrary data via witness data</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">15</div><div class="lesson-content"><div class="lesson-title">BRC-20 Tokens</div><div class="lesson-desc">Fungible tokens on Bitcoin via ordinals</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">16</div><div class="lesson-content"><div class="lesson-title">Schnorr Signatures</div><div class="lesson-desc">The upgrade from ECDSA to Schnorr</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">17</div><div class="lesson-content"><div class="lesson-title">Key Aggregation</div><div class="lesson-desc">Combining multiple keys into one signature</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">18</div><div class="lesson-content"><div class="lesson-title">Taproot: The Soft Fork</div><div class="lesson-desc">Understanding the 2021 upgrade</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">19</div><div class="lesson-content"><div class="lesson-title">Merkle Trees in Taproot</div><div class="lesson-desc">MAST: Merkleized Abstract Syntax Trees</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">20</div><div class="lesson-content"><div class="lesson-title">P2TR: Pay to Taproot</div><div class="lesson-desc">The new output type</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">21</div><div class="lesson-content"><div class="lesson-title">Tapscript</div><div class="lesson-desc">The new script version for Taproot</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">22</div><div class="lesson-content"><div class="lesson-title">Script Path Spending</div><div class="lesson-desc">Revealing scripts at spend time</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">23</div><div class="lesson-content"><div class="lesson-title">Key Path Spending</div><div class="lesson-desc">Spending via the aggregated key</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">24</div><div class="lesson-content"><div class="lesson-title">PSBTs: Partially Signed Bitcoin Transactions</div><div class="lesson-desc">Standard format for multi-sig workflows</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">25</div><div class="lesson-content"><div class="lesson-title">Hardware Wallet PSBT Flow</div><div class="lesson-desc">Signing transactions securely</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">26</div><div class="lesson-content"><div class="lesson-title">CoinJoin with PSBTs</div><div class="lesson-desc">Creating collaborative transactions</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">27</div><div class="lesson-content"><div class="lesson-title">Discreet Log Contracts</div><div class="lesson-desc">Smart contracts using adaptor signatures</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">28</div><div class="lesson-content"><div class="lesson-title">Liquid Network and Assets</div><div class="lesson-desc">Bitcoin sidechain for tokenization</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">29</div><div class="lesson-content"><div class="lesson-title">Drivechains</div><div class="lesson-desc">Two-way pegged sidechains</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">30</div><div class="lesson-content"><div class="lesson-title">RGB Protocol</div><div class="lesson-desc">Client-side validation for smart contracts</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">31</div><div class="lesson-content"><div class="lesson-title">Stacks and Clarity</div><div class="lesson-desc">Smart contracts on Bitcoin via proof of transfer</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">32</div><div class="lesson-content"><div class="lesson-title">Writing Your First Script</div><div class="lesson-desc">Hands-on: create a custom locking script</div></div></div>
+          <div class="lesson-item"><div class="lesson-number">33</div><div class="lesson-content"><div class="lesson-title">Real-World Script Applications</div><div class="lesson-desc">Building escrow, atomic swaps, and more</div></div></div>
+        </div>
+        
         <div class="path-details">
           <div class="path-detail-row">
             <span class="path-detail-icon">⏱️</span>
-            <span class="path-detail-text"><strong>Duration:</strong> 8-10 hours</span>
+            <span class="path-detail-text"><strong>Duration:</strong> 28-35 hours</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">📖</span>
-            <span class="path-detail-text"><strong>Modules:</strong> 10 lessons + code labs</span>
+            <span class="path-detail-text"><strong>Lessons:</strong> 33 comprehensive modules</span>
           </div>
           <div class="path-detail-row">
             <span class="path-detail-icon">🎯</span>
-            <span class="path-detail-text"><strong>You'll learn:</strong> OP codes, multisig, CLTV, CSV, tapscript, PSBTs</span>
+            <span class="path-detail-text"><strong>You'll learn:</strong> Script opcodes, multisig, timelocks, Taproot, PSBTs</span>
           </div>
         </div>
         
         <div class="path-footer">
           <div class="path-meta">
-            <span>📚 10 Lessons</span>
-            <span>⏱️ 8-10h</span>
+            <span>📚 33 Lessons</span>
+            <span>⏱️ 28-35h</span>
           </div>
           <a href="topics.html" class="path-action">Coming Soon →</a>
         </div>
@@ -912,13 +1261,11 @@
     
     levelTabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        // Update active tab
         levelTabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         
         const level = tab.dataset.level;
         
-        // Filter cards
         pathCards.forEach(card => {
           if (level === 'all' || card.dataset.level === level) {
             card.style.display = 'block';
@@ -928,6 +1275,13 @@
         });
       });
     });
+    
+    // Lessons Toggle
+    function toggleLessons(element) {
+      element.classList.toggle('active');
+      const lessonsList = element.nextElementSibling;
+      lessonsList.classList.toggle('show');
+    }
     
     // Quiz Functionality
     let quizAnswered = false;
@@ -975,7 +1329,7 @@
         
         miningInterval = setInterval(() => {
           hashrate += Math.random() * 50 + 10;
-          blocks += (hashrate / 1000000) * 0.1; // Simplified probability
+          blocks += (hashrate / 1000000) * 0.1;
           
           if (Math.random() < 0.02) {
             blocks = Math.floor(blocks) + 1;
